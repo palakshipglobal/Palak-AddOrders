@@ -18,6 +18,7 @@ interface SimpleFormFieldProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  inputStyle?: string;
 }
 function SimpleFormFields({
   form,
@@ -27,13 +28,14 @@ function SimpleFormFields({
   placeholder,
   required = false,
   className,
+  inputStyle,
 }: SimpleFormFieldProps) {
   return (
     <FormField
       name={name}
       control={form.control}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel>
             {label} {required && <Required />}
           </FormLabel>
@@ -42,7 +44,7 @@ function SimpleFormFields({
               type={type}
               placeholder={placeholder}
               {...field}
-              className={className}
+              className={inputStyle}
             />
           </FormControl>
           <FormMessage />

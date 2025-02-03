@@ -1,9 +1,6 @@
-"use client";
-
-import * as React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,71 +15,84 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import Required from "./Required";
+import { DatePickerWithPresets } from "./DatePicker";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Delhi",
-  },
-  {
-    value: "sveltekit",
-    label: "Mumbai",
-  },
-  {
-    value: "nuxt.js",
-    label: "Punjab",
-  },
-  {
-    value: "remix",
-    label: "Chandigarh",
-  },
-  {
-    value: "astro",
-    label: "Haryana",
-  },
+const states = [
+  { value: "ny", label: "New York" },
+  { value: "ca", label: "California" },
+  { value: "tx", label: "Texas" },
 ];
 
-export function ComboboxDemo({ placeholder }: { placeholder: string }) {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+const addresses = [
+  { value: "address1", label: "123 Main St" },
+  {
+    value: "address2",
+    label: "456 Oak Street",
+  },
+  { value: "address3", label: "789 Pine St" },
+];
+
+const currency = [
+  { value: "AED", label: "AED" },
+  { value: "AUD", label: "AUD" },
+  { value: "CAD", label: "CAD" },
+  { value: "EUR", label: "EUR" },
+  { value: "IND", label: "IND" },
+];
+
+const igst = [
+  { value: "0", label: "0%" },
+  { value: "3", label: "3%" },
+  { value: "5", label: "5%" },
+  { value: "12", label: "12%" },
+  { value: "18", label: "18%" },
+];
+
+function Combobox({ options, placeholder, field }) {
+  const [open, setOpen] = useState(false);
+  const selectedOption = options.find((option) => option.value === field.value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          role="combobox"
-          aria-expanded={open}
           className="w-full bg-gray-100 h-10 text-gray-600 justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select Pickup Address..."}
+          {selectedOption ? selectedOption.label : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="max-w-full p-0">
+      {/* <PopoverContent className="max-w-full p-0"> */}
+      <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
         <Command>
           <CommandInput placeholder={placeholder} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {options.map((option) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                  key={option.value}
+                  value={option.value}
+                  onSelect={() => {
+                    field.onChange(option.value);
                     setOpen(false);
                   }}
                 >
                   <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
+                    className={`mr-2 h-4 w-4 ${
+                      field.value === option.value ? "opacity-100" : "opacity-0"
+                    }`}
                   />
-                  {framework.label}
+                  {option.label}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -90,5 +100,182 @@ export function ComboboxDemo({ placeholder }: { placeholder: string }) {
         </Command>
       </PopoverContent>
     </Popover>
+  );
+}
+
+// export function CountrySelect({ form, name }) {
+//   return (
+//     <FormField
+//       control={form.control}
+//       name={name}
+//       render={({ field }) => (
+//         <FormItem>
+//           <FormLabel>Country</FormLabel>
+//           <FormControl>
+//             <Combobox
+//               options={countries}
+//               placeholder="Select a Country"
+//               field={field}
+//             />
+//           </FormControl>
+//           <FormMessage />
+//         </FormItem>
+//       )}
+//     />
+//   );
+// }
+
+export function CountrySelect({ form, name, required }) {
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCountries() {
+      try {
+        const response = await fetch(
+          "https://api.fr.stg.shipglobal.in/api/v1/location/countries"
+        );
+        const result = await response.json();
+
+        if (result.data && result.data.countries) {
+          const formattedCountries = result.data.countries.map((country) => ({
+            value: country.country_iso2,
+            label: country.country_display,
+          }));
+          setCountries(formattedCountries);
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCountries();
+  }, []);
+
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Country {required && <Required />}</FormLabel>
+          <FormControl>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <Combobox
+                options={countries}
+                placeholder="Select a Country"
+                field={field}
+              />
+            )}
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function StateSelect({ form, name, required }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>State {required && <Required />}</FormLabel>
+          <FormControl>
+            <Combobox
+              options={states}
+              placeholder="Select a State"
+              field={field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function AddressSelect({ form, name }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Combobox
+              options={addresses}
+              placeholder="Select an Address"
+              field={field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function CurrencySelect({ form, name, required }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Invoice Currency {required && <Required />}</FormLabel>
+          <FormControl>
+            <Combobox
+              options={currency}
+              placeholder="Select the Currency"
+              field={field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function IGSTSelect({ form, name, required }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormControl>
+            <Combobox options={igst} placeholder="0%" field={field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function DateSelect({ form, name, required }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormControl>
+           <DatePickerWithPresets name="invoice_date"/>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }
