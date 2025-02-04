@@ -135,13 +135,11 @@ export function BuyerDetailsForm({ nextStep }) {
             }
           );
           const result = await response.json();
-          // console.log("Selected Country:", countryShipping);
-
           console.log(result);
 
           if (result.data && result.data.states) {
             const formattedStates = result.data.states.map((state) => ({
-              value: state.state_id,
+              value: state.state_name,
               label: state.state_name,
             }));
             setStates(formattedStates);

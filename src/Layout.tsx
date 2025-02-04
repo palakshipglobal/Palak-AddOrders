@@ -14,7 +14,9 @@ const StepperArray = [
 ];
 
 const Layout = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    return Number(localStorage.getItem("stepNumber")) || 1;
+  });
   const [buyerData, setBuyerData] = useState({});
   const [orderData, setOrderData] = useState({});
 
@@ -29,6 +31,10 @@ const Layout = () => {
       setCurrentStep(currentStep - 1);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("stepNumber", `${currentStep}`);
+  }, [currentStep]);
 
   return (
     <div className="bg-gray-50 min-h-screen pt-5 pb-20 p-2 lg:px-24">
@@ -112,7 +118,7 @@ const Stepper = ({
           }`}
         >
           {isCompleted ? (
-            <Check className="text-blue-500 mx-1.5 my-1 lg:my-0 rounded-md size-4" />
+            <Check className="text-blue-500 mx-1.5 lg:mx-2.5 my-1  rounded-md size-4" />
           ) : (
             step
           )}
