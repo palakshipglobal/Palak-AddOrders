@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import BreadCrumb from "./shadcnComponents/BreadCrumb";
+import BreadCrumb from "./layout/BreadCrumb";
 import { BuyerDetailsForm } from "./forms/BuyerDetailsForm";
 import { Check } from "lucide-react";
 import OrderDetails from "./forms/OrderDetails";
@@ -13,7 +13,7 @@ const StepperArray = [
   { number: 4, text: "Place Order", lineStyle: "hidden" },
 ];
 
-const Layout = () => {
+const Form = () => {
   const [currentStep, setCurrentStep] = useState(() => {
     return Number(localStorage.getItem("stepNumber")) || 1;
   });
@@ -63,7 +63,7 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default Form;
 interface StepperProps {
   step: number;
   text: string;

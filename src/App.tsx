@@ -1,8 +1,8 @@
 import React from "react";
-import Layout from "./Layout";
+import Form from "./Form";
 
 function App() {
-  return <Layout />;
+  return <Form />;
 }
 
 export default App;

@@ -1,4 +1,4 @@
-import SimpleFormFields from "@/shadcnComponents/SimpleFormFields";
+import SimpleFormFields from "@/layout/SimpleFormFields";
 import React from "react";
 
 const ShipmentDetails = ({ form }) => {

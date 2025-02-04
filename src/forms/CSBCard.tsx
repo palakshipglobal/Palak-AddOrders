@@ -11,7 +11,6 @@ interface CSBCardProps {
     onSelect: any;
   }
   const CSBCard = ({
-    className,
     Icon,
     text1,
     text2,
@@ -22,7 +21,7 @@ interface CSBCardProps {
   }: CSBCardProps) => {
     return (
       <div
-        className={`${className} mt-5 p-7 cursor-pointer rounded-md`}
+        className="mt-5 p-7 cursor-pointer rounded-md"
         onClick={onSelect}
       >
         <p className="ml-10 font-semibold text-lg">CSB - {csbNumber}</p>

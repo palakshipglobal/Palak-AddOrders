@@ -1,10 +1,10 @@
 import React, { useEffect, useId, useState } from "react";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { OrderSchema } from "@/shadcnComponents/schemas";
+import { OrderSchema } from "@/layout/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { csbArray } from "@/shadcnComponents/arrays";
+import { csbArray } from "@/layout/arrays";
 import ItemDetails from "./ItemDetails";
 import OrderItemDetails from "./OrderItemDetails";
 import ShipmentDetails from "./ShipmentDetails";
@@ -56,14 +56,9 @@ function OrderDetails({ nextStep, prevStep }) {
     }
   }, []);
 
-  useEffect(() => {
-    const data = OrderForm.watch((values) => {
-      localStorage.setItem("orderFormData", JSON.stringify(values));
-    });
-  }, [OrderForm]);
-
   const onSubmit = (values: z.infer<typeof OrderSchema>) => {
     console.log("OrderForm Data:", values);
+    localStorage.setItem("orderFormData", JSON.stringify(values));
     nextStep(values);
   };
   return (
@@ -87,10 +82,10 @@ function OrderDetails({ nextStep, prevStep }) {
             text2={item.text2}
             text3={item.text3}
             Icon={item.Icon}
-            className={`${item.className} ${
+            className={` ${
               selectedCsbNumber === item.csbNumber
                 ? "border-2 border-dashed  border-blue-500 bg-blue-100"
-                : ""
+                : "border-dashed border-gray-300 border-2  hover:bg-blue-50"
             }`}
             iconStyle={item.iconStyle}
             onSelect={() => {

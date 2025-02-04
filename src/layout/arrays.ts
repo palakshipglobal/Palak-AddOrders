@@ -5,8 +5,7 @@ export const csbArray = [
     text1: "Non Commercial Mode",
     text2: "Minimum Documentation",
     text3: "All Service Providers",
-    className:
-      "border-dashed border-gray-200 border-2 hover:border-blue-400 hover:bg-blue-50",
+
     csbNumber: "IV",
     iconStyle: "text-blue-400 fill-blue-400 size-8",
   },
@@ -15,8 +14,7 @@ export const csbArray = [
     text1: "Commercial Mode",
     text2: "Valid Export Documents Required",
     text3: "Only Shipglobal Direct",
-    className:
-      "border-dashed border-gray-200 border-2 hover:border-blue-400 hover:bg-blue-50",
+
     csbNumber: "V",
     iconStyle: "text-gray-400 size-8",
   },

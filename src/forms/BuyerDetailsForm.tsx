@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { BuyerSchema } from "@/shadcnComponents/schemas";
+import { BuyerSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BuyerShippingDetails from "./BuyerShippingDetails";
 import BuyerBillingDetails from "./BuyerBillingDetails";
@@ -163,7 +163,7 @@ export function BuyerDetailsForm({ nextStep }) {
         <div className="flex justify-end my-10">
           <button
             type="submit"
-            className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400 transition duration-300 ease-in-out"
+            className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
           >
             Continue
           </button>

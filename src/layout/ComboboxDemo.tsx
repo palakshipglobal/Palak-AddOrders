@@ -25,15 +25,6 @@ import {
 import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
 
-// const states = [
-//   { value: "ny", label: "New York" },
-//   { value: "ca", label: "California" },
-//   { value: "tx", label: "Texas" },
-//   { value: "pb", label: "Punjab" },
-//   { value: "hr", label: "Haryana" },
-//   { value: "dl", label: "Delhi" },
-// ];
-
 const addresses = [
   { value: "Main St", label: "Main St" },
   {
@@ -217,24 +208,6 @@ export function CurrencySelect({ form, name, required }) {
               placeholder="Select the Currency"
               field={field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
-
-export function IGSTSelect({ form, name, required }) {
-  return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>IGST {required && <Required />}</FormLabel>
-          <FormControl>
-            <Combobox options={igst} placeholder="0%" field={field} />
           </FormControl>
           <FormMessage />
         </FormItem>

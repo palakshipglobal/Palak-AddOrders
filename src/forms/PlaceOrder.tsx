@@ -16,11 +16,9 @@ function PlaceOrder({ prevStep }) {
 
   const handleFormData = () => {
     if (storedData) {
-      const parsedBuyerData = JSON.parse(storedData);
       console.log("Buyer Data:", parsedBuyerData);
     }
     if (orderDetails) {
-      const parsedOrderData = JSON.parse(orderDetails);
       console.log("Order Data:", parsedOrderData);
     }
     console.log("Shipping Partner", selectedPartner);
