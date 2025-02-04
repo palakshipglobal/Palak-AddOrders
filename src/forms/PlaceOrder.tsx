@@ -14,7 +14,7 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
     const storedData = localStorage.getItem("buyerFormData");
     const orderDetails = localStorage.getItem("orderFormData");
     const selectedPartner = localStorage.getItem("selectedPartner");
-  
+
     if (storedData) {
       const parsedBuyerData = JSON.parse(storedData);
       console.log("Buyer Data:", parsedBuyerData);
@@ -25,11 +25,11 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
     }
     console.log("Shipping Partner", selectedPartner);
   };
-  
+
   return (
     <div>
       <p className="text-xl font-bold">Order Details</p>
-      <div className="flex flex-col lg:flex-row gap-y-5 mt-10 gap-x-80">
+      <div className="flex flex-col md:flex-row gap-y-5 mt-10 gap-x-80">
         <AddressDetails
           title="Pickup"
           firstName={buyerData?.shipping_firstname}
@@ -50,23 +50,24 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
           pincode={buyerData?.billing_pincode}
         />
       </div>
-      <div className="flex lg:flex-col gap-2 mt-12">
-        <div className="grid grid-cols-1 lg:gap-10 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-y-5 mt-12 lg:gap-10 md:grid-cols-3">
+        <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipping Partner:</p>
-          <p className="text-gray-500 font-semibold">Shipment Mode:</p>
-          <p className="text-gray-500 font-semibold">Billed Weight:</p>
+          <p>shipglobal</p>
+          <p className="text-gray-500 text-sm font-medium">
+            Transit Time: 4 - 7 Days
+          </p>
         </div>
-        <div className="grid grid-cols-1 lg:gap-10 lg:grid-cols-3">
-          <div className="flex flex-col">
-            <p>{selectedPartner}</p>
-            <p className="text-gray-500 text-sm font-medium">
-              Transit Time: 4 - 7 Days
-            </p>
-          </div>
+        <div className="flex flex-col">
+          <p className="text-gray-500 font-semibold">Shipment Mode:</p>
           <p>CSB-{orderData.csb_number}</p>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-gray-500 font-semibold">Billed Weight:</p>
           <p>1.00 KG</p>
         </div>
       </div>
+
       <div className="flex justify-start md:justify-end mt-20 md:mt-14 lg:mr-10 gap-10">
         <div className="flex flex-col text-gray-500 font-medium">
           <p>Logistic Fee</p>
