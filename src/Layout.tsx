@@ -17,12 +17,8 @@ const Layout = () => {
   const [currentStep, setCurrentStep] = useState(() => {
     return Number(localStorage.getItem("stepNumber")) || 1;
   });
-  const [buyerData, setBuyerData] = useState({});
-  const [orderData, setOrderData] = useState({});
 
   const nextStep = (data: {}) => {
-    setBuyerData((prevData) => ({ ...prevData, ...data }));
-    setOrderData((prevData) => ({ ...prevData, ...data }));
     setCurrentStep(currentStep + 1);
   };
 
@@ -40,19 +36,7 @@ const Layout = () => {
     <div className="bg-gray-50 min-h-screen pt-5 pb-20 p-2 lg:px-24">
       <BreadCrumb />
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-10 mt-4">
-        <div className="w-full grid grid-cols-2 gap-y-5 md:grid-cols-4 lg:hidden px-4 md:px-10 lg:px-10 py-5 bg-white rounded-lg">
-          {StepperArray.map((item, index) => (
-            <Stepper
-              key={index}
-              step={item.number}
-              text={item.text}
-              lineStyle={item.lineStyle}
-              isActive={currentStep === item.number}
-              isCompleted={currentStep > item.number}
-            />
-          ))}
-        </div>
-        <div className="lg:flex lg:flex-col hidden px-10 justify-center w-1/4 bg-white rounded-lg">
+        <div className="w-full py-5 bg-white rounded-lg flex flex-row justify-center px-4 gap-5 lg:gap-0 lg:flex-col lg:px-10 lg:w-1/4">
           {StepperArray.map((item, index) => (
             <Stepper
               key={index}
@@ -72,13 +56,7 @@ const Layout = () => {
           {currentStep === 3 && (
             <ShippingPartner nextStep={nextStep} prevStep={prevStep} />
           )}
-          {currentStep === 4 && (
-            <PlaceOrder
-              prevStep={prevStep}
-              buyerData={buyerData}
-              orderData={orderData}
-            />
-          )}
+          {currentStep === 4 && <PlaceOrder prevStep={prevStep} />}
         </div>
       </div>
     </div>
@@ -104,7 +82,7 @@ const Stepper = ({
   return (
     <div className="flex flex-col">
       <div
-        className={`flex items-center gap-x-2 lg:gap-x-5 ${
+        className={`flex flex-col lg:flex-row items-center gap-y-2 lg:gap-x-5 ${
           isActive ? "font-bold text-blue-500" : "text-gray-500"
         }`}
       >
@@ -118,16 +96,14 @@ const Stepper = ({
           }`}
         >
           {isCompleted ? (
-            <Check className="text-blue-500 mx-1.5 lg:mx-2.5 my-1  rounded-md size-4" />
+            <Check className="text-blue-500 mx-1.5 lg:mx-2.5 my-1 rounded-md size-4" />
           ) : (
             step
           )}
         </div>
-        <p className="text-xs md:text-md lg:text-base">{text}</p>
+        <p className="text-xs md:text-md lg:text-base text-center">{text}</p>
       </div>
-      <div
-        className={`h-10 w-5 border-dashed border-l-2 ml-4 ${lineStyle}`}
-      ></div>
+      <div className={`h-10 w-5 border-dashed border-l-2 ml-4 ${lineStyle}`} />
     </div>
   );
 };

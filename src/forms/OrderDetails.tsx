@@ -1,51 +1,14 @@
 import React, { useEffect, useId, useState } from "react";
-import { UserCheck, FilePenLine, Trash2, Plus } from "lucide-react";
-import SimpleFormFields from "@/shadcnComponents/SimpleFormFields";
-import { CurrencySelect, DateSelect } from "@/shadcnComponents/ComboboxDemo";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 import { OrderSchema } from "@/shadcnComponents/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-
-const csbArray = [
-  {
-    Icon: UserCheck,
-    text1: "Non Commercial Mode",
-    text2: "Minimum Documentation",
-    text3: "All Service Providers",
-    className:
-      "border-dashed border-gray-200 border-2 hover:border-blue-400 hover:bg-blue-50",
-    csbNumber: "IV",
-    iconStyle: "text-blue-400 fill-blue-400 size-8",
-  },
-  {
-    Icon: FilePenLine,
-    text1: "Commercial Mode",
-    text2: "Valid Export Documents Required",
-    text3: "Only Shipglobal Direct",
-    className:
-      "border-dashed border-gray-200 border-2 hover:border-blue-400 hover:bg-blue-50",
-    csbNumber: "V",
-    iconStyle: "text-gray-400 size-8",
-  },
-];
+import { csbArray } from "@/shadcnComponents/arrays";
+import ItemDetails from "./ItemDetails";
+import OrderItemDetails from "./OrderItemDetails";
+import ShipmentDetails from "./ShipmentDetails";
+import CSBCard from "./CSBCard";
 
 function OrderDetails({ nextStep, prevStep }) {
   const [selectedCsbNumber, setSelectedCsbNumber] = useState("");
@@ -101,7 +64,6 @@ function OrderDetails({ nextStep, prevStep }) {
 
   const onSubmit = (values: z.infer<typeof OrderSchema>) => {
     console.log("OrderForm Data:", values);
-    // localStorage.removeItem("orderFormData");
     nextStep(values);
   };
   return (
@@ -145,7 +107,7 @@ function OrderDetails({ nextStep, prevStep }) {
       </p>
       <Form {...OrderForm}>
         <form className="" onSubmit={OrderForm.handleSubmit(onSubmit)}>
-          <ShipmentDetails form={OrderForm}></ShipmentDetails>
+          <ShipmentDetails form={OrderForm} />
           <p className="text-xl font-bold mt-16">Order Details</p>
           <OrderItemDetails form={OrderForm} />
           <p className="text-xl font-bold mt-16">Item Details</p>
@@ -171,242 +133,3 @@ function OrderDetails({ nextStep, prevStep }) {
 }
 
 export default OrderDetails;
-
-interface CSBCardProps {
-  className?: string;
-  Icon: any;
-  text1: string;
-  text2: string;
-  text3: string;
-  csbNumber: string;
-  iconStyle: string;
-  onSelect: any;
-}
-const CSBCard = ({
-  className,
-  Icon,
-  text1,
-  text2,
-  text3,
-  csbNumber,
-  iconStyle,
-  onSelect,
-}: CSBCardProps) => {
-  return (
-    <div
-      className={`${className} mt-5 p-7 cursor-pointer rounded-md`}
-      onClick={onSelect}
-    >
-      <p className="ml-10 font-semibold text-lg">CSB - {csbNumber}</p>
-      <div className="flex items-center gap-14 mt-2">
-        <Icon className={`${iconStyle}`} />
-        <div className="flex flex-col text-sm text-gray-500 font-medium">
-          <p>{text1}</p>
-          <p>{text2}</p>
-          <p>{text3}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ShipmentDetails = ({ form }) => {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 mt-5">
-      <div className="flex">
-        <SimpleFormFields
-          form={form}
-          label="Actual Weight"
-          name="actual_weight"
-          type="text"
-          className="w-full"
-          required
-          inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
-        />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
-          kg
-        </div>
-      </div>
-      <div className="flex">
-        <SimpleFormFields
-          form={form}
-          label="Length"
-          name="length"
-          type="text"
-          className="w-full"
-          inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
-          required
-        />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
-      </div>
-      <div className="flex">
-        <SimpleFormFields
-          form={form}
-          label="Breadth"
-          name="breadth"
-          type="text"
-          className="w-full"
-          inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
-          required
-        />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
-      </div>
-      <div className="flex">
-        <SimpleFormFields
-          form={form}
-          label="Height"
-          name="height"
-          type="text"
-          inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
-          className="w-full"
-          required
-        />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const OrderItemDetails = ({ form }) => {
-  return (
-    <div className="grid mt-4 grid-cols-1 lg:grid-cols-3 gap-5">
-      <SimpleFormFields
-        form={form}
-        label="Invoice No."
-        name="invoice_no"
-        type="text"
-        required
-      />
-      <DateSelect form={form} name="invoice_date" required />
-      <CurrencySelect form={form} name="invoice_currency" required />
-      <SimpleFormFields
-        form={form}
-        label="Order Id/Ref. Id"
-        name="order_id"
-        type="text"
-      />
-      <SimpleFormFields
-        form={form}
-        label="IOSS Number:"
-        name="ioss_number"
-        type="text"
-      />
-    </div>
-  );
-};
-
-const ItemDetails = ({ form }) => {
-  const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];
-  type ItemFields = "product_name" | "sku" | "hsn" | "qty" | "unit_price";
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "items",
-  });
-
-  return (
-    <div>
-      {fields.map((field, index) => (
-        <div className="lg:flex items-center gap-x-2">
-          <div
-            key={field.id}
-            className="grid grid-cols-1 lg:grid-cols-6 gap-4 mt-5"
-          >
-            {(itemFields as ItemFields[]).map((itemField) => (
-              <FormField
-                key={itemField}
-                control={form.control}
-                name={`items.${index}.${itemField}` as const}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {itemField === "product_name"
-                        ? "Product Name"
-                        : itemField === "sku"
-                        ? "SKU"
-                        : itemField === "hsn"
-                        ? "HSN"
-                        : itemField === "qty"
-                        ? "Qty"
-                        : "Unit Price(INR)"}
-                      {itemField !== "sku" && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type={
-                          itemField === "qty" || itemField === "unit_price"
-                            ? "number"
-                            : "text"
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-            <FormField
-              control={form.control}
-              name={`items.${index}.igst` as const}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    IGST <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select IGST" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">0%</SelectItem>
-                      <SelectItem value="5">5%</SelectItem>
-                      <SelectItem value="12">12%</SelectItem>
-                      <SelectItem value="18">18%</SelectItem>
-                      <SelectItem value="28">28%</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          {fields.length > 1 && (
-            <div onClick={() => remove(index)} className="mt-7">
-              <Trash2 className="w-5 h-5 text-red-500" />
-            </div>
-          )}
-        </div>
-      ))}
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={() =>
-          append({
-            product_name: "",
-            sku: "",
-            hsn: "",
-            qty: "",
-            unit_price: "",
-            igst: "0",
-          })
-        }
-        className="flex items-center gap-2 mt-5"
-      >
-        <Plus className="w-4 h-4" /> Add Item
-      </Button>
-    </div>
-  );
-};

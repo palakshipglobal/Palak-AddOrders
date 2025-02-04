@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function PlaceOrder({ prevStep, buyerData, orderData }) {
+function PlaceOrder({ prevStep }) {
   const [selectedPartner, setSelectedPartner] = useState(null);
 
   useEffect(() => {
@@ -9,12 +9,12 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
       setSelectedPartner(storedPartner);
     }
   }, []);
+  const storedData = localStorage.getItem("buyerFormData");
+  const parsedBuyerData = JSON.parse(storedData);
+  const orderDetails = localStorage.getItem("orderFormData");
+  const parsedOrderData = JSON.parse(orderDetails);
 
   const handleFormData = () => {
-    const storedData = localStorage.getItem("buyerFormData");
-    const orderDetails = localStorage.getItem("orderFormData");
-    const selectedPartner = localStorage.getItem("selectedPartner");
-
     if (storedData) {
       const parsedBuyerData = JSON.parse(storedData);
       console.log("Buyer Data:", parsedBuyerData);
@@ -32,22 +32,22 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
       <div className="flex flex-col md:flex-row gap-y-5 mt-10 gap-x-80">
         <AddressDetails
           title="Pickup"
-          firstName={buyerData?.shipping_firstname}
-          lastName={buyerData?.shipping_lastname}
-          address1={buyerData?.shipping_address1}
-          city={buyerData?.shipping_city}
-          country={buyerData?.shipping_country}
-          pincode={buyerData?.shipping_pincode}
+          firstName={parsedBuyerData?.shipping_firstname}
+          lastName={parsedBuyerData?.shipping_lastname}
+          address1={parsedBuyerData?.shipping_address1}
+          city={parsedBuyerData?.shipping_city}
+          country={parsedBuyerData?.shipping_country}
+          pincode={parsedBuyerData?.shipping_pincode}
         />
 
         <AddressDetails
           title="Delivery"
-          firstName={buyerData?.billing_firstname}
-          lastName={buyerData?.billing_lastname}
-          address1={buyerData?.billing_address1}
-          city={buyerData?.billing_city}
-          country={buyerData?.billing_country}
-          pincode={buyerData?.billing_pincode}
+          firstName={parsedBuyerData?.billing_firstname}
+          lastName={parsedBuyerData?.billing_lastname}
+          address1={parsedBuyerData?.billing_address1}
+          city={parsedBuyerData?.billing_city}
+          country={parsedBuyerData?.billing_country}
+          pincode={parsedBuyerData?.billing_pincode}
         />
       </div>
       <div className="grid grid-cols-1 gap-y-5 mt-12 lg:gap-10 md:grid-cols-3">
@@ -60,7 +60,7 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipment Mode:</p>
-          <p>CSB-{orderData.csb_number}</p>
+          <p>CSB-{parsedOrderData.csb_number}</p>
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Billed Weight:</p>

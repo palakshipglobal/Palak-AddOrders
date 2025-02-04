@@ -60,11 +60,6 @@ export function BuyerDetailsForm({ nextStep }) {
     },
   });
 
-  // useEffect(() => {
-  //   const data = BuyerForm.watch((values) => {
-  //     localStorage.setItem("buyerFormData", JSON.stringify(values));
-  //   });
-  // }, [BuyerForm]);
   useEffect(() => {
     if (isBillingSame) {
       BuyerForm.setValue(
@@ -102,12 +97,6 @@ export function BuyerDetailsForm({ nextStep }) {
       );
     }
   }, [isBillingSame]);
-
-  // const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
-  //   console.log("BuyerForm Data:", values);
-  //   localStorage.removeItem("buyerFormData");
-  //   nextStep(values);
-  // };
 
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);

@@ -1,37 +1,5 @@
 import React, { useState } from "react";
-
-const weightData = [
-  { text: "Dead", className: "border-2 border-dashed border-gray-300" },
-  { text: "Volumetric", className: "border-2 border-dashed border-gray-300" },
-  { text: "Billed", className: "border-2 border-dashed border-blue-300" },
-];
-
-const partnerData = [
-  {
-    name: "Shipglobal Direct",
-    message: "FBA Orders are not allowed",
-    days: "10-12",
-    price: "1020",
-  },
-  {
-    name: "Shipglobal WorldWide",
-    message: "FBA Orders are not allowed",
-    days: "12-14",
-    price: "1450",
-  },
-  {
-    name: "UPS",
-    message: "FBA Orders are not allowed",
-    days: "14-16",
-    price: "1800",
-  },
-  {
-    name: "Fedex",
-    message: "FBA Orders are not allowed",
-    days: "4-7",
-    price: "3490",
-  },
-];
+import { weightData, partnerData } from "@/shadcnComponents/arrays";
 
 function ShippingPartner({ nextStep, prevStep }) {
   const [selectedPartner, setSelectedPartner] = useState(
