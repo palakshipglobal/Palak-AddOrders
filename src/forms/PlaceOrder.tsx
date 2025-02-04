@@ -53,7 +53,7 @@ function PlaceOrder({ prevStep, buyerData, orderData }) {
       <div className="grid grid-cols-1 gap-y-5 mt-12 lg:gap-10 md:grid-cols-3">
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipping Partner:</p>
-          <p>shipglobal</p>
+          <p>{selectedPartner}</p>
           <p className="text-gray-500 text-sm font-medium">
             Transit Time: 4 - 7 Days
           </p>

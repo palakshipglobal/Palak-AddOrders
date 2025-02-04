@@ -51,7 +51,7 @@ export const BuyerSchema = z.object({
 
 export const OrderSchema = z.object({
   id: z.string().min(2),
-  csb_number:z.string().min(1, "required"),
+  csb_number: z.string().min(1, "required"),
   actual_weight: z.string().min(1, "required"),
   length: z.string().min(1, "required"),
   breadth: z.string().min(1, "required"),
