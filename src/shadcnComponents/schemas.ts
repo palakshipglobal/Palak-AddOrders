@@ -1,30 +1,4 @@
 import { z } from "zod";
-export const BuyerShippingSchema = z.object({
-  pickup_address: z.string().min(2, { message: "Pickup address is required." }),
-  country: z.string().min(2, { message: "Country is required." }),
-  state: z.string().min(2, { message: "State is required." }),
-  firstname: z.string().min(2, { message: "First name is required." }),
-  lastname: z.string().min(2, { message: "Last name is required." }),
-  mobile: z.string().min(10, { message: "Mobile number must be valid." }),
-  alternate_mobile: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address." }),
-  address1: z.string().min(2, { message: "Address1 is required." }),
-  address2: z.string().optional(),
-  pincode: z.string().min(2, { message: "Pincode is required." }),
-  city: z.string().min(2, { message: "City is required." }),
-});
-
-export const BuyerBillingSchema = z.object({
-  country: z.string().min(2, { message: "Country is required." }),
-  state: z.string().min(2, { message: "State is required." }),
-  firstname: z.string().min(2, { message: "First name is required." }),
-  lastname: z.string().min(2, { message: "Last name is required." }),
-  mobile: z.string().min(10, { message: "Mobile number must be valid." }),
-  address1: z.string().min(2, { message: "House no. is required." }),
-  address2: z.string().optional(),
-  pincode: z.string().min(2, { message: "Pincode is required." }),
-  city: z.string().min(2, { message: "City is required." }),
-});
 
 export const BuyerSchema = z.object({
   shipping_pickup_address: z.string().min(1, "The Pickup Address is required"),
@@ -77,6 +51,7 @@ export const BuyerSchema = z.object({
 
 export const OrderSchema = z.object({
   id: z.string().min(2),
+  csb_number:z.string().min(1, "required"),
   actual_weight: z.string().min(1, "required"),
   length: z.string().min(1, "required"),
   breadth: z.string().min(1, "required"),

@@ -1,44 +1,49 @@
 import React, { useState } from "react";
 
+const weightData = [
+  { text: "Dead", className: "border-2 border-dashed border-gray-300" },
+  { text: "Volumetric", className: "border-2 border-dashed border-gray-300" },
+  { text: "Billed", className: "border-2 border-dashed border-blue-300" },
+];
+
+const partnerData = [
+  {
+    name: "Shipglobal Direct",
+    message: "FBA Orders are not allowed",
+    days: "10-12",
+    price: "1020",
+  },
+  {
+    name: "Shipglobal WorldWide",
+    message: "FBA Orders are not allowed",
+    days: "12-14",
+    price: "1450",
+  },
+  {
+    name: "UPS",
+    message: "FBA Orders are not allowed",
+    days: "14-16",
+    price: "1800",
+  },
+  {
+    name: "Fedex",
+    message: "FBA Orders are not allowed",
+    days: "4-7",
+    price: "3490",
+  },
+];
+
 function ShippingPartner({ nextStep, prevStep }) {
-  const [selectedPartner, setSelectedPartner] = useState("Shipglobal Direct");
+  const [selectedPartner, setSelectedPartner] = useState(
+    localStorage.getItem("selectedPartner") || "Shipglobal Direct"
+  );
 
-  const weightData = [
-    { text: "Dead", className: "border-2 border-dashed border-gray-300" },
-    { text: "Volumetric", className: "border-2 border-dashed border-gray-300" },
-    { text: "Billed", className: "border-2 border-dashed border-blue-300" },
-  ];
-
-  const partnerData = [
-    {
-      name: "Shipglobal Direct",
-      message: "FBA Orders are not allowed",
-      days: "10-12",
-      price: "1020",
-    },
-    {
-      name: "Shipglobal WorldWide",
-      message: "FBA Orders are not allowed",
-      days: "12-14",
-      price: "1450",
-    },
-    {
-      name: "UPS",
-      message: "FBA Orders are not allowed",
-      days: "14-16",
-      price: "1800",
-    },
-    {
-      name: "Fedex",
-      message: "FBA Orders are not allowed",
-      days: "4-7",
-      price: "3490",
-    },
-  ];
   function onSubmit() {
+    localStorage.setItem("selectedPartner", selectedPartner);
     console.log("Shipping Partner", selectedPartner);
-    nextStep();
+    nextStep(selectedPartner);
   }
+
   return (
     <div>
       <p className="text-xl font-bold">Select Shipping Partner</p>
@@ -83,7 +88,6 @@ function ShippingPartner({ nextStep, prevStep }) {
         <button
           type="submit"
           onClick={onSubmit}
-          // disabled={!selectedPartner}
           className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
         >
           Continue

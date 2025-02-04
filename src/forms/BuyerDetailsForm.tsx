@@ -14,6 +14,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 export function BuyerDetailsForm({ nextStep }) {
   const [isBillingSame, setIsBillingSame] = useState(true);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("buyerFormData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      Object.keys(parsedData).forEach((key) => {
+        BuyerForm.setValue(
+          key as keyof z.infer<typeof BuyerSchema>,
+          parsedData[key]
+        );
+      });
+
+      if (parsedData.isBillingSame !== undefined) {
+        setIsBillingSame(parsedData.isBillingSame);
+      }
+    }
+  }, []);
+
   const BuyerForm = useForm<z.infer<typeof BuyerSchema>>({
     resolver: zodResolver(BuyerSchema),
     defaultValues: {
@@ -41,6 +59,12 @@ export function BuyerDetailsForm({ nextStep }) {
       billing_state: "",
     },
   });
+
+  // useEffect(() => {
+  //   const data = BuyerForm.watch((values) => {
+  //     localStorage.setItem("buyerFormData", JSON.stringify(values));
+  //   });
+  // }, [BuyerForm]);
   useEffect(() => {
     if (isBillingSame) {
       BuyerForm.setValue(
@@ -77,28 +101,64 @@ export function BuyerDetailsForm({ nextStep }) {
         BuyerForm.getValues("shipping_state")
       );
     }
-  }, [
-    isBillingSame,
-    BuyerForm.watch("shipping_firstname"),
-    BuyerForm.watch("shipping_lastname"),
-    BuyerForm.watch("shipping_mobile"),
-    BuyerForm.watch("shipping_country"),
-    BuyerForm.watch("shipping_address1"),
-    BuyerForm.watch("shipping_address2"),
-    BuyerForm.watch("shipping_pincode"),
-    BuyerForm.watch("shipping_city"),
-    BuyerForm.watch("shipping_state"),
-  ]);
+  }, [isBillingSame]);
+
+  // const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
+  //   console.log("BuyerForm Data:", values);
+  //   localStorage.removeItem("buyerFormData");
+  //   nextStep(values);
+  // };
 
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
-    nextStep();
+    localStorage.setItem("buyerFormData", JSON.stringify(values));
+    nextStep(values);
   };
+
+  const countryShipping = BuyerForm.watch("shipping_country");
+  const [states, setStates] = useState([]);
+
+  useEffect(() => {
+    if (countryShipping) {
+      const fetchStates = async () => {
+        try {
+          const response = await fetch(
+            `https://api.fr.stg.shipglobal.in/api/v1/location/states`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                state_country_code: countryShipping,
+              }),
+            }
+          );
+          const result = await response.json();
+          // console.log("Selected Country:", countryShipping);
+
+          console.log(result);
+
+          if (result.data && result.data.states) {
+            const formattedStates = result.data.states.map((state) => ({
+              value: state.state_id,
+              label: state.state_name,
+            }));
+            setStates(formattedStates);
+          }
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+
+      fetchStates();
+    }
+  }, [countryShipping]);
 
   return (
     <Form {...BuyerForm}>
       <form onSubmit={BuyerForm.handleSubmit(onSubmit)}>
-        <BuyerShippingDetails form={BuyerForm} />
+        <BuyerShippingDetails form={BuyerForm} states={states} />
         <div
           className="flex gap-2 mt-10 items-center cursor-pointer"
           onClick={() => setIsBillingSame(!isBillingSame)}
@@ -113,12 +173,14 @@ export function BuyerDetailsForm({ nextStep }) {
             Shipping & Billing Address are same.
           </p>
         </div>
-        {!isBillingSame && <BuyerBillingDetails form={BuyerForm} />}
+        {!isBillingSame && (
+          <BuyerBillingDetails form={BuyerForm} states={states} />
+        )}
 
         <div className="flex justify-end my-10">
           <button
             type="submit"
-            className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+            className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400 transition duration-300 ease-in-out"
           >
             Continue
           </button>
@@ -128,7 +190,7 @@ export function BuyerDetailsForm({ nextStep }) {
   );
 }
 
-const BuyerShippingDetails = ({ form }) => {
+const BuyerShippingDetails = ({ form, states }) => {
   return (
     <div>
       <label className="text-xl font-bold">
@@ -208,14 +270,19 @@ const BuyerShippingDetails = ({ form }) => {
             type="text"
             required
           />
-          <StateSelect form={form} name="shipping_state" required />
+          <StateSelect
+            form={form}
+            name="shipping_state"
+            required
+            states={states}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-const BuyerBillingDetails = ({ form }) => {
+const BuyerBillingDetails = ({ form, states }) => {
   return (
     <div className="space-y-6">
       <p className="text-xl font-bold my-10">Buyer Billing Details</p>
@@ -273,7 +340,12 @@ const BuyerBillingDetails = ({ form }) => {
           type="text"
           required
         />
-        <StateSelect form={form} name="billing_state" required />
+        <StateSelect
+          form={form}
+          name="billing_state"
+          required
+          states={states}
+        />
       </div>
     </div>
   );

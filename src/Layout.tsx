@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "./shadcnComponents/BreadCrumb";
 import { BuyerDetailsForm } from "./forms/BuyerDetailsForm";
 import { Check } from "lucide-react";
@@ -10,16 +10,19 @@ const StepperArray = [
   { number: 1, text: "Buyer Details" },
   { number: 2, text: "Order Details" },
   { number: 3, text: "Shipping Partner" },
-  { number: 4, text: "Place Order" },
+  { number: 4, text: "Place Order", lineStyle: "hidden" },
 ];
 
 const Layout = () => {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [buyerData, setBuyerData] = useState({});
+  const [orderData, setOrderData] = useState({});
+  // const [selectedPartner, setSelectedPartner] = useState("");
 
-  const nextStep = () => {
-    if (currentStep < StepperArray.length) {
-      setCurrentStep(currentStep + 1);
-    }
+  const nextStep = (data: {}) => {
+    setBuyerData((prevData) => ({ ...prevData, ...data }));
+    setOrderData((prevData) => ({ ...prevData, ...data }));
+    setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
@@ -28,16 +31,24 @@ const Layout = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const selectedPartner = localStorage.getItem("selectedPartner");
+  //   if (selectedPartner) {
+  //     setSelectedPartner(selectedPartner);
+  //   }
+  // }, []);
+
   return (
     <div className="bg-gray-50 min-h-screen pt-5 pb-20 p-2 lg:px-24">
       <BreadCrumb />
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-10 mt-4">
-        <div className="w-full flex flex-col gap-y-5 lg:gap-y-10 px-10 py-5 lg:py-0 justify-center lg:w-1/4 bg-white rounded-lg">
+        <div className="w-full flex flex-col pl-56 lg:px-10 py-5 lg:py-0 justify-center lg:w-1/4 bg-white rounded-lg">
           {StepperArray.map((item, index) => (
             <Stepper
               key={index}
               step={item.number}
               text={item.text}
+              lineStyle={item.lineStyle}
               isActive={currentStep === item.number}
               isCompleted={currentStep > item.number}
             />
@@ -52,7 +63,12 @@ const Layout = () => {
             <ShippingPartner nextStep={nextStep} prevStep={prevStep} />
           )}
           {currentStep === 4 && (
-            <PlaceOrder nextStep={nextStep} prevStep={prevStep} />
+            <PlaceOrder
+              prevStep={prevStep}
+              buyerData={buyerData}
+              // selectedPartner={selectedPartner}
+              orderData={orderData}
+            />
           )}
         </div>
       </div>
@@ -66,31 +82,43 @@ interface StepperProps {
   text: string;
   isActive: boolean;
   isCompleted: boolean;
+  lineStyle: string;
 }
 
-const Stepper = ({ step, text, isActive, isCompleted }: StepperProps) => {
+const Stepper = ({
+  step,
+  text,
+  isActive,
+  isCompleted,
+  lineStyle,
+}: StepperProps) => {
   return (
-    <div
-      className={`flex items-center gap-x-5 ${
-        isActive ? "font-bold text-blue-500" : "text-gray-500"
-      }`}
-    >
+    <div className="flex flex-col">
       <div
-        className={`w-9 h-9 text-center font-semibold py-1.5 rounded-md ${
-          isActive
-            ? "bg-blue-500 text-white"
-            : isCompleted
-            ? "bg-blue-50"
-            : "bg-gray-200 text-gray-600"
+        className={`flex items-center gap-x-5 ${
+          isActive ? "font-bold text-blue-500" : "text-gray-500"
         }`}
       >
-        {isCompleted ? (
-          <Check className="text-blue-500 mx-1.5 rounded-md" />
-        ) : (
-          step
-        )}
+        <div
+          className={`w-9 h-9 text-center font-semibold py-1.5 rounded-md ${
+            isActive
+              ? "bg-blue-500 text-white"
+              : isCompleted
+              ? "bg-blue-50"
+              : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {isCompleted ? (
+            <Check className="text-blue-500 mx-1.5 rounded-md" />
+          ) : (
+            step
+          )}
+        </div>
+        <p>{text}</p>
       </div>
-      <p>{text}</p>
+      <div
+        className={`h-10 w-5 border-dashed border-l-2 ml-4 ${lineStyle}`}
+      ></div>
     </div>
   );
 };

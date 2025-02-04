@@ -25,19 +25,22 @@ import {
 import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
 
-const states = [
-  { value: "ny", label: "New York" },
-  { value: "ca", label: "California" },
-  { value: "tx", label: "Texas" },
-];
+// const states = [
+//   { value: "ny", label: "New York" },
+//   { value: "ca", label: "California" },
+//   { value: "tx", label: "Texas" },
+//   { value: "pb", label: "Punjab" },
+//   { value: "hr", label: "Haryana" },
+//   { value: "dl", label: "Delhi" },
+// ];
 
 const addresses = [
-  { value: "address1", label: "123 Main St" },
+  { value: "Main St", label: "Main St" },
   {
-    value: "address2",
-    label: "456 Oak Street",
+    value: "Oak Street",
+    label: "Oak Street",
   },
-  { value: "address3", label: "789 Pine St" },
+  { value: "Pine St", label: "Pine St" },
 ];
 
 const currency = [
@@ -103,18 +106,99 @@ function Combobox({ options, placeholder, field }) {
   );
 }
 
-// export function CountrySelect({ form, name }) {
+// export function CountrySelect({ form, name, required }) {
+//   const [countries, setCountries] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function fetchCountries() {
+//       try {
+//         const response = await fetch(
+//           "https://api.fr.stg.shipglobal.in/api/v1/location/countries"
+//         );
+//         const result = await response.json();
+
+//         if (result.data && result.data.countries) {
+//           const formattedCountries = result.data.countries.map((country) => ({
+//             value: country.country_iso3,
+//             label: country.country_display,
+//           }));
+//           setCountries(formattedCountries);
+//         }
+//       } catch (error) {
+//         console.error("Error fetching countries:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+
+//     fetchCountries();
+//   }, []);
+
 //   return (
 //     <FormField
 //       control={form.control}
 //       name={name}
 //       render={({ field }) => (
 //         <FormItem>
-//           <FormLabel>Country</FormLabel>
+//           <FormLabel>Country {required && <Required />}</FormLabel>
+//           <FormControl>
+//             {loading ? (
+//               <p>Loading...</p>
+//             ) : (
+//               <Combobox
+//                 options={countries}
+//                 placeholder="Select a Country"
+//                 field={field}
+//               />
+//             )}
+//           </FormControl>
+//           <FormMessage />
+//         </FormItem>
+//       )}
+//     />
+//   );
+// }
+
+// export function StateSelect({ form, name, required }) {
+//   const [states, setStates] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function fetchState() {
+//       try {
+//         const response = await fetch(
+//           "https://api.fr.stg.shipglobal.in/api/v1/location/countries/${country_id}/states"
+//         );
+//         const result = await response.json();
+
+//         if (result.data && result.data.states) {
+//           const formattedStates = result.data.states.map((state) => ({
+//             value: state.iso2,
+//             label: state.name,
+//           }));
+//           setStates(formattedStates);
+//         }
+//       } catch (error) {
+//         console.error("Error fetching countries:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+
+//     fetchState();
+//   }, []);
+//   return (
+//     <FormField
+//       control={form.control}
+//       name={name}
+//       render={({ field }) => (
+//         <FormItem>
+//           <FormLabel>State {required && <Required />}</FormLabel>
 //           <FormControl>
 //             <Combobox
-//               options={countries}
-//               placeholder="Select a Country"
+//               options={states}
+//               placeholder="Select a State"
 //               field={field}
 //             />
 //           </FormControl>
@@ -179,7 +263,7 @@ export function CountrySelect({ form, name, required }) {
   );
 }
 
-export function StateSelect({ form, name, required }) {
+export function StateSelect({ form, name, required,states }) {
   return (
     <FormField
       control={form.control}
@@ -269,9 +353,9 @@ export function DateSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormLabel>Invoice Date {required && <Required />}</FormLabel>
           <FormControl>
-           <DatePickerWithPresets name="invoice_date"/>
+            <DatePickerWithPresets name="invoice_date" />
           </FormControl>
           <FormMessage />
         </FormItem>
