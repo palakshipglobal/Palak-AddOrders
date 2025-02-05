@@ -11,8 +11,9 @@ import ShipmentDetails from "./ShipmentDetails";
 import CSBCard from "./CSBCard";
 
 function OrderDetails({ nextStep, prevStep }) {
-  const [selectedCsbNumber, setSelectedCsbNumber] = useState("");
-
+  const [selectedCsbNumber, setSelectedCsbNumber] = useState(
+    localStorage.getItem("csb_number") || "IV"
+  );
   const OrderForm = useForm<z.infer<typeof OrderSchema>>({
     resolver: zodResolver(OrderSchema),
     defaultValues: {

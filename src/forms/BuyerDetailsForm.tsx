@@ -150,7 +150,11 @@ export function BuyerDetailsForm({ nextStep }) {
             type="checkbox"
             className="w-4 h-4 cursor-pointer"
             checked={isBillingSame}
-            onChange={() => setIsBillingSame(!isBillingSame)}
+            onChange={() => {
+              const newValue = !isBillingSame;
+              setIsBillingSame(newValue);
+              BuyerForm.setValue("isBillingSame", newValue);
+            }}
           />
           <p className="text-sm font-medium">
             Shipping & Billing Address are same.
