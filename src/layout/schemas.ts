@@ -55,7 +55,7 @@ export const BuyerSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.isBillingSame) {
-      if (!data.billing_firstname?.trim()) {
+      if (!data.billing_firstname) {
         ctx.addIssue({
           path: ["billing_firstname"],
           message: "The customer billing first name is required.",
@@ -68,7 +68,7 @@ export const BuyerSchema = z
           code: "custom",
         });
       }
-      if (!data.billing_lastname?.trim()) {
+      if (!data.billing_lastname) {
         ctx.addIssue({
           path: ["billing_lastname"],
           message: "The customer billing last name is required.",
@@ -82,7 +82,7 @@ export const BuyerSchema = z
         });
       }
 
-      if (!data.billing_mobile?.trim()) {
+      if (!data.billing_mobile) {
         ctx.addIssue({
           path: ["billing_mobile"],
           message: "The customer billing mobile number is required.",
@@ -96,7 +96,7 @@ export const BuyerSchema = z
         });
       }
 
-      if (!data.billing_country?.trim()) {
+      if (!data.billing_country) {
         ctx.addIssue({
           path: ["billing_country"],
           message: "The customer billing country is required.",
@@ -104,7 +104,7 @@ export const BuyerSchema = z
         });
       }
 
-      if (!data.billing_address1?.trim()) {
+      if (!data.billing_address1?) {
         ctx.addIssue({
           path: ["billing_address1"],
           message: "The customer billing address 1 is required.",
@@ -112,7 +112,7 @@ export const BuyerSchema = z
         });
       }
 
-      if (!data.billing_pincode?.trim()) {
+      if (!data.billing_pincode) {
         ctx.addIssue({
           path: ["billing_pincode"],
           message: "The customer billing pincode is required.",
@@ -125,7 +125,7 @@ export const BuyerSchema = z
           code: "custom",
         });
       }
-      if (!data.billing_city?.trim()) {
+      if (!data.billing_city) {
         ctx.addIssue({
           path: ["billing_city"],
           message: "The customer billing city is required.",
@@ -138,7 +138,7 @@ export const BuyerSchema = z
           code: "custom",
         });
       }
-      if (!data.billing_state?.trim()) {
+      if (!data.billing_state) {
         ctx.addIssue({
           path: ["billing_state"],
           message: "The customer billing state is required.",
