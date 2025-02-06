@@ -104,7 +104,7 @@ export const BuyerSchema = z
         });
       }
 
-      if (!data.billing_address1?) {
+      if (!data.billing_address1) {
         ctx.addIssue({
           path: ["billing_address1"],
           message: "The customer billing address 1 is required.",
