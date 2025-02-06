@@ -58,7 +58,7 @@ function PlaceOrder({ prevStep }) {
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipment Mode:</p>
-          <p>CSB-{parsedOrderData.csb_number}</p>
+          {/* <p>CSB-{parsedOrderData.csb_number}</p> */}
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Billed Weight:</p>

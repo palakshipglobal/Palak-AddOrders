@@ -233,3 +233,21 @@ export function DateSelect({ form, name, required }) {
     />
   );
 }
+
+export  function IGSTSelect({ form, name, required }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormControl>
+            <Combobox options={igst} placeholder="0%" field={field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}

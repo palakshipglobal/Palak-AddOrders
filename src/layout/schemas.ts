@@ -202,7 +202,7 @@ export const OrderSchema = z.object({
         .min(1, "Unit Price is Required")
         .regex(/^\d+$/, "Only numbers are allowed."),
 
-      igst: z.string().min(1, "IGST is required"),
+      // igst: z.string().min(1, "IGST is required"),
     })
   ),
 });

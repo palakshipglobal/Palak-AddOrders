@@ -1,17 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { weightData, partnerData } from "@/layout/arrays";
 import CompanyPartner from "./CompanyPartner";
+import { useDispatch, useSelector } from "react-redux";
+import { updateShippingPartner } from "@/features/formSlice";
+import { RootState } from "@/store";
 
 function ShippingPartner({ nextStep, prevStep }) {
-  const [selectedPartner, setSelectedPartner] = useState(
-    localStorage.getItem("selectedPartner") || "Shipglobal Direct"
-  );
+  // const [selectedPartner, setSelectedPartner] = useState(
+  //   localStorage.getItem("selectedPartner") || "Shipglobal Direct"
+  // );
 
+  // function onSubmit() {
+  //   localStorage.setItem("selectedPartner", selectedPartner);
+  //   console.log("Shipping Partner", selectedPartner);
+  //   nextStep(selectedPartner);
+  // }
+  const dispatch = useDispatch();
+  const selectedPartner = useSelector(
+    (state: RootState) => state.form.shippingPartner
+  );
   function onSubmit() {
-    localStorage.setItem("selectedPartner", selectedPartner);
+    // localStorage.setItem("selectedPartner", selectedPartner);
+    dispatch(updateShippingPartner(selectedPartner));
     console.log("Shipping Partner", selectedPartner);
     nextStep(selectedPartner);
   }
+
+  useEffect(() => {
+    dispatch(updateShippingPartner(selectedPartner));
+  }, [ShippingPartner, dispatch]);
 
   return (
     <div>
@@ -42,7 +59,7 @@ function ShippingPartner({ nextStep, prevStep }) {
             price={item.price}
             days={item.days}
             selected={selectedPartner === item.name}
-            onSelect={() => setSelectedPartner(item.name)}
+            onSelect={() => updateShippingPartner(item.name)}
           />
         ))}
       </div>

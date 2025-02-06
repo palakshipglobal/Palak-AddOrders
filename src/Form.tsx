@@ -5,6 +5,9 @@ import { Check } from "lucide-react";
 import OrderDetails from "./forms/OrderDetails";
 import ShippingPartner from "./forms/ShippingPartner";
 import PlaceOrder from "./forms/PlaceOrder";
+import { useDispatch, useSelector } from "react-redux";
+import { updateStep } from "./features/formSlice";
+import { RootState } from "@/store";
 
 const StepperArray = [
   { number: 1, text: "Buyer Details", lineStyle: "hidden lg:block" },
@@ -14,23 +17,22 @@ const StepperArray = [
 ];
 
 const Form = () => {
-  const [currentStep, setCurrentStep] = useState(() => {
-    return Number(localStorage.getItem("stepNumber")) || 1;
-  });
-
-  const nextStep = (data: {}) => {
-    setCurrentStep(currentStep + 1);
+  const dispatch = useDispatch();
+  const currentStep = useSelector((state: RootState) => state.form.step);
+  const nextStep = () => {
+    if (currentStep < 4) {
+      dispatch(updateStep(currentStep + 1));
+    }
   };
-
   const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+    if (currentStep > 1) {
+      dispatch(updateStep(currentStep - 1));
     }
   };
 
   useEffect(() => {
-    localStorage.setItem("stepNumber", `${currentStep}`);
-  }, [currentStep]);
+    dispatch(updateStep(currentStep));
+  }, [currentStep, dispatch]);
 
   return (
     <div className="bg-gray-50 min-h-screen pt-5 pb-20 p-2 lg:px-24">

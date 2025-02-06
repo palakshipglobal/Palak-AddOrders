@@ -7,54 +7,87 @@ import { BuyerSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BuyerShippingDetails from "./BuyerShippingDetails";
 import BuyerBillingDetails from "./BuyerBillingDetails";
+import {  useDispatch, useSelector } from "react-redux";
+import { updateForm1Data } from "@/features/formSlice";
+import { RootState } from "@/store";
 
 export function BuyerDetailsForm({ nextStep }) {
   const [isBillingSame, setIsBillingSame] = useState(true);
+    
+  const dispatch = useDispatch();
+  const form1Data = useSelector((state:RootState)=>state.form.form1Data);
 
-  useEffect(() => {
-    const storedData = localStorage.getItem("buyerFormData");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      Object.keys(parsedData).forEach((key) => {
-        BuyerForm.setValue(
-          key as keyof z.infer<typeof BuyerSchema>,
-          parsedData[key]
-        );
-      });
+ type BuyerFormData = {
+  shipping_firstname: string;
+  shipping_lastname: string;
+  shipping_mobile: string;
+  shipping_country: string;
+  shipping_address1: string;
+  shipping_address2: string;
+  shipping_pincode: string;
+  shipping_city: string;
+  shipping_state: string;
+  isBillingSame: boolean;
+  billing_firstname: string;
+  billing_lastname: string;
+  billing_mobile: string;
+  billing_country: string;
+  billing_address1: string;
+  billing_address2: string;
+  billing_pincode: string;
+  billing_city: string;
+  billing_state: string;
+};
 
-      if (parsedData.isBillingSame !== undefined) {
-        setIsBillingSame(parsedData.isBillingSame);
-      }
-    }
-  }, []);
+const BuyerForm = useForm<BuyerFormData>({
+  resolver: zodResolver(BuyerSchema),
+  defaultValues: form1Data,
+});
+  // useEffect(() => {
+  //   const storedData = localStorage.getItem("buyerFormData");
+  //   if (storedData) {
+  //     const parsedData = JSON.parse(storedData);
+  //     Object.keys(parsedData).forEach((key) => {
+  //       BuyerForm.setValue(
+  //         key as keyof z.infer<typeof BuyerSchema>,
+  //         parsedData[key]
+  //       );
+  //     });
 
-  const BuyerForm = useForm<z.infer<typeof BuyerSchema>>({
-    resolver: zodResolver(BuyerSchema),
-    defaultValues: {
-      shipping_pickup_address: "",
-      shipping_firstname: "",
-      shipping_lastname: "",
-      shipping_mobile: "",
-      shipping_alternate_mobile: "",
-      shipping_email: "",
-      shipping_country: "",
-      shipping_address1: "",
-      shipping_address2: "",
-      shipping_pincode: "",
-      shipping_city: "",
-      shipping_state: "",
-      isBillingSame: true,
-      billing_firstname: "",
-      billing_lastname: "",
-      billing_mobile: "",
-      billing_country: "",
-      billing_address1: "",
-      billing_address2: "",
-      billing_pincode: "",
-      billing_city: "",
-      billing_state: "",
-    },
-  });
+  //     if (parsedData.isBillingSame !== undefined) {
+  //       setIsBillingSame(parsedData.isBillingSame);
+  //     }
+  //   }
+  // }, []);
+
+  // const BuyerForm = useForm<z.infer<typeof BuyerSchema>>({
+  //   resolver: zodResolver(BuyerSchema),
+  //   defaultValues: {
+  //     shipping_pickup_address: "",
+  //     shipping_firstname: "",
+  //     shipping_lastname: "",
+  //     shipping_mobile: "",
+  //     shipping_alternate_mobile: "",
+  //     shipping_email: "",
+  //     shipping_country: "",
+  //     shipping_address1: "",
+  //     shipping_address2: "",
+  //     shipping_pincode: "",
+  //     shipping_city: "",
+  //     shipping_state: "",
+  //     isBillingSame: true,
+  //     billing_firstname: "",
+  //     billing_lastname: "",
+  //     billing_mobile: "",
+  //     billing_country: "",
+  //     billing_address1: "",
+  //     billing_address2: "",
+  //     billing_pincode: "",
+  //     billing_city: "",
+  //     billing_state: "",
+  //   },
+  // });
+
 
   useEffect(() => {
     if (isBillingSame) {
@@ -94,9 +127,11 @@ export function BuyerDetailsForm({ nextStep }) {
     }
   }, [isBillingSame]);
 
+
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
-    localStorage.setItem("buyerFormData", JSON.stringify(values));
+    dispatch(updateForm1Data(values))
+    // localStorage.setItem("buyerFormData", JSON.stringify(values));
     nextStep(values);
   };
 
