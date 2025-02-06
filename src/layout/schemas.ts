@@ -149,8 +149,8 @@ export const BuyerSchema = z
   });
 
 export const OrderSchema = z.object({
-  id: z.string().min(2),
-  csb_number: z.string().min(1, "required"),
+  // id: z.string().min(2),
+  // csb_number: z.string().min(1, "required"),
   actual_weight: z
     .string()
     .min(1, "Weight is Required")
@@ -202,7 +202,7 @@ export const OrderSchema = z.object({
         .min(1, "Unit Price is Required")
         .regex(/^\d+$/, "Only numbers are allowed."),
 
-      // igst: z.string().min(1, "IGST is required"),
+      igst: z.string().min(1, "IGST is required"),
     })
   ),
 });

@@ -6,29 +6,15 @@ import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 
 function ShippingPartner({ nextStep, prevStep }) {
-  // const [selectedPartner, setSelectedPartner] = useState(
-  //   localStorage.getItem("selectedPartner") || "Shipglobal Direct"
-  // );
-
-  // function onSubmit() {
-  //   localStorage.setItem("selectedPartner", selectedPartner);
-  //   console.log("Shipping Partner", selectedPartner);
-  //   nextStep(selectedPartner);
-  // }
   const dispatch = useDispatch();
   const selectedPartner = useSelector(
     (state: RootState) => state.form.shippingPartner
   );
   function onSubmit() {
-    // localStorage.setItem("selectedPartner", selectedPartner);
     dispatch(updateShippingPartner(selectedPartner));
     console.log("Shipping Partner", selectedPartner);
     nextStep(selectedPartner);
   }
-
-  useEffect(() => {
-    dispatch(updateShippingPartner(selectedPartner));
-  }, [ShippingPartner, dispatch]);
 
   return (
     <div>
@@ -59,7 +45,7 @@ function ShippingPartner({ nextStep, prevStep }) {
             price={item.price}
             days={item.days}
             selected={selectedPartner === item.name}
-            onSelect={() => updateShippingPartner(item.name)}
+            onSelect={() => dispatch(updateShippingPartner(item.name))}
           />
         ))}
       </div>

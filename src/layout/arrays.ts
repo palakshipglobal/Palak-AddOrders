@@ -16,7 +16,7 @@ export const csbArray = [
     text3: "Only Shipglobal Direct",
 
     csbNumber: "V",
-    iconStyle: "text-gray-400 size-8",
+    iconStyle: "text-blue-400 size-8",
   },
 ];
 export const weightData = [

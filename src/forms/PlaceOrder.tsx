@@ -1,27 +1,27 @@
+import { RootState } from "@/store";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function PlaceOrder({ prevStep }) {
-  const [selectedPartner, setSelectedPartner] = useState(null);
+  const { shippingPartner, form1Data, form2Data, csbNumber } = useSelector(
+    (state: RootState) => state.form
+  );
+  const [selectedPartner, setSelectedPartner] = useState(shippingPartner);
 
   useEffect(() => {
-    const storedPartner = localStorage.getItem("selectedPartner");
-    if (storedPartner) {
-      setSelectedPartner(storedPartner);
-    }
-  }, []);
-  const storedData = localStorage.getItem("buyerFormData");
-  const parsedBuyerData = JSON.parse(storedData);
-  const orderDetails = localStorage.getItem("orderFormData");
-  const parsedOrderData = JSON.parse(orderDetails);
+    setSelectedPartner(shippingPartner);
+  }, [shippingPartner]);
+  
+  const [selectedCsbNumber, setSelectedCsbNumber] = useState(csbNumber);
+
+  useEffect(() => {
+    setSelectedCsbNumber(csbNumber);
+  }, [csbNumber]);
 
   const handleFormData = () => {
-    if (storedData) {
-      console.log("Buyer Data:", parsedBuyerData);
-    }
-    if (orderDetails) {
-      console.log("Order Data:", parsedOrderData);
-    }
-    console.log("Shipping Partner", selectedPartner);
+    console.log("Buyer Data:", form1Data);
+    console.log("Order Data:", form2Data);
+    console.log("Shipping Partner:", selectedPartner);
   };
 
   return (
@@ -30,22 +30,22 @@ function PlaceOrder({ prevStep }) {
       <div className="flex flex-col md:flex-row gap-y-5 mt-10 gap-x-80">
         <AddressDetails
           title="Pickup"
-          firstName={parsedBuyerData?.shipping_firstname}
-          lastName={parsedBuyerData?.shipping_lastname}
-          address1={parsedBuyerData?.shipping_address1}
-          city={parsedBuyerData?.shipping_city}
-          country={parsedBuyerData?.shipping_country}
-          pincode={parsedBuyerData?.shipping_pincode}
+          firstName={form1Data?.shipping_firstname}
+          lastName={form1Data?.shipping_lastname}
+          address1={form1Data?.shipping_address1}
+          city={form1Data?.shipping_city}
+          country={form1Data?.shipping_country}
+          pincode={form1Data?.shipping_pincode}
         />
 
         <AddressDetails
           title="Delivery"
-          firstName={parsedBuyerData?.billing_firstname}
-          lastName={parsedBuyerData?.billing_lastname}
-          address1={parsedBuyerData?.billing_address1}
-          city={parsedBuyerData?.billing_city}
-          country={parsedBuyerData?.billing_country}
-          pincode={parsedBuyerData?.billing_pincode}
+          firstName={form1Data?.billing_firstname}
+          lastName={form1Data?.billing_lastname}
+          address1={form1Data?.billing_address1}
+          city={form1Data?.billing_city}
+          country={form1Data?.billing_country}
+          pincode={form1Data?.billing_pincode}
         />
       </div>
       <div className="grid grid-cols-1 gap-y-5 mt-12 lg:gap-10 md:grid-cols-3">
@@ -58,7 +58,7 @@ function PlaceOrder({ prevStep }) {
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipment Mode:</p>
-          {/* <p>CSB-{parsedOrderData.csb_number}</p> */}
+          <p>CSB-{selectedCsbNumber}</p>
         </div>
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Billed Weight:</p>
