@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "@/components/ui/form";
-import {  useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { OrderSchema } from "@/layout/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -119,46 +119,3 @@ function OrderDetails({ nextStep, prevStep }) {
 }
 
 export default OrderDetails;
-
-// const OrderForm = useForm<z.infer<typeof OrderSchema>>({
-//   resolver: zodResolver(OrderSchema),
-//   defaultValues: {
-//     id: useId(),
-//     csb_number: "",
-//     actual_weight: "",
-//     length: "",
-//     breadth: "",
-//     height: "",
-//     invoice_no: "",
-//     invoice_date: "",
-//     invoice_currency: "",
-//     order_id: "",
-//     ioss_number: "",
-//     items: [
-//       {
-//         product_name: "",
-//         sku: "",
-//         hsn: "",
-//         qty: "",
-//         unit_price: "",
-//         igst: "",
-//       },
-//     ],
-//   },
-// });
-
-// useEffect(() => {
-//   const storedData = localStorage.getItem("orderFormData");
-//   if (storedData) {
-//     const parsedData = JSON.parse(storedData);
-//     Object.keys(parsedData).forEach((key) => {
-//       OrderForm.setValue(
-//         key as keyof z.infer<typeof OrderSchema>,
-//         parsedData[key]
-//       );
-//     });
-//     if (parsedData.csb_number) {
-//       setSelectedCsbNumber(parsedData.csb_number);
-//     }
-//   }
-// }, []);

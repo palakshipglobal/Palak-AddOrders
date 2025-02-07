@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { weightData, partnerData } from "@/layout/arrays";
 import CompanyPartner from "./CompanyPartner";
 import { useDispatch, useSelector } from "react-redux";
