@@ -11,7 +11,7 @@ function PlaceOrder({ prevStep }) {
   useEffect(() => {
     setSelectedPartner(shippingPartner);
   }, [shippingPartner]);
-  
+
   const [selectedCsbNumber, setSelectedCsbNumber] = useState(csbNumber);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function PlaceOrder({ prevStep }) {
   return (
     <div>
       <p className="text-xl font-bold">Order Details</p>
-      <div className="flex flex-col md:flex-row gap-y-5 mt-10 gap-x-80">
+      <div className="flex flex-col md:flex-row gap-y-5 mt-10 justify-between">
         <AddressDetails
           title="Pickup"
           firstName={form1Data?.shipping_firstname}
@@ -48,11 +48,11 @@ function PlaceOrder({ prevStep }) {
           pincode={form1Data?.billing_pincode}
         />
       </div>
-      <div className="grid grid-cols-1 gap-y-5 mt-12 lg:gap-10 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-y-5 mt-12 md:gap-10 md:grid-cols-3">
         <div className="flex flex-col">
           <p className="text-gray-500 font-semibold">Shipping Partner:</p>
           <p>{selectedPartner}</p>
-          <p className="text-gray-500 text-sm font-medium">
+          <p className="text-gray-500 text-xs font-medium">
             Transit Time: 4 - 7 Days
           </p>
         </div>
@@ -66,7 +66,7 @@ function PlaceOrder({ prevStep }) {
         </div>
       </div>
 
-      <div className="flex justify-start md:justify-end mt-20 md:mt-14 lg:mr-10 gap-10">
+      <div className="flex justify-start md:justify-end mt-12 md:mt-14 lg:mr-10 gap-10">
         <div className="flex flex-col text-gray-500 font-medium">
           <p>Logistic Fee</p>
           <p>GST</p>

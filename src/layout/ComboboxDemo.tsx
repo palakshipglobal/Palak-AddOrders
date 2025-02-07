@@ -59,13 +59,12 @@ function Combobox({ options, placeholder, field }) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full bg-gray-100 h-10 text-gray-600 justify-between"
+          className="w-full bg-gray-100 h-9 text-gray-600 justify-between overflow-hidden text-ellipsis"
         >
           {selectedOption ? selectedOption.label : placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      {/* <PopoverContent className="max-w-full p-0"> */}
       <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
         <Command>
           <CommandInput placeholder={placeholder} />
@@ -234,7 +233,7 @@ export function DateSelect({ form, name, required }) {
   );
 }
 
-export  function IGSTSelect({ form, name, required }) {
+export function IGSTSelect({ form, name, required }) {
   return (
     <FormField
       control={form.control}

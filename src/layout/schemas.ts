@@ -38,7 +38,7 @@ export const BuyerSchema = z
     shipping_city: z
       .string()
       .min(1, "The customer shipping city is required.")
-      .regex(/^[A-Za-z]+$/, "City should only contain alphabets."),
+      .regex(/^[A-Za-z\s]+$/, "City should only contain alphabets and spaces."),
     shipping_state: z
       .string()
       .min(1, "The customer shipping state is required."),
@@ -131,7 +131,7 @@ export const BuyerSchema = z
           message: "The customer billing city is required.",
           code: "custom",
         });
-      } else if (!/^[A-Za-z]+$/.test(data.billing_city)) {
+      } else if (!/^[A-Za-z\s]+$/.test(data.billing_city)) {
         ctx.addIssue({
           path: ["billing_city"],
           message: "City should only contain alphabets.",
@@ -149,8 +149,6 @@ export const BuyerSchema = z
   });
 
 export const OrderSchema = z.object({
-  // id: z.string().min(2),
-  // csb_number: z.string().min(1, "required"),
   actual_weight: z
     .string()
     .min(1, "Weight is Required")
@@ -189,7 +187,11 @@ export const OrderSchema = z.object({
       product_name: z
         .string()
         .min(1, "Product name is Required")
-        .regex(/^[A-Za-z0-9]+$/, "The product name is invalid."),
+        .regex(
+          /^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/,
+          "The product name is invalid."
+        ),
+
       sku: z.string().optional(),
       hsn: z.string().regex(/^\d{8}$/, "HSN must be exactly 8 digits."),
       qty: z

@@ -32,7 +32,7 @@ const ItemDetails = ({ form }) => {
           <div className="lg:flex items-center gap-x-2">
             <div
               key={field.id}
-              className="grid grid-cols-1 lg:grid-cols-6 gap-4 mt-5"
+              className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-5"
             >
               {(itemFields as ItemFields[]).map((itemField) => (
                 <FormField

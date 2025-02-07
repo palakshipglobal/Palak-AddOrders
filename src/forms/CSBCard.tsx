@@ -26,8 +26,8 @@ const CSBCard = ({
       onClick={onSelect}
     >
       <p className="ml-10 font-semibold text-lg">CSB - {csbNumber}</p>
-      <div className="flex items-center gap-14 mt-2">
-        <Icon className={`${iconStyle}`} />
+      <div className="flex items-center gap-14 lg:gap-8 mt-2">
+        <Icon className={`${iconStyle} size-8`} />
         <div className="flex flex-col text-sm text-gray-500 font-medium">
           <p>{text1}</p>
           <p>{text2}</p>

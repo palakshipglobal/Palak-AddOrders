@@ -38,7 +38,7 @@ export function DatePickerWithPresets({ name }: { name: string }) {
                 !field.value && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-2" />
+              <CalendarIcon className="-ml-1" />
               {field.value
                 ? format(new Date(field.value), "PPP")
                 : "Pick a date"}

@@ -3,18 +3,18 @@ import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 mt-5">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 mt-5">
       <div className="flex">
         <SimpleFormFields
           form={form}
-          label="Actual Weight"
+          label="Weight"
           name="actual_weight"
           type="text"
           className="w-full"
-          required
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
+          required
         />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
+        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
           kg
         </div>
       </div>
@@ -28,7 +28,7 @@ const ShipmentDetails = ({ form }) => {
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
+        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
           cm
         </div>
       </div>
@@ -42,7 +42,7 @@ const ShipmentDetails = ({ form }) => {
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
+        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
           cm
         </div>
       </div>
@@ -56,7 +56,7 @@ const ShipmentDetails = ({ form }) => {
           className="w-full"
           required
         />
-        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm uppercase rounded-r-md">
+        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
           cm
         </div>
       </div>
