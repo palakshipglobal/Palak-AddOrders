@@ -68,6 +68,7 @@ const BuyerBillingDetails = ({ form, states }) => {
         />
       </div>
     </div>
+    
   );
 };
 
