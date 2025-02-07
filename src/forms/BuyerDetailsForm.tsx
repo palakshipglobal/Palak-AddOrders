@@ -21,6 +21,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     shipping_firstname: string;
     shipping_lastname: string;
     shipping_mobile: string;
+    shipping_email: string;
     shipping_country: string;
     shipping_address1: string;
     shipping_address2: string;
@@ -28,9 +29,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
     shipping_city: string;
     shipping_state: string;
     isBillingSame: boolean;
-    billing_firstname: string;
-    billing_lastname: string;
-    billing_mobile: string;
     billing_country: string;
     billing_address1: string;
     billing_address2: string;
@@ -46,18 +44,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   useEffect(() => {
     if (isBillingSame) {
-      BuyerForm.setValue(
-        "billing_firstname",
-        BuyerForm.getValues("shipping_firstname")
-      );
-      BuyerForm.setValue(
-        "billing_lastname",
-        BuyerForm.getValues("shipping_lastname")
-      );
-      BuyerForm.setValue(
-        "billing_mobile",
-        BuyerForm.getValues("shipping_mobile")
-      );
       BuyerForm.setValue(
         "billing_country",
         BuyerForm.getValues("shipping_country")
@@ -144,7 +130,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
         <form onSubmit={BuyerForm.handleSubmit(onSubmit)}>
           <BuyerShippingDetails form={BuyerForm} states={states} />
           <div
-            className="flex gap-2 mt-10 items-center cursor-pointer"
+            className="flex gap-2 my-5 items-center cursor-pointer"
             onClick={() => setIsBillingSame(!isBillingSame)}
           >
             <input
@@ -165,10 +151,10 @@ export function BuyerDetailsForm({ setActiveStep }) {
             <BuyerBillingDetails form={BuyerForm} states={states} />
           )}
 
-          <div className="flex justify-end my-10">
+          <div className="flex justify-end my-5">
             <button
               type="submit"
-              className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+              className="bg-blue-800 text-white rounded-md px-5 py-2 hover:bg-blue-700"
             >
               Continue
             </button>

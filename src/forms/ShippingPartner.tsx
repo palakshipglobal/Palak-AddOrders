@@ -19,18 +19,19 @@ function ShippingPartner() {
 
   return (
     <div className="px-5">
-      <p className="text-sm text-gray-500 font-base mt-2">
-        All shipments via ShipGlobal Direct service are Delivered Duty Paid
-        (DDP), hence no extra duty will be billed on the consignee or the
-        shipper. Rates are inclusive of covid & fuel surcharge, exclusive of GST
-        and ex-Delhi Hub.
+      <p className="text-sm font-base mt-2">
+        All shipments via ShipGlobal Direct service are{" "}
+        <span className="font-bold">Delivered Duty Paid (DDP)</span>, hence{" "}
+        <span className="font-bold">no extra duty</span> will be billed on the
+        consignee or the shipper. Rates are inclusive of covid & fuel surcharge,
+        exclusive of GST and ex-Delhi Hub.
       </p>
-      <p className="my-6 text-gray-500 font-medium text-sm">
+      <p className="my-6 font-medium text-sm">
         If you need more info, please call/whatsapp at{" "}
         <span className="text-blue-500">011-422 77 777</span> .
       </p>
 
-      <div className="flex flex-col md:flex-row gap-5 justify-around px-10 lg:px-20 mt-10">
+      <div className="flex flex-col md:flex-row gap-2 justify-around px-10 lg:px-48 mt-10">
         {weightData.map((item, index) => (
           <Card text={item.text} className={item.className} key={index} />
         ))}
@@ -67,9 +68,11 @@ export default ShippingPartner;
 
 const Card = ({ className, text }) => {
   return (
-    <div className={`${className} px-4 py-3 rounded-md`}>
-      <p className="font-bold text-lg">1.00 KG</p>
-      <p>{text} weight</p>
+    <div
+      className={`${className} text-gray-400 bg-gray-100 px-4 py-1 rounded-md`}
+    >
+      <p className="font-bold text-lg text-center">1.00 KG</p>
+      <p className="text-sm">{text} weight</p>
     </div>
   );
 };

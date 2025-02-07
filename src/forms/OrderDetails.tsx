@@ -54,56 +54,19 @@ function OrderDetails({ setActiveStep }) {
 
   return (
     <div className="px-5">
-      <p className="text-sm text-gray-500 font-base mt-2">
-        Please select the shipment Mode. Note: CSB-V Shipments can only be sent
-        through ShipGlobal Direct. If other partner services are needed please
-        select CSB IV.
-      </p>
-      <p className="my-6 text-gray-500 font-medium text-sm">
-        If you need more info, please call/whatsapp at{" "}
-        <span className="text-blue-500">+91 9811098919</span> .
-      </p>
       <Form {...OrderForm}>
         <form className="" onSubmit={OrderForm.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-10">
-            {csbArray.map((item, index) => (
-              <CSBCard
-                key={index}
-                csbNumber={item.csbNumber}
-                text1={item.text1}
-                text2={item.text2}
-                text3={item.text3}
-                Icon={item.Icon}
-                className={` ${
-                  csbNumber === item.csbNumber
-                    ? "border-2 border-dashed  border-blue-500 bg-blue-100"
-                    : "border-dashed border-gray-300 border-2  hover:bg-blue-50"
-                }`}
-                iconStyle={item.iconStyle}
-                onSelect={() => {
-                  dispatch(updateCsbNumber(item.csbNumber));
-                  // OrderForm.setValue("csbNumber", item.csbNumber);
-                }}
-              />
-            ))}
-          </div>
-          <p className="text-xl font-bold mt-10">Shipment Details</p>
-          <p className="mt-2 text-gray-500 font-medium text-sm">
-            If you need more info, please check out{" "}
-            <span className="text-blue-500">Help Page</span> .
-          </p>
-
-          <ShipmentDetails form={OrderForm} />
-          <p className="text-xl font-bold mt-10">Order Details</p>
           <OrderItemDetails form={OrderForm} />
-          <p className="text-xl font-bold mt-10">Item Details</p>
+          <p className="text-md font-bold pt-4">Box Measurements</p>
+          <ShipmentDetails form={OrderForm} />
+          <p className="text-md font-bold pt-5">Item(s) Details</p>
           <ItemDetails form={OrderForm} />
-          <div className="flex justify-end my-10">
+          <div className="flex justify-end my-5">
             <button
               type="submit"
-              className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+              className="bg-blue-800 text-white rounded-md px-5 py-2 hover:bg-blue-700"
             >
-              Continue
+              Select Shipping
             </button>
           </div>
         </form>

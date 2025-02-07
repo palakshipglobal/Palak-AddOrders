@@ -20,9 +20,12 @@ export const csbArray = [
   },
 ];
 export const weightData = [
-  { text: "Dead", className: "border-2 border-dashed border-gray-300" },
-  { text: "Volumetric", className: "border-2 border-dashed border-gray-300" },
-  { text: "Billed", className: "border-2 border-dashed border-blue-300" },
+  { text: "Dead", className: "border border-gray-300" },
+  { text: "Volumetric", className: "border border-gray-300" },
+  {
+    text: "Billed",
+    className: "border border-orange-300 bg-orange-100 text-orange-500",
+  },
 ];
 
 export const partnerData = [

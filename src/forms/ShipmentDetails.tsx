@@ -3,11 +3,11 @@ import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 mt-5">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 mt-2">
       <div className="flex">
         <SimpleFormFields
           form={form}
-          label="Weight"
+          label="Dead Weight"
           name="actual_weight"
           type="text"
           className="w-full"

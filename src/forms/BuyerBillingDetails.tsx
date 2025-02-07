@@ -4,67 +4,50 @@ import React from "react";
 
 const BuyerBillingDetails = ({ form, states }) => {
   return (
-    <div className="space-y-6">
-      <p className="text-xl font-bold my-10">Buyer Billing Details</p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <div className="space-y-2">
+      <p className="text-md font-bold pt-4">Billing Address</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <SimpleFormFields
           form={form}
-          label="First Name"
-          name="billing_firstname"
+          label="Address1"
+          name="shipping_address1"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
-          label="Last Name"
-          name="billing_lastname"
+          label="Address2"
+          name="shipping_address2"
           type="text"
-          required
         />
         <SimpleFormFields
           form={form}
-          label="Mobile no."
-          name="billing_mobile"
+          label="Landmark"
+          name="landmark"
           type="text"
-          required
         />
-      </div>
-      <CountrySelect form={form} name="billing_country" required />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <SimpleFormFields
+
+        <CountrySelect form={form} name="shipping_country" required />
+        <StateSelect
           form={form}
-          label="House No."
-          name="billing_address1"
-          type="text"
+          name="shipping_state"
           required
+          states={states}
         />
-        <SimpleFormFields
-          form={form}
-          label="Street Name"
-          name="billing_address2"
-          type="text"
-        />
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
         <SimpleFormFields
           form={form}
           label="Pincode"
-          name="billing_pincode"
+          name="shipping_pincode"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
           label="City"
-          name="billing_city"
+          name="shipping_city"
           type="text"
           required
-        />
-        <StateSelect
-          form={form}
-          name="billing_state"
-          required
-          states={states}
         />
       </div>
     </div>

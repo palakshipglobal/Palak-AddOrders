@@ -8,8 +8,9 @@ import React from "react";
 
 const BuyerShippingDetails = ({ form, states }) => {
   return (
-    <div className="space-y-6 mt-2">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <div className="space-y-2 mt-2">
+      <p className="text-md font-bold">Personal Details</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <SimpleFormFields
           form={form}
           label="First Name"
@@ -33,21 +34,14 @@ const BuyerShippingDetails = ({ form, states }) => {
         />
         <SimpleFormFields
           form={form}
-          label="Alternate Mobile"
-          name="shipping_alternate_mobile"
-          type="text"
-        />
-        <SimpleFormFields
-          form={form}
           label="Email"
           name="shipping_email"
           type="email"
-          className="lg:col-span-2"
           required
         />
       </div>
-      <CountrySelect form={form} name="shipping_country" required />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <p className="text-md font-bold pt-4">Shipping Address</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <SimpleFormFields
           form={form}
           label="Address1"
@@ -61,8 +55,21 @@ const BuyerShippingDetails = ({ form, states }) => {
           name="shipping_address2"
           type="text"
         />
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <SimpleFormFields
+          form={form}
+          label="Landmark"
+          name="landmark"
+          type="text"
+        />
+
+        <CountrySelect form={form} name="shipping_country" required />
+        <StateSelect
+          form={form}
+          name="shipping_state"
+          required
+          states={states}
+        />
+
         <SimpleFormFields
           form={form}
           label="Pincode"
@@ -76,12 +83,6 @@ const BuyerShippingDetails = ({ form, states }) => {
           name="shipping_city"
           type="text"
           required
-        />
-        <StateSelect
-          form={form}
-          name="shipping_state"
-          required
-          states={states}
         />
       </div>
     </div>
