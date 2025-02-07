@@ -9,16 +9,17 @@ const BuyerBillingDetails = ({ form, states }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <SimpleFormFields
           form={form}
-          label="Address1"
+          label="Address 1"
           name="shipping_address1"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
-          label="Address2"
+          label="Address 2"
           name="shipping_address2"
           type="text"
+          required
         />
         <SimpleFormFields
           form={form}

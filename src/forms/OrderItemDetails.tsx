@@ -6,7 +6,7 @@ const OrderItemDetails = ({ form }) => {
     <div className="grid mt-2 grid-cols-1 lg:grid-cols-3 gap-3">
       <SimpleFormFields
         form={form}
-        label="Invoice No."
+        label="Invoice Number"
         name="invoice_no"
         type="text"
         required
@@ -15,7 +15,7 @@ const OrderItemDetails = ({ form }) => {
       <CurrencySelect form={form} name="invoice_currency" required />
       <SimpleFormFields
         form={form}
-        label="Order Id/Ref. Id"
+        label="Order/Reference Id"
         name="order_id"
         type="text"
       />

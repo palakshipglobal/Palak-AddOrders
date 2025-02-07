@@ -25,6 +25,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     shipping_country: string;
     shipping_address1: string;
     shipping_address2: string;
+    shipping_landmark:string,
     shipping_pincode: string;
     shipping_city: string;
     shipping_state: string;
@@ -35,6 +36,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     billing_pincode: string;
     billing_city: string;
     billing_state: string;
+    billing_landmark:string;
   };
 
   const BuyerForm = useForm<BuyerFormData>({
@@ -59,6 +61,10 @@ export function BuyerDetailsForm({ setActiveStep }) {
       BuyerForm.setValue(
         "billing_pincode",
         BuyerForm.getValues("shipping_pincode")
+      );
+      BuyerForm.setValue(
+        "billing_landmark",
+        BuyerForm.getValues("shipping_landmark")
       );
       BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
       BuyerForm.setValue(
@@ -85,6 +91,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     // nextStep(values);
     setActiveStep(3);
   };
+  console.log(BuyerForm.formState.errors)
 
   const countryShipping = BuyerForm.watch("shipping_country");
   const [states, setStates] = useState([]);

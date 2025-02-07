@@ -2,9 +2,6 @@ import { z } from "zod";
 
 export const BuyerSchema = z
   .object({
-    shipping_pickup_address: z
-      .string()
-      .min(1, "The Pickup Address is required"),
     shipping_firstname: z
       .string()
       .min(1, "The customer shipping first name is required.")
@@ -43,9 +40,7 @@ export const BuyerSchema = z
       .string()
       .min(1, "The customer shipping state is required."),
     isBillingSame: z.boolean(),
-    billing_firstname: z.string().optional(),
-    billing_lastname: z.string().optional(),
-    billing_mobile: z.string().optional(),
+
     billing_country: z.string().optional(),
     billing_address1: z.string().optional(),
     billing_address2: z.string().optional(),
@@ -55,47 +50,6 @@ export const BuyerSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.isBillingSame) {
-      if (!data.billing_firstname) {
-        ctx.addIssue({
-          path: ["billing_firstname"],
-          message: "The customer billing first name is required.",
-          code: "custom",
-        });
-      } else if (!/^[A-Za-z]+$/.test(data.billing_firstname)) {
-        ctx.addIssue({
-          path: ["billing_firstname"],
-          message: "First name should only contain alphabets.",
-          code: "custom",
-        });
-      }
-      if (!data.billing_lastname) {
-        ctx.addIssue({
-          path: ["billing_lastname"],
-          message: "The customer billing last name is required.",
-          code: "custom",
-        });
-      } else if (!/^[A-Za-z]+$/.test(data.billing_lastname)) {
-        ctx.addIssue({
-          path: ["billing_lastname"],
-          message: "Last name should only contain alphabets.",
-          code: "custom",
-        });
-      }
-
-      if (!data.billing_mobile) {
-        ctx.addIssue({
-          path: ["billing_mobile"],
-          message: "The customer billing mobile number is required.",
-          code: "custom",
-        });
-      } else if (!/^\d{10}$/.test(data.billing_mobile)) {
-        ctx.addIssue({
-          path: ["billing_mobile"],
-          message: "The mobile number should contain exactly 10 digits.",
-          code: "custom",
-        });
-      }
-
       if (!data.billing_country) {
         ctx.addIssue({
           path: ["billing_country"],

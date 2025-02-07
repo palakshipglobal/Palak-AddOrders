@@ -52,7 +52,7 @@ const ItemDetails = ({ form }) => {
                         ? "Qty"
                         : "Unit Price(INR)"}
                       {itemField !== "sku" && (
-                        <span className="text-red-500">*</span>
+                        <span className="text-red-500 ml-1">*</span>
                       )}
                     </FormLabel>
                     <FormControl>

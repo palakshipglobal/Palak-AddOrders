@@ -48,7 +48,6 @@ function OrderDetails({ setActiveStep }) {
     console.log("OrderForm Data:", values);
     dispatch(updateForm2Data(values));
     dispatch(updateCsbNumber(csbNumber));
-    // nextStep(values);
     setActiveStep(4);
   };
 

@@ -7,16 +7,14 @@ const ShipmentDetails = ({ form }) => {
       <div className="flex">
         <SimpleFormFields
           form={form}
-          label="Dead Weight"
+          label="Weight"
           name="actual_weight"
           type="text"
           className="w-full"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
-        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
-          kg
-        </div>
+        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm rounded-r-md">kg</div>
       </div>
       <div className="flex">
         <SimpleFormFields
@@ -28,9 +26,7 @@ const ShipmentDetails = ({ form }) => {
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
-        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
+        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm rounded-r-md">cm</div>
       </div>
       <div className="flex">
         <SimpleFormFields
@@ -42,9 +38,7 @@ const ShipmentDetails = ({ form }) => {
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
-        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
+        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm rounded-r-md">cm</div>
       </div>
       <div className="flex">
         <SimpleFormFields
@@ -56,9 +50,7 @@ const ShipmentDetails = ({ form }) => {
           className="w-full"
           required
         />
-        <div className="bg-gray-100 p-2.5 h-9 mt-8 text-sm uppercase rounded-r-md">
-          cm
-        </div>
+        <div className="bg-gray-100 p-2 h-9 mt-8 text-sm rounded-r-md">cm</div>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ function ShippingPartner() {
         <span className="text-blue-500">011-422 77 777</span> .
       </p>
 
-      <div className="flex flex-col md:flex-row gap-2 justify-around px-10 lg:px-48 mt-10">
+      <div className="flex flex-col md:flex-row gap-2 justify-around px-10 lg:px-32 mt-10">
         {weightData.map((item, index) => (
           <Card text={item.text} className={item.className} key={index} />
         ))}
@@ -57,7 +57,7 @@ function ShippingPartner() {
           onClick={onSubmit}
           className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
         >
-          Continue
+          Pay and Order
         </button>
       </div>
     </div>

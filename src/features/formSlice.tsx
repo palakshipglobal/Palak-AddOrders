@@ -5,6 +5,7 @@ const initialState = {
     shipping_lastname: "",
     shipping_mobile: "",
     shipping_email:"",
+    shipping_landmark:"",
     shipping_country: "",
     shipping_address1: "",
     shipping_address2: "",
@@ -17,6 +18,7 @@ const initialState = {
     billing_pincode: "",
     billing_city: "",
     billing_state: "",
+    billing_landmark:"",
     isBillingSame: true,
   },
 

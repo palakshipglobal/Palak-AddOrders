@@ -27,7 +27,7 @@ const BuyerShippingDetails = ({ form, states }) => {
         />
         <SimpleFormFields
           form={form}
-          label="Mobile no."
+          label="Mobile Number"
           name="shipping_mobile"
           type="text"
           required
@@ -44,14 +44,14 @@ const BuyerShippingDetails = ({ form, states }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <SimpleFormFields
           form={form}
-          label="Address1"
+          label="Address 1"
           name="shipping_address1"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
-          label="Address2"
+          label="Address 2"
           name="shipping_address2"
           type="text"
         />
@@ -69,18 +69,17 @@ const BuyerShippingDetails = ({ form, states }) => {
           required
           states={states}
         />
-
         <SimpleFormFields
           form={form}
-          label="Pincode"
-          name="shipping_pincode"
+          label="City"
+          name="shipping_city"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
-          label="City"
-          name="shipping_city"
+          label="Pincode"
+          name="shipping_pincode"
           type="text"
           required
         />
