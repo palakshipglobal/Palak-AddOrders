@@ -2,7 +2,7 @@ import { RootState } from "@/store";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-function PlaceOrder({ prevStep }) {
+function PlaceOrder() {
   const { shippingPartner, form1Data, form2Data, csbNumber } = useSelector(
     (state: RootState) => state.form
   );
@@ -25,8 +25,8 @@ function PlaceOrder({ prevStep }) {
   };
 
   return (
-    <div>
-      <p className="text-xl font-bold">Order Details</p>
+    <div className="px-5">
+      <p className="text-xl mt-2 font-bold">Order Details</p>
       <div className="flex flex-col md:flex-row gap-y-5 mt-10 justify-between">
         <AddressDetails
           title="Pickup"
@@ -78,13 +78,7 @@ function PlaceOrder({ prevStep }) {
           <p>Rs. 5100</p>
         </div>
       </div>
-      <div className="flex justify-between mt-20">
-        <button
-          onClick={prevStep}
-          className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-600"
-        >
-          Back
-        </button>
+      <div className="flex justify-end mt-20">
         <button
           type="submit"
           className="bg-green-500 text-white rounded-md px-5 py-2 hover:bg-green-400"

@@ -13,7 +13,7 @@ import { updateCsbNumber, updateForm2Data } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 
-function OrderDetails({ nextStep, prevStep }) {
+function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
   const form2Data = useSelector((state: RootState) => state.form.form2Data);
   const csbNumber = useSelector((state: RootState) => state.form.csbNumber);
@@ -48,12 +48,12 @@ function OrderDetails({ nextStep, prevStep }) {
     console.log("OrderForm Data:", values);
     dispatch(updateForm2Data(values));
     dispatch(updateCsbNumber(csbNumber));
-    nextStep(values);
+    // nextStep(values);
+    setActiveStep(4);
   };
 
   return (
-    <div>
-      <p className="text-xl font-bold">Shipment Type</p>
+    <div className="px-5">
       <p className="text-sm text-gray-500 font-base mt-2">
         Please select the shipment Mode. Note: CSB-V Shipments can only be sent
         through ShipGlobal Direct. If other partner services are needed please
@@ -87,24 +87,18 @@ function OrderDetails({ nextStep, prevStep }) {
               />
             ))}
           </div>
-          <p className="text-xl font-bold mt-16">Shipment Details</p>
+          <p className="text-xl font-bold mt-10">Shipment Details</p>
           <p className="mt-2 text-gray-500 font-medium text-sm">
             If you need more info, please check out{" "}
             <span className="text-blue-500">Help Page</span> .
           </p>
 
           <ShipmentDetails form={OrderForm} />
-          <p className="text-xl font-bold mt-16">Order Details</p>
+          <p className="text-xl font-bold mt-10">Order Details</p>
           <OrderItemDetails form={OrderForm} />
-          <p className="text-xl font-bold mt-16">Item Details</p>
+          <p className="text-xl font-bold mt-10">Item Details</p>
           <ItemDetails form={OrderForm} />
-          <div className="flex justify-between my-10">
-            <button
-              onClick={prevStep}
-              className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-600"
-            >
-              Back
-            </button>
+          <div className="flex justify-end my-10">
             <button
               type="submit"
               className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"

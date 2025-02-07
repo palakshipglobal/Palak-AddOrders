@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateForm1Data } from "@/features/formSlice";
 import { RootState } from "@/store";
 
-export function BuyerDetailsForm({ nextStep }) {
+export function BuyerDetailsForm({ setActiveStep }) {
   const [isBillingSame, setIsBillingSame] = useState(true);
 
   const dispatch = useDispatch();
@@ -96,7 +96,8 @@ export function BuyerDetailsForm({ nextStep }) {
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
     dispatch(updateForm1Data(values));
-    nextStep(values);
+    // nextStep(values);
+    setActiveStep(3);
   };
 
   const countryShipping = BuyerForm.watch("shipping_country");
@@ -138,40 +139,42 @@ export function BuyerDetailsForm({ nextStep }) {
   }, [countryShipping]);
 
   return (
-    <Form {...BuyerForm}>
-      <form onSubmit={BuyerForm.handleSubmit(onSubmit)}>
-        <BuyerShippingDetails form={BuyerForm} states={states} />
-        <div
-          className="flex gap-2 mt-10 items-center cursor-pointer"
-          onClick={() => setIsBillingSame(!isBillingSame)}
-        >
-          <input
-            type="checkbox"
-            className="w-4 h-4 cursor-pointer"
-            checked={isBillingSame}
-            onChange={() => {
-              const newValue = !isBillingSame;
-              setIsBillingSame(newValue);
-              BuyerForm.setValue("isBillingSame", newValue);
-            }}
-          />
-          <p className="text-sm font-medium">
-            Shipping & Billing Address are same.
-          </p>
-        </div>
-        {!isBillingSame && (
-          <BuyerBillingDetails form={BuyerForm} states={states} />
-        )}
-
-        <div className="flex justify-end my-10">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+    <div className="px-5">
+      <Form {...BuyerForm}>
+        <form onSubmit={BuyerForm.handleSubmit(onSubmit)}>
+          <BuyerShippingDetails form={BuyerForm} states={states} />
+          <div
+            className="flex gap-2 mt-10 items-center cursor-pointer"
+            onClick={() => setIsBillingSame(!isBillingSame)}
           >
-            Continue
-          </button>
-        </div>
-      </form>
-    </Form>
+            <input
+              type="checkbox"
+              className="w-4 h-4 cursor-pointer"
+              checked={isBillingSame}
+              onChange={() => {
+                const newValue = !isBillingSame;
+                setIsBillingSame(newValue);
+                BuyerForm.setValue("isBillingSame", newValue);
+              }}
+            />
+            <p className="text-sm font-medium">
+              Shipping & Billing Address are same.
+            </p>
+          </div>
+          {!isBillingSame && (
+            <BuyerBillingDetails form={BuyerForm} states={states} />
+          )}
+
+          <div className="flex justify-end my-10">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+            >
+              Continue
+            </button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

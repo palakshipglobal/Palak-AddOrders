@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 
-function ShippingPartner({ nextStep, prevStep }) {
+function ShippingPartner() {
   const dispatch = useDispatch();
   const selectedPartner = useSelector(
     (state: RootState) => state.form.shippingPartner
@@ -13,12 +13,12 @@ function ShippingPartner({ nextStep, prevStep }) {
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
     console.log("Shipping Partner", selectedPartner);
-    nextStep(selectedPartner);
+    // setActiveStep(4);
+    // nextStep(selectedPartner);
   }
 
   return (
-    <div>
-      <p className="text-xl font-bold">Select Shipping Partner</p>
+    <div className="px-5">
       <p className="text-sm text-gray-500 font-base mt-2">
         All shipments via ShipGlobal Direct service are Delivered Duty Paid
         (DDP), hence no extra duty will be billed on the consignee or the
@@ -50,13 +50,7 @@ function ShippingPartner({ nextStep, prevStep }) {
         ))}
       </div>
 
-      <div className="flex justify-between my-10">
-        <button
-          onClick={prevStep}
-          className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-600"
-        >
-          Back
-        </button>
+      <div className="flex justify-end my-10">
         <button
           type="submit"
           onClick={onSubmit}

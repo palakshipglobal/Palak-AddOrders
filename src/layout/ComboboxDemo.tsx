@@ -50,6 +50,14 @@ const igst = [
   { value: "18", label: "18%" },
 ];
 
+const customers = [
+  {
+    value: "customer1",
+    label: "8287435835 / Ross Willer / ross.willer@shipglobal.in",
+  },
+  
+];
+
 function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === field.value);
@@ -243,6 +251,23 @@ export function IGSTSelect({ form, name, required }) {
           <FormLabel>IGST {required && <Required />}</FormLabel>
           <FormControl>
             <Combobox options={igst} placeholder="0%" field={field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function CustomerSelect({ form,name }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Combobox options={customers} placeholder="Select Customer" field={field} />
           </FormControl>
           <FormMessage />
         </FormItem>
