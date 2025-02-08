@@ -19,15 +19,15 @@ import ConsignorDetails from "./forms/ConsignorDetails";
 
 function AddOrderForm() {
   const [activeStep, setActiveStep] = useState(1);
-  const { shippingPartner, form1Data, form2Data, csbNumber } = useSelector(
+  const { shippingPartner, form1Data, form2Data } = useSelector(
     (state: RootState) => state.form
   );
   return (
-    <div className="bg-gray-50 min-h-screen px-3 pt-5 pb-20 p-2 lg:px-12">
+    <div className="bg-gray-50 min-h-screen px-2 pt-5 pb-20 p-2 lg:px-12">
       <p className="text-2xl my-2">Create CSB-IV Order</p>
       <BreadCrumb />
       <div className="flex gap-3 mt-4">
-        <div className="w-full rounded-md bg-white max-h-max lg:w-2/3 px-2 py-5 lg:px-7 flex flex-col">
+        <div className="w-full rounded-md bg-white max-h-max lg:w-2/3 px-1.5 py-5 lg:px-7 flex flex-col">
           <AccordionComponent
             title="Consignor Details"
             activeStep={activeStep}
@@ -62,8 +62,9 @@ function AddOrderForm() {
           />
         </div>
 
-        <div className="bg-white rounded-md w-1/3 hidden lg:block px-5 py-3">
+        <div className="bg-white rounded-md w-1/3 hidden lg:block px-8 py-3">
           {activeStep === 1 && <QuickTipsContent />}
+          {activeStep > 1 && <ConsignorContent />}
           {activeStep > 2 && <ConsigneeContent form1Data={form1Data} />}
           {activeStep > 3 && <ItemContent form2Data={form2Data} />}
         </div>
@@ -110,6 +111,26 @@ const QuickTipsContent = () => {
   );
 };
 
+const ConsignorContent = () => {
+  return (
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Consignor Details</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex flex-col">
+            <p className="text-gray-500">Name</p>
+            <p className="font-medium mt-0.5">Ross Willer</p>
+            <p>ross.willer@shipglobal.in</p>
+            <p className="text-gray-500 mt-2.5">Address</p>
+            <p>PLOT NUMBER 245-246, G-1, SAI ESTATE</p>
+            <p>GULMOHAR TRILOCHAN NAGAR</p>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
 const ConsigneeContent = ({ form1Data }) => {
   return (
     <Accordion type="single" collapsible>
@@ -145,7 +166,7 @@ const ItemContent = ({ form2Data }) => {
       <AccordionItem value="item-1">
         <AccordionTrigger>Item Details</AccordionTrigger>
         <AccordionContent>
-          <div className="grid grid-cols-2">
+          <div className="flex justify-between">
             <div className="flex flex-col">
               <p className="text-gray-500">Billed Weight</p>
               <p className="font-medium mt-0.5">{form2Data.actual_weight} KG</p>
@@ -158,7 +179,7 @@ const ItemContent = ({ form2Data }) => {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-y-5 mt-5">
+          <div className="grid grid-cols-3 gap-y-2 mt-5">
             <div className="flex flex-col">
               <p className="text-gray-500">Product</p>
               <p className="font-medium mt-0.5">
@@ -188,6 +209,38 @@ const ItemContent = ({ form2Data }) => {
               <p className="font-medium mt-0.5">120.0</p>
             </div>
           </div>
+          {/* {form2Data.items.length > 1 && (
+            <div className="grid grid-cols-3 gap-y-2 mt-5">
+            <div className="flex flex-col">
+              <p className="text-gray-500">Product</p>
+              <p className="font-medium mt-0.5">
+                {form2Data.items[1]?.product_name}
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-gray-500">HSN</p>
+              <p className="font-medium mt-0.5">{form2Data.items[1]?.hsn}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-gray-500">SKU</p>
+              <p className="font-medium mt-0.5">{form2Data.items[1]?.sku}</p>
+            </div>
+            <div className="flex flex-col ">
+              <p className="text-gray-500">Qty</p>
+              <p className="font-medium mt-0.5">{form2Data.items[1]?.qty}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-gray-500">Unit Price</p>
+              <p className="font-medium mt-0.5">
+                {form2Data.items[1]?.unit_price}
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-gray-500">Total</p>
+              <p className="font-medium mt-0.5">120.0</p>
+            </div>
+          </div>
+          )} */}
         </AccordionContent>
       </AccordionItem>
     </Accordion>

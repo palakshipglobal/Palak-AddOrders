@@ -52,7 +52,7 @@ function AccordionComponent({
         <div
           className={`${
             !isOpen && "hidden"
-          } border-t-[1px] bg-white text-black p-2`}
+          } border-t-[1px] bg-white text-black`}
         >
           {childElement}
         </div>

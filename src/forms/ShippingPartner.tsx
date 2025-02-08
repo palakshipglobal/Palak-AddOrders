@@ -31,7 +31,7 @@ function ShippingPartner() {
         <span className="text-blue-500">011-422 77 777</span> .
       </p>
 
-      <div className="flex flex-col md:flex-row gap-2 justify-around px-10 lg:px-32 mt-10">
+      <div className="flex flex-col md:flex-row gap-2 justify-center px-10 mt-10">
         {weightData.map((item, index) => (
           <Card text={item.text} className={item.className} key={index} />
         ))}
@@ -69,9 +69,9 @@ export default ShippingPartner;
 const Card = ({ className, text }) => {
   return (
     <div
-      className={`${className} text-gray-400 bg-gray-100 px-4 py-1 rounded-md`}
+      className={`${className} text-gray-400 text-center bg-gray-100 px-4 py-1 min-w-28 rounded-md`}
     >
-      <p className="font-bold text-lg text-center">1.00 KG</p>
+      <p className="font-bold text-lg">1.00 KG</p>
       <p className="text-sm">{text} weight</p>
     </div>
   );

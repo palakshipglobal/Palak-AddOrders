@@ -25,15 +25,28 @@ function ConsignorDetails({ setActiveStep }) {
   return (
     <div className="px-5 mt-2">
       <label className="font-medium">
-        Search Customer <span className="ml-px text-red-500">*</span>
+        Search Customer
+        {/* <span className="ml-px text-red-500">*</span> */}
       </label>
       <Form {...ConsignorForm}>
         <form onSubmit={ConsignorForm.handleSubmit(onSubmit)} className="mt-2">
           <CustomerSelect form={ConsignorForm} name="consignorName" />
-          <div className="flex justify-end my-5">
+          <div className="mt-5 flex flex-col md:flex-row gap-y-2 gap-x-10">
+            <div className="flex flex-col text-sm">
+              <p className="font-semibold">Ross Willer</p>
+              <p>ross.willer@shipglobal.in</p>
+              <p>+91 8287435835</p>
+            </div>
+            <div className="flex flex-col text-sm">
+              <p className="font-semibold text-gray-500">Address</p>
+              <p>PLOT NUMBER 245-246, G-1, SAI ESTATE GULMOHAR</p>
+              <p>TRILOCHAN NAGAR</p>
+            </div>
+          </div>
+          <div className="flex justify-end my-2">
             <button
               type="submit"
-              className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+              className="bg-blue-800 text-white rounded-md px-5 py-1.5 hover:bg-blue-700"
             >
               Continue
             </button>

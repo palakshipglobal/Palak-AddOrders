@@ -107,10 +107,9 @@ const ItemDetails = ({ form }) => {
           )}
         </div>
       ))}
-      <div className="flex justify-between mt-5 items-center">
-        <Button
+      <div className="flex flex-col md:flex-row md:justify-between mt-5">
+        <button
           type="button"
-          variant="link"
           onClick={() =>
             append({
               product_name: "",
@@ -121,12 +120,12 @@ const ItemDetails = ({ form }) => {
               igst: "0",
             })
           }
-          className="flex items-center gap-2"
+          className="flex text-sm items-center gap-2"
         >
           <Plus className="w-4 h-4 text-blue-800" />{" "}
           <span className="text-blue-800 underline">Add Another Product</span>
-        </Button>
-        <p className="text-lg font-bold mt-2">Total Price : CAD 12.00</p>
+        </button>
+        <p className="lg:text-lg  font-bold mt-2">Total Price : CAD 12.00</p>
       </div>
     </div>
   );
