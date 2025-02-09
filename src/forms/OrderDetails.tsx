@@ -4,11 +4,9 @@ import { useForm } from "react-hook-form";
 import { OrderSchema } from "@/layout/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { csbArray } from "@/layout/arrays";
 import ItemDetails from "./ItemDetails";
 import OrderItemDetails from "./OrderItemDetails";
 import ShipmentDetails from "./ShipmentDetails";
-import CSBCard from "./CSBCard";
 import { updateCsbNumber, updateForm2Data } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +58,7 @@ function OrderDetails({ setActiveStep }) {
           <ShipmentDetails form={OrderForm} />
           <p className="text-md font-bold pt-5">Item(s) Details</p>
           <ItemDetails form={OrderForm} />
-          <div className="flex justify-end my-5">
+          <div className="flex justify-end py-5">
             <button
               type="submit"
               className="bg-blue-800 text-white rounded-md px-5 py-2 hover:bg-blue-700"

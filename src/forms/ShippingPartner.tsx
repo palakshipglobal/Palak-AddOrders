@@ -1,9 +1,15 @@
 import React from "react";
-import { weightData, partnerData } from "@/layout/arrays";
-import CompanyPartner from "./CompanyPartner";
+import { weightData } from "@/layout/arrays";
 import { useDispatch, useSelector } from "react-redux";
 import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
+import { CircleCheck } from "lucide-react";
+
+const courierOptions = [
+  { name: "ShipGlobal WorldWide", time: "13 - 18 Days", rate: "Rs. 3229" },
+  { name: "Fedex", time: "4 - 7 Days", rate: "Rs. 3465" },
+  { name: "UPS", time: "4 - 7 Days", rate: "Rs. 5785" },
+];
 
 function ShippingPartner() {
   const dispatch = useDispatch();
@@ -13,8 +19,6 @@ function ShippingPartner() {
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
     console.log("Shipping Partner", selectedPartner);
-    // setActiveStep(4);
-    // nextStep(selectedPartner);
   }
 
   return (
@@ -37,7 +41,40 @@ function ShippingPartner() {
         ))}
       </div>
 
-      <div className="mt-14">
+      <table className="mt-10">
+        <thead>
+          <tr className="grid grid-cols-4 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
+            <th className="pr-12">Courier Partner</th>
+            <th>Delivery Time</th>
+            <th>Shipment Rate</th>
+            <th>Select</th>
+          </tr>
+        </thead>
+        <tbody>
+          {courierOptions.map((courier, index) => (
+            <tr
+              key={index}
+              className="grid grid-cols-4 py-4 border rounded-md mb-2"
+              onClick={() => dispatch(updateShippingPartner(courier.name))}
+            >
+              <td className="font-semibold text-sm px-4">{courier.name}</td>
+              <td className="ml-9">{courier.time}</td>
+              <td className="ml-14">{courier.rate}</td>
+              <td className="ml-20">
+                <CircleCheck
+                  className={`h-6 w-6 cursor-pointer transition-colors ${
+                    selectedPartner === courier.name
+                      ? "fill-green-500 text-white"
+                      : "text-white fill-gray-300"
+                  }`}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* <div className="mt-14">
         {partnerData.map((item, index) => (
           <CompanyPartner
             key={index}
@@ -49,9 +86,9 @@ function ShippingPartner() {
             onSelect={() => dispatch(updateShippingPartner(item.name))}
           />
         ))}
-      </div>
+      </div> */}
 
-      <div className="flex justify-end my-10">
+      <div className="flex justify-end py-5">
         <button
           type="submit"
           onClick={onSubmit}

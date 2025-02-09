@@ -43,7 +43,7 @@ function ConsignorDetails({ setActiveStep }) {
               <p>TRILOCHAN NAGAR</p>
             </div>
           </div>
-          <div className="flex justify-end my-2">
+          <div className="flex justify-end py-2">
             <button
               type="submit"
               className="bg-blue-800 text-white rounded-md px-5 py-1.5 hover:bg-blue-700"

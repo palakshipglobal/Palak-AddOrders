@@ -64,9 +64,15 @@ function AddOrderForm() {
 
         <div className="bg-white rounded-md w-1/3 hidden lg:block px-8 py-3">
           {activeStep === 1 && <QuickTipsContent />}
-          {activeStep > 1 && <ConsignorContent />}
+          {/* {activeStep > 1 && <ConsignorContent />}
           {activeStep > 2 && <ConsigneeContent form1Data={form1Data} />}
-          {activeStep > 3 && <ItemContent form2Data={form2Data} />}
+          {activeStep > 3 && <ItemContent form2Data={form2Data} />} */}
+          <Data
+            activeStep={activeStep}
+            form1Data={form1Data}
+            form2Data={form2Data}
+          />
+          <Summary />
         </div>
       </div>
     </div>
@@ -111,138 +117,261 @@ const QuickTipsContent = () => {
   );
 };
 
-const ConsignorContent = () => {
+const Data = ({ activeStep, form1Data, form2Data }) => {
   return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger>Consignor Details</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex flex-col">
-            <p className="text-gray-500">Name</p>
-            <p className="font-medium mt-0.5">Ross Willer</p>
-            <p>ross.willer@shipglobal.in</p>
-            <p className="text-gray-500 mt-2.5">Address</p>
-            <p>PLOT NUMBER 245-246, G-1, SAI ESTATE</p>
-            <p>GULMOHAR TRILOCHAN NAGAR</p>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-};
-
-const ConsigneeContent = ({ form1Data }) => {
-  return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger>Consignee Details</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex flex-col">
-            <p className="text-gray-500">Name</p>
-            <p className="font-medium mt-0.5">{form1Data.shipping_firstname}</p>
-
-            <p className="text-gray-500 mt-2.5">Billing Address</p>
-            <p className="font-medium mt-0.5">
-              {form1Data.isBillingSame === true
-                ? "Same as Shipping Address"
-                : `${form1Data.shipping_address1}, ${form1Data.shipping_landmark}, ${form1Data.shipping_address2}, ${form1Data.shipping_city}, ${form1Data.shipping_country}, ${form1Data.shipping_pincode}`}
-            </p>
-            <p className="text-gray-500 mt-2.5">Shipping Address</p>
-            <p className="font-medium mt-0.5">
-              {form1Data.shipping_address1}, {form1Data.shipping_landmark},{" "}
-              {form1Data.shipping_address2}, {form1Data.shipping_city},{" "}
-              {form1Data.shipping_country}, {form1Data.shipping_pincode}
-            </p>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-};
-
-const ItemContent = ({ form2Data }) => {
-  return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger>Item Details</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex justify-between">
+    <Accordion
+      type="multiple"
+      defaultValue={["consignor", "consignee", "item"]}
+    >
+      {activeStep > 1 && (
+        <AccordionItem value="consignor">
+          <AccordionTrigger>Consignor Details</AccordionTrigger>
+          <AccordionContent>
             <div className="flex flex-col">
-              <p className="text-gray-500">Billed Weight</p>
-              <p className="font-medium mt-0.5">{form2Data.actual_weight} KG</p>
+              <p className="text-gray-500">Name</p>
+              <p className="font-medium mt-0.5">Ross Willer</p>
+              <p>ross.willer@shipglobal.in</p>
+              <p className="text-gray-500 mt-2.5">Address</p>
+              <p>PLOT NUMBER 245-246, G-1, SAI ESTATE</p>
+              <p>GULMOHAR TRILOCHAN NAGAR</p>
             </div>
+          </AccordionContent>
+        </AccordionItem>
+      )}
+      {activeStep > 2 && (
+        <AccordionItem value="consignee">
+          <AccordionTrigger>Consignee Details</AccordionTrigger>
+          <AccordionContent>
             <div className="flex flex-col">
-              <p className="text-gray-500">Dimensions</p>
+              <p className="text-gray-500">Name</p>
               <p className="font-medium mt-0.5">
-                {form2Data.length}cm X {form2Data.breadth}cm X{" "}
-                {form2Data.height}cm
+                {form1Data.shipping_firstname}
+              </p>
+
+              <p className="text-gray-500 mt-2.5">Billing Address</p>
+              <p className="font-medium mt-0.5">
+                {form1Data.isBillingSame
+                  ? "Same as Shipping Address"
+                  : `${form1Data.shipping_address1}, ${form1Data.shipping_landmark}, ${form1Data.shipping_address2}, ${form1Data.shipping_city}, ${form1Data.shipping_country}, ${form1Data.shipping_pincode}`}
+              </p>
+              <p className="text-gray-500 mt-2.5">Shipping Address</p>
+              <p className="font-medium mt-0.5">
+                {form1Data.shipping_address1}, {form1Data.shipping_landmark},{" "}
+                {form1Data.shipping_address2}, {form1Data.shipping_city},{" "}
+                {form1Data.shipping_country}, {form1Data.shipping_pincode}
               </p>
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-y-2 mt-5">
-            <div className="flex flex-col">
-              <p className="text-gray-500">Product</p>
-              <p className="font-medium mt-0.5">
-                {form2Data.items[0]?.product_name}
-              </p>
+          </AccordionContent>
+        </AccordionItem>
+      )}
+      {activeStep > 3 && (
+        <AccordionItem value="item">
+          <AccordionTrigger>Item Details</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex justify-between">
+              <div className="flex flex-col">
+                <p className="text-gray-500">Billed Weight</p>
+                <p className="font-medium mt-0.5">
+                  {form2Data.actual_weight} KG
+                </p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">Dimensions</p>
+                <p className="font-medium mt-0.5">
+                  {form2Data.length}cm X {form2Data.breadth}cm X{" "}
+                  {form2Data.height}cm
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">HSN</p>
-              <p className="font-medium mt-0.5">{form2Data.items[0]?.hsn}</p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">SKU</p>
-              <p className="font-medium mt-0.5">{form2Data.items[0]?.sku}</p>
-            </div>
-            <div className="flex flex-col ">
-              <p className="text-gray-500">Qty</p>
-              <p className="font-medium mt-0.5">{form2Data.items[0]?.qty}</p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">Unit Price</p>
-              <p className="font-medium mt-0.5">
-                {form2Data.items[0]?.unit_price}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">Total</p>
-              <p className="font-medium mt-0.5">120.0</p>
-            </div>
-          </div>
-          {/* {form2Data.items.length > 1 && (
             <div className="grid grid-cols-3 gap-y-2 mt-5">
-            <div className="flex flex-col">
-              <p className="text-gray-500">Product</p>
-              <p className="font-medium mt-0.5">
-                {form2Data.items[1]?.product_name}
-              </p>
+              {form2Data.items.map((item, index) => (
+                <React.Fragment key={index}>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Product</p>
+                    <p className="font-medium mt-0.5">{item.product_name}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">HSN</p>
+                    <p className="font-medium mt-0.5">{item.hsn}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">SKU</p>
+                    <p className="font-medium mt-0.5">{item.sku}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Qty</p>
+                    <p className="font-medium mt-0.5">{item.qty}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Unit Price</p>
+                    <p className="font-medium mt-0.5">{item.unit_price}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Total</p>
+                    <p className="font-medium mt-0.5">
+                      {item.qty * item.unit_price}
+                    </p>
+                  </div>
+                </React.Fragment>
+              ))}
             </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">HSN</p>
-              <p className="font-medium mt-0.5">{form2Data.items[1]?.hsn}</p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">SKU</p>
-              <p className="font-medium mt-0.5">{form2Data.items[1]?.sku}</p>
-            </div>
-            <div className="flex flex-col ">
-              <p className="text-gray-500">Qty</p>
-              <p className="font-medium mt-0.5">{form2Data.items[1]?.qty}</p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">Unit Price</p>
-              <p className="font-medium mt-0.5">
-                {form2Data.items[1]?.unit_price}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-gray-500">Total</p>
-              <p className="font-medium mt-0.5">120.0</p>
-            </div>
-          </div>
-          )} */}
-        </AccordionContent>
-      </AccordionItem>
+          </AccordionContent>
+        </AccordionItem>
+      )}
     </Accordion>
   );
 };
+
+const Summary = () => {
+  return (
+    <div className="rounded-lg border border-gray-200 p-5 mt-5 bg-red-50">
+      <p className="text-orange-500 font-semibold">Summary</p>
+      <div className="flex flex-col gap-y-2 mt-3">
+        <div className="flex justify-between">
+          <p>Logistic Fee</p>
+          <p>Rs. 14327.00</p>
+        </div>
+        <div className="flex justify-between">
+          <p>GST</p>
+          <p>Rs. 1230.00</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// const ConsignorContent = () => {
+//   return (
+//     <Accordion type="multiple">
+//       <AccordionItem value="item-1">
+//         <AccordionTrigger>Consignor Details</AccordionTrigger>
+//         <AccordionContent>
+//           <div className="flex flex-col">
+//             <p className="text-gray-500">Name</p>
+//             <p className="font-medium mt-0.5">Ross Willer</p>
+//             <p>ross.willer@shipglobal.in</p>
+//             <p className="text-gray-500 mt-2.5">Address</p>
+//             <p>PLOT NUMBER 245-246, G-1, SAI ESTATE</p>
+//             <p>GULMOHAR TRILOCHAN NAGAR</p>
+//           </div>
+//         </AccordionContent>
+//       </AccordionItem>
+//     </Accordion>
+//   );
+// };
+
+// const ConsigneeContent = ({ form1Data }) => {
+//   return (
+//     <Accordion type="multiple">
+//       <AccordionItem value="item-1">
+//         <AccordionTrigger>Consignee Details</AccordionTrigger>
+//         <AccordionContent>
+//           <div className="flex flex-col">
+//             <p className="text-gray-500">Name</p>
+//             <p className="font-medium mt-0.5">{form1Data.shipping_firstname}</p>
+
+//             <p className="text-gray-500 mt-2.5">Billing Address</p>
+//             <p className="font-medium mt-0.5">
+//               {form1Data.isBillingSame === true
+//                 ? "Same as Shipping Address"
+//                 : `${form1Data.shipping_address1}, ${form1Data.shipping_landmark}, ${form1Data.shipping_address2}, ${form1Data.shipping_city}, ${form1Data.shipping_country}, ${form1Data.shipping_pincode}`}
+//             </p>
+//             <p className="text-gray-500 mt-2.5">Shipping Address</p>
+//             <p className="font-medium mt-0.5">
+//               {form1Data.shipping_address1}, {form1Data.shipping_landmark},{" "}
+//               {form1Data.shipping_address2}, {form1Data.shipping_city},{" "}
+//               {form1Data.shipping_country}, {form1Data.shipping_pincode}
+//             </p>
+//           </div>
+//         </AccordionContent>
+//       </AccordionItem>
+//     </Accordion>
+//   );
+// };
+
+// const ItemContent = ({ form2Data }) => {
+//   return (
+//     <Accordion type="multiple">
+//       <AccordionItem value="item-1">
+//         <AccordionTrigger>Item Details</AccordionTrigger>
+//         <AccordionContent>
+//           <div className="flex justify-between">
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Billed Weight</p>
+//               <p className="font-medium mt-0.5">{form2Data.actual_weight} KG</p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Dimensions</p>
+//               <p className="font-medium mt-0.5">
+//                 {form2Data.length}cm X {form2Data.breadth}cm X{" "}
+//                 {form2Data.height}cm
+//               </p>
+//             </div>
+//           </div>
+//           <div className="grid grid-cols-3 gap-y-2 mt-5">
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Product</p>
+//               <p className="font-medium mt-0.5">
+//                 {form2Data.items[0]?.product_name}
+//               </p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">HSN</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[0]?.hsn}</p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">SKU</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[0]?.sku}</p>
+//             </div>
+//             <div className="flex flex-col ">
+//               <p className="text-gray-500">Qty</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[0]?.qty}</p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Unit Price</p>
+//               <p className="font-medium mt-0.5">
+//                 {form2Data.items[0]?.unit_price}
+//               </p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Total</p>
+//               <p className="font-medium mt-0.5">120.0</p>
+//             </div>
+//           </div>
+//           {/* {form2Data.items.length > 1 && (
+//             <div className="grid grid-cols-3 gap-y-2 mt-5">
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Product</p>
+//               <p className="font-medium mt-0.5">
+//                 {form2Data.items[1]?.product_name}
+//               </p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">HSN</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[1]?.hsn}</p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">SKU</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[1]?.sku}</p>
+//             </div>
+//             <div className="flex flex-col ">
+//               <p className="text-gray-500">Qty</p>
+//               <p className="font-medium mt-0.5">{form2Data.items[1]?.qty}</p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Unit Price</p>
+//               <p className="font-medium mt-0.5">
+//                 {form2Data.items[1]?.unit_price}
+//               </p>
+//             </div>
+//             <div className="flex flex-col">
+//               <p className="text-gray-500">Total</p>
+//               <p className="font-medium mt-0.5">120.0</p>
+//             </div>
+//           </div>
+//           )} */}
+//         </AccordionContent>
+//       </AccordionItem>
+//     </Accordion>
+//   );
+// };
