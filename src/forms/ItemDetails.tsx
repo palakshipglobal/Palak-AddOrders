@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 
 const ItemDetails = ({ form }) => {
@@ -25,6 +24,18 @@ const ItemDetails = ({ form }) => {
     control: form.control,
     name: "items",
   });
+
+  const items = form.watch("items") || [];
+  const currency = form.watch("invoice_currency");
+
+  const totalPrice = items.reduce(
+    (total: number, item: { qty: number; unit_price: number }) => {
+      const qty = item.qty || 0;
+      const unitPrice = item.unit_price || 0;
+      return total + qty * unitPrice;
+    },
+    0
+  );
 
   return (
     <div>
@@ -125,7 +136,9 @@ const ItemDetails = ({ form }) => {
           <Plus className="w-4 h-4 text-blue-800" />{" "}
           <span className="text-blue-800 underline">Add Another Product</span>
         </button>
-        <p className="lg:text-lg  font-bold mt-2">Total Price : CAD 12.00</p>
+        <p className="lg:text-lg  font-bold mt-2">
+          Total Price : {currency} {totalPrice.toFixed(2)}
+        </p>
       </div>
     </div>
   );

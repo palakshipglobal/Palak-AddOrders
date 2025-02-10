@@ -39,7 +39,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     billing_landmark: string;
   };
 
-  const BuyerForm = useForm<BuyerFormData>({
+   const BuyerForm = useForm<BuyerFormData>({
     resolver: zodResolver(BuyerSchema),
     defaultValues: form1Data,
   });
@@ -91,7 +91,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
     // nextStep(values);
     setActiveStep(3);
   };
-  console.log(BuyerForm.formState.errors);
 
   const countryShipping = BuyerForm.watch("shipping_country");
   const [states, setStates] = useState([]);
@@ -113,7 +112,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
             }
           );
           const result = await response.json();
-          console.log(result);
 
           if (result.data && result.data.states) {
             const formattedStates = result.data.states.map((state) => ({

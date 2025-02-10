@@ -34,7 +34,7 @@ const addresses = [
   { value: "Pine St", label: "Pine St" },
 ];
 
-const currency = [
+export const currency = [
   { value: "AED", label: "AED" },
   { value: "AUD", label: "AUD" },
   { value: "CAD", label: "CAD" },
@@ -50,12 +50,13 @@ const igst = [
   { value: "18", label: "18%" },
 ];
 
-const customers = [
+export const customers = [
   {
-    value: "customer1",
-    label: "8287435835 / Ross Willer / ross.willer@shipglobal.in",
+    value:
+      "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",
+    label:
+      "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",
   },
-  
 ];
 
 function Combobox({ options, placeholder, field }) {
@@ -259,7 +260,7 @@ export function IGSTSelect({ form, name, required }) {
   );
 }
 
-export function CustomerSelect({ form,name }) {
+export function CustomerSelect({ form, name }) {
   return (
     <FormField
       control={form.control}
@@ -267,7 +268,11 @@ export function CustomerSelect({ form,name }) {
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <Combobox options={customers} placeholder="Select Customer" field={field} />
+            <Combobox
+              options={customers}
+              placeholder="Select Pickup Address"
+              field={field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

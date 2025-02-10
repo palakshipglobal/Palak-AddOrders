@@ -6,9 +6,9 @@ import { RootState } from "@/store";
 import { CircleCheck } from "lucide-react";
 
 const courierOptions = [
-  { name: "ShipGlobal WorldWide", time: "13 - 18 Days", rate: "Rs. 3229" },
-  { name: "Fedex", time: "4 - 7 Days", rate: "Rs. 3465" },
-  { name: "UPS", time: "4 - 7 Days", rate: "Rs. 5785" },
+  { name: "ShipGlobal", time: "13 - 18 Days", rate: "3229" },
+  { name: "Fedex", time: "4 - 7 Days", rate: "3465" },
+  { name: "UPS", time: "4 - 7 Days", rate: "5785" },
 ];
 
 function ShippingPartner() {
@@ -18,7 +18,12 @@ function ShippingPartner() {
   );
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
-    console.log("Shipping Partner", selectedPartner);
+    console.log(
+      "Shipping Partner",
+      selectedPartner,
+      "Rate:",
+      selectedPartner.rate
+    );
   }
 
   return (
@@ -41,9 +46,9 @@ function ShippingPartner() {
         ))}
       </div>
 
-      <table className="mt-10">
+      <table className="mt-10 w-full">
         <thead>
-          <tr className="grid grid-cols-4 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
+          <tr className="grid grid-cols-4 text-xs lg:text-md pl-2 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
             <th className="pr-12">Courier Partner</th>
             <th>Delivery Time</th>
             <th>Shipment Rate</th>
@@ -54,16 +59,25 @@ function ShippingPartner() {
           {courierOptions.map((courier, index) => (
             <tr
               key={index}
-              className="grid grid-cols-4 py-4 border rounded-md mb-2"
-              onClick={() => dispatch(updateShippingPartner(courier.name))}
+              className="grid grid-cols-4 text-xs lg:text-sm py-4 border rounded-md mb-2"
+              onClick={() =>
+                dispatch(
+                  updateShippingPartner({
+                    name: courier.name,
+                    rate: courier.rate,
+                  })
+                )
+              }
             >
-              <td className="font-semibold text-sm px-4">{courier.name}</td>
-              <td className="ml-9">{courier.time}</td>
-              <td className="ml-14">{courier.rate}</td>
-              <td className="ml-20">
+              <td className="font-semibold text-xs lg:text-sm pl-2 md:pl-8">
+                {courier.name}
+              </td>
+              <td className="ml-5 md:ml-16">{courier.time}</td>
+              <td className="ml-6 md:ml-16">{courier.rate}</td>
+              <td className="ml-4 md:ml-20">
                 <CircleCheck
                   className={`h-6 w-6 cursor-pointer transition-colors ${
-                    selectedPartner === courier.name
+                    selectedPartner?.name === courier.name
                       ? "fill-green-500 text-white"
                       : "text-white fill-gray-300"
                   }`}
@@ -73,20 +87,6 @@ function ShippingPartner() {
           ))}
         </tbody>
       </table>
-
-      {/* <div className="mt-14">
-        {partnerData.map((item, index) => (
-          <CompanyPartner
-            key={index}
-            name={item.name}
-            message={item.message}
-            price={item.price}
-            days={item.days}
-            selected={selectedPartner === item.name}
-            onSelect={() => dispatch(updateShippingPartner(item.name))}
-          />
-        ))}
-      </div> */}
 
       <div className="flex justify-end py-5">
         <button

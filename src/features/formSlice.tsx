@@ -4,8 +4,8 @@ const initialState = {
     shipping_firstname: "",
     shipping_lastname: "",
     shipping_mobile: "",
-    shipping_email:"",
-    shipping_landmark:"",
+    shipping_email: "",
+    shipping_landmark: "",
     shipping_country: "",
     shipping_address1: "",
     shipping_address2: "",
@@ -18,7 +18,7 @@ const initialState = {
     billing_pincode: "",
     billing_city: "",
     billing_state: "",
-    billing_landmark:"",
+    billing_landmark: "",
     isBillingSame: true,
   },
 
@@ -46,8 +46,10 @@ const initialState = {
     ],
   },
   step: 1,
-  shippingPartner: "Shipglobal WorldWide",
+  shippingPartner: { name: "ShipGlobal", rate: "Rs. 3229" },
+
   csbNumber: "IV",
+  pickupAddress: "",
 };
 const formSlice = createSlice({
   name: "form",
@@ -72,6 +74,10 @@ const formSlice = createSlice({
     updateCsbNumber: (state, action) => {
       state.csbNumber = action.payload;
     },
+
+    updatePickupAddress: (state, action) => {
+      state.pickupAddress = action.payload;
+    },
   },
 });
 
@@ -81,5 +87,6 @@ export const {
   updateStep,
   updateShippingPartner,
   updateCsbNumber,
+  updatePickupAddress,
 } = formSlice.actions;
 export default formSlice.reducer;
