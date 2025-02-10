@@ -25,15 +25,14 @@ function ConsignorDetails({ setActiveStep }) {
     },
   });
 
-  
   useEffect(() => {
-    ConsignorForm.setValue("pickupAddress", storedPickupAddress); 
+    ConsignorForm.setValue("pickupAddress", storedPickupAddress);
   }, [storedPickupAddress, ConsignorForm]);
 
   const data = ConsignorForm.watch("pickupAddress");
 
-  function onSubmit(formData:z.infer<typeof ConsignorSchema>) {
-    dispatch(updatePickupAddress(formData.pickupAddress))
+  function onSubmit(formData: z.infer<typeof ConsignorSchema>) {
+    dispatch(updatePickupAddress(formData.pickupAddress));
     console.log("Pickup Address", storedPickupAddress);
     setActiveStep(2);
   }

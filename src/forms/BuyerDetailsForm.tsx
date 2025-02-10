@@ -46,37 +46,26 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   useEffect(() => {
     if (isBillingSame) {
-      BuyerForm.setValue(
-        "billing_country",
-        BuyerForm.getValues("shipping_country")
-      );
-      BuyerForm.setValue(
-        "billing_address1",
-        BuyerForm.getValues("shipping_address1")
-      );
-      BuyerForm.setValue(
-        "billing_address2",
-        BuyerForm.getValues("shipping_address2")
-      );
-      BuyerForm.setValue(
-        "billing_pincode",
-        BuyerForm.getValues("shipping_pincode")
-      );
-      BuyerForm.setValue(
-        "billing_landmark",
-        BuyerForm.getValues("shipping_landmark")
-      );
-      BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
-      BuyerForm.setValue(
-        "billing_state",
-        BuyerForm.getValues("shipping_state")
-      );
+      const shippingValues = BuyerForm.getValues([
+        "shipping_country",
+        "shipping_address1",
+        "shipping_address2",
+        "shipping_pincode",
+        "shipping_landmark",
+        "shipping_city",
+        "shipping_state",
+      ]);
+
+      BuyerForm.setValue("billing_country", shippingValues[0]);
+      BuyerForm.setValue("billing_address1", shippingValues[1]);
+      BuyerForm.setValue("billing_address2", shippingValues[2]);
+      BuyerForm.setValue("billing_pincode", shippingValues[3]);
+      BuyerForm.setValue("billing_landmark", shippingValues[4]);
+      BuyerForm.setValue("billing_city", shippingValues[5]);
+      BuyerForm.setValue("billing_state", shippingValues[6]);
     }
   }, [
     isBillingSame,
-    BuyerForm.watch("shipping_firstname"),
-    BuyerForm.watch("shipping_lastname"),
-    BuyerForm.watch("shipping_mobile"),
     BuyerForm.watch("shipping_country"),
     BuyerForm.watch("shipping_address1"),
     BuyerForm.watch("shipping_address2"),
@@ -88,7 +77,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
     dispatch(updateForm1Data(values));
-    // nextStep(values);
     setActiveStep(3);
   };
 

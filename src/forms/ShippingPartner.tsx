@@ -1,21 +1,66 @@
-import React from "react";
-import { weightData } from "@/layout/arrays";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { CircleCheck } from "lucide-react";
-
-const courierOptions = [
-  { name: "ShipGlobal", time: "13 - 18 Days", rate: "3229" },
-  { name: "Fedex", time: "4 - 7 Days", rate: "3465" },
-  { name: "UPS", time: "4 - 7 Days", rate: "5785" },
-];
 
 function ShippingPartner() {
   const dispatch = useDispatch();
   const selectedPartner = useSelector(
     (state: RootState) => state.form.shippingPartner
   );
+
+  const [courierOptions, setCourierOptions] = useState([]);
+
+  const { form1Data, form2Data } = useSelector(
+    (state: RootState) => state.form
+  );
+
+  const url =
+    "https://api.fr.stg.shipglobal.in/api/v1/orders/get-shipper-rates";
+
+  const payload = {
+    customer_shipping_country_code: form1Data.shipping_country,
+    customer_shipping_postcode: form1Data.shipping_pincode,
+    package_breadth: form2Data.breadth,
+    package_height: form2Data.height,
+    package_length: form2Data.length,
+    package_weight: form2Data.actual_weight,
+  };
+
+  const token =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTAgMTY6NTg6NDguNTc2NzgyIiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMiAxNjo1ODo0OC41NzY3ODMiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjViYjM5M2ZmLWY3ZWUtNDE4My04YmE3LTg0MTFjZGJmMmVmOSIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.e374_FSMTBZt98yC6fx3Hqq1mvrKfHrytRQx_hRStsw";
+
+  useEffect(() => {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data?.data?.rate) {
+          const formattedRates = data.data.rate.map(
+            (rate: {
+              display_name: string;
+              transit_time: string;
+              rate: string;
+            }) => ({
+              name: rate.display_name,
+              time: rate.transit_time,
+              rate: rate.rate,
+            })
+          );
+          setCourierOptions(formattedRates);
+          console.log(data);
+        }
+      })
+      .catch((error) => console.error("Error fetching rates:", error));
+  }, []);
+
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
     console.log(
@@ -28,24 +73,6 @@ function ShippingPartner() {
 
   return (
     <div className="px-5">
-      <p className="text-sm font-base mt-2">
-        All shipments via ShipGlobal Direct service are{" "}
-        <span className="font-bold">Delivered Duty Paid (DDP)</span>, hence{" "}
-        <span className="font-bold">no extra duty</span> will be billed on the
-        consignee or the shipper. Rates are inclusive of covid & fuel surcharge,
-        exclusive of GST and ex-Delhi Hub.
-      </p>
-      <p className="my-6 font-medium text-sm">
-        If you need more info, please call/whatsapp at{" "}
-        <span className="text-blue-500">011-422 77 777</span> .
-      </p>
-
-      <div className="flex flex-col md:flex-row gap-2 justify-center px-10 mt-10">
-        {weightData.map((item, index) => (
-          <Card text={item.text} className={item.className} key={index} />
-        ))}
-      </div>
-
       <table className="mt-10 w-full">
         <thead>
           <tr className="grid grid-cols-4 text-xs lg:text-sm pl-2 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
@@ -69,9 +96,6 @@ function ShippingPartner() {
                 )
               }
             >
-              <p className="text-xs text-red-500 bg-blue-100 rounded-tl-md rounded-tr-md py-0.5 px-3 absolute w-full">
-                Duties will be charged, if applicable.
-              </p>
               <td className="font-semibold text-xs lg:text-sm pl-2 md:pl-8">
                 {courier.name}
               </td>

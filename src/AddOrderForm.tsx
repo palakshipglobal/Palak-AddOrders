@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import BreadCrumb from "./layout/BreadCrumb";
 import AccordionComponent from "./layout/AccordionComponent";
 import box from "./assets/box.jpg";
@@ -18,71 +17,41 @@ import ConsignorDetails from "./forms/ConsignorDetails";
 import { updateStep } from "./features/formSlice";
 
 function AddOrderForm() {
-  const activeStep = useSelector((state: RootState) => state.form.step);
   const dispatch = useDispatch();
-  const { form1Data, form2Data, shippingPartner,pickupAddress } =
-    useSelector((state: RootState) => state.form);
+  const { step: activeStep, form1Data, form2Data, shippingPartner, pickupAddress } = useSelector(
+    (state: RootState) => state.form
+  );
+
+  const formSteps = [
+    { title: "Consignor Details", component: <ConsignorDetails setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
+    { title: "Consignee Details", component: <BuyerDetailsForm setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
+    { title: "Shipment Details", component: <OrderDetails setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
+    { title: "Select Shipping Partner", component: <ShippingPartner /> },
+  ];
+
   return (
-    <div className="bg-gray-50 min-h-screen px-2 pt-5 pb-20 p-2 lg:px-12">
+    <div className="bg-gray-50 min-h-screen px-2 pt-5 pb-20 lg:px-12">
       <p className="text-2xl my-2">Create CSB-IV Order</p>
       <BreadCrumb />
       <div className="flex gap-3 mt-4">
-        <div className="w-full rounded-md bg-white max-h-max lg:w-2/3 px-1.5 py-5 lg:px-7 flex flex-col">
-          <AccordionComponent
-            title="Consignor Details"
-            activeStep={activeStep}
-            isOpen={activeStep === 1}
-            setActiveStep={(step) => dispatch(updateStep(step))}
-            stepNumber={1}
-            childElement={
-              <ConsignorDetails
-                setActiveStep={(step) => dispatch(updateStep(step))}
-              />
-            }
-          />
-          <AccordionComponent
-            title="Consignee Details"
-            activeStep={activeStep}
-            isOpen={activeStep === 2}
-            setActiveStep={(step) => dispatch(updateStep(step))}
-            stepNumber={2}
-            childElement={
-              <BuyerDetailsForm
-                setActiveStep={(step) => dispatch(updateStep(step))}
-              />
-            }
-          />
-          <AccordionComponent
-            title="Shipment Details"
-            activeStep={activeStep}
-            isOpen={activeStep === 3}
-            setActiveStep={(step) => dispatch(updateStep(step))}
-            stepNumber={3}
-            childElement={
-              <OrderDetails
-                setActiveStep={(step) => dispatch(updateStep(step))}
-              />
-            }
-          />
-          <AccordionComponent
-            title="Select Shipping Partner"
-            activeStep={activeStep}
-            isOpen={activeStep === 4}
-            setActiveStep={(step) => dispatch(updateStep(step))}
-            stepNumber={4}
-            childElement={<ShippingPartner />}
-          />
+        <div className="w-full rounded-md bg-white lg:w-2/3 p-5 flex flex-col">
+          {formSteps.map((step, index) => (
+            <AccordionComponent
+              key={index}
+              title={step.title}
+              activeStep={activeStep}
+              isOpen={activeStep === index + 1}
+              setActiveStep={(step) => dispatch(updateStep(step))}
+              stepNumber={index + 1}
+              childElement={step.component}
+            />
+          ))}
         </div>
 
-        <div className="bg-white rounded-md max-h-max w-1/3 hidden lg:block px-8 py-3">
+       
+        <div className="bg-white rounded-md w-1/3 hidden lg:block px-8 py-3">
           {activeStep === 1 && <QuickTipsContent />}
-
-          <Data
-            activeStep={activeStep}
-            form1Data={form1Data}
-            form2Data={form2Data}
-            pickupAddress={pickupAddress}
-          />
+          <Data activeStep={activeStep} form1Data={form1Data} form2Data={form2Data} pickupAddress={pickupAddress} />
           {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
         </div>
       </div>
