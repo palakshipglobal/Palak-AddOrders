@@ -12,15 +12,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import ConsignorDetails from "./forms/ConsignorDetails";
+import { updateStep } from "./features/formSlice";
 
 function AddOrderForm() {
-  const [activeStep, setActiveStep] = useState(1);
-  const { form1Data, form2Data, pickupAddress, shippingPartner } = useSelector(
-    (state: RootState) => state.form
-  );
+  const activeStep = useSelector((state: RootState) => state.form.step);
+  const dispatch = useDispatch();
+  const { form1Data, form2Data, shippingPartner,pickupAddress } =
+    useSelector((state: RootState) => state.form);
   return (
     <div className="bg-gray-50 min-h-screen px-2 pt-5 pb-20 p-2 lg:px-12">
       <p className="text-2xl my-2">Create CSB-IV Order</p>
@@ -31,37 +32,49 @@ function AddOrderForm() {
             title="Consignor Details"
             activeStep={activeStep}
             isOpen={activeStep === 1}
-            setActiveStep={setActiveStep}
+            setActiveStep={(step) => dispatch(updateStep(step))}
             stepNumber={1}
-            childElement={<ConsignorDetails setActiveStep={setActiveStep} />}
+            childElement={
+              <ConsignorDetails
+                setActiveStep={(step) => dispatch(updateStep(step))}
+              />
+            }
           />
           <AccordionComponent
             title="Consignee Details"
             activeStep={activeStep}
             isOpen={activeStep === 2}
-            setActiveStep={setActiveStep}
+            setActiveStep={(step) => dispatch(updateStep(step))}
             stepNumber={2}
-            childElement={<BuyerDetailsForm setActiveStep={setActiveStep} />}
+            childElement={
+              <BuyerDetailsForm
+                setActiveStep={(step) => dispatch(updateStep(step))}
+              />
+            }
           />
           <AccordionComponent
             title="Shipment Details"
             activeStep={activeStep}
             isOpen={activeStep === 3}
-            setActiveStep={setActiveStep}
+            setActiveStep={(step) => dispatch(updateStep(step))}
             stepNumber={3}
-            childElement={<OrderDetails setActiveStep={setActiveStep} />}
+            childElement={
+              <OrderDetails
+                setActiveStep={(step) => dispatch(updateStep(step))}
+              />
+            }
           />
           <AccordionComponent
             title="Select Shipping Partner"
             activeStep={activeStep}
             isOpen={activeStep === 4}
-            setActiveStep={setActiveStep}
+            setActiveStep={(step) => dispatch(updateStep(step))}
             stepNumber={4}
             childElement={<ShippingPartner />}
           />
         </div>
 
-        <div className="bg-white rounded-md w-1/3 hidden lg:block px-8 py-3">
+        <div className="bg-white rounded-md max-h-max w-1/3 hidden lg:block px-8 py-3">
           {activeStep === 1 && <QuickTipsContent />}
 
           <Data
@@ -69,7 +82,6 @@ function AddOrderForm() {
             form1Data={form1Data}
             form2Data={form2Data}
             pickupAddress={pickupAddress}
-            shippingPartner={shippingPartner}
           />
           {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
         </div>
@@ -121,7 +133,6 @@ const Data = ({
   form1Data,
   form2Data,
   pickupAddress,
-  shippingPartner,
 }) => {
   return (
     <Accordion
@@ -132,13 +143,9 @@ const Data = ({
         <AccordionItem value="consignor">
           <AccordionTrigger>Consignor Details</AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col">
-              {/* <p className="text-gray-500">Name</p>
-              <p className="font-medium mt-0.5">Ross Willer</p>
-              <p>ross.willer@shipglobal.in</p> */}
+            <div className="flex flex-col">              
               <p className="text-gray-500 mt-2.5">Address</p>
-              <p>{pickupAddress}</p>
-              {/* <p>GULMOHAR TRILOCHAN NAGAR</p> */}
+              {pickupAddress}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -219,18 +226,6 @@ const Data = ({
                   </div>
                 </React.Fragment>
               ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      )}
-
-      {activeStep === 4 && (
-        <AccordionItem value="shipping">
-          <AccordionTrigger>Shipping Details</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col">
-              <p className="text-gray-500">Shipping Partner</p>
-              <p>{shippingPartner.name}</p>
             </div>
           </AccordionContent>
         </AccordionItem>

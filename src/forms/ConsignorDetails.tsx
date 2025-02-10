@@ -1,6 +1,6 @@
 import { Form } from "@/components/ui/form";
 import { updatePickupAddress } from "@/features/formSlice";
-import { customers, CustomerSelect } from "@/layout/ComboboxDemo";
+import { CustomerSelect } from "@/layout/ComboboxDemo";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
@@ -13,53 +13,39 @@ function ConsignorDetails({ setActiveStep }) {
     pickupAddress: z.string().min(1, "This field is required"),
   });
 
-  const ConsignorForm = useForm<z.infer<typeof ConsignorSchema>>({
-    resolver: zodResolver(ConsignorSchema),
-    defaultValues: {
-      pickupAddress: "",
-    },
-  });
-
   const dispatch = useDispatch();
-  const selectedPickupAddress = useSelector(
+  const storedPickupAddress = useSelector(
     (state: RootState) => state.form.pickupAddress
   );
 
-  useEffect(() => {
-    const selectedAddress = ConsignorForm.watch("pickupAddress");
-    if (selectedAddress) {
-      dispatch(updatePickupAddress(selectedAddress));
-    }
-  }, [ConsignorForm.watch("pickupAddress"), dispatch]);
+  const ConsignorForm = useForm<z.infer<typeof ConsignorSchema>>({
+    resolver: zodResolver(ConsignorSchema),
+    defaultValues: {
+      pickupAddress: storedPickupAddress,
+    },
+  });
 
-  function onSubmit() {
-    console.log("Pickup Address", selectedPickupAddress);
+  
+  useEffect(() => {
+    ConsignorForm.setValue("pickupAddress", storedPickupAddress); 
+  }, [storedPickupAddress, ConsignorForm]);
+
+  const data = ConsignorForm.watch("pickupAddress");
+
+  function onSubmit(formData:z.infer<typeof ConsignorSchema>) {
+    dispatch(updatePickupAddress(formData.pickupAddress))
+    console.log("Pickup Address", storedPickupAddress);
     setActiveStep(2);
   }
   return (
     <div className="px-5 mt-2">
-      <label className="font-medium">
-        Select Pickup address
-        {/* <span className="ml-px text-red-500">*</span> */}
-      </label>
+      <label className="font-medium">Select Pickup address</label>
       <Form {...ConsignorForm}>
         <form onSubmit={ConsignorForm.handleSubmit(onSubmit)} className="mt-2">
           <CustomerSelect form={ConsignorForm} name="pickupAddress" />
           <p className="text-gray-500 mt-5 font-medium">Pickup Address</p>
-          <p className="">{customers[0].label}</p>
-          {/* <div className="mt-5 flex flex-col md:flex-row gap-y-2 gap-x-10">
-            <div className="flex flex-col text-sm">
-              
-              <p className="font-semibold">Ross Willer</p>
-              <p>ross.willer@shipglobal.in</p>
-              <p>+91 8287435835</p>
-            </div>
-            <div className="flex flex-col text-sm">
-              <p className="font-semibold text-gray-500">Address</p>
-              <p>PLOT NUMBER 245-246, G-1, SAI ESTATE GULMOHAR</p>
-              <p>TRILOCHAN NAGAR</p>
-            </div>
-          </div> */}
+          <p className="">{data}</p>
+
           <div className="flex justify-end py-2">
             <button
               type="submit"

@@ -111,7 +111,7 @@ const ItemDetails = ({ form }) => {
               )}
             />
           </div>
-          {fields.length > 1 && (
+          {index > 1 && (
             <div onClick={() => remove(index)} className="mt-7">
               <Trash2 className="w-5 h-5 text-red-500" />
             </div>
