@@ -39,7 +39,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     billing_landmark: string;
   };
 
-   const BuyerForm = useForm<BuyerFormData>({
+  const BuyerForm = useForm<BuyerFormData>({
     resolver: zodResolver(BuyerSchema),
     defaultValues: form1Data,
   });

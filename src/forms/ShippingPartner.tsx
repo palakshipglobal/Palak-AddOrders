@@ -48,7 +48,7 @@ function ShippingPartner() {
 
       <table className="mt-10 w-full">
         <thead>
-          <tr className="grid grid-cols-4 text-xs lg:text-md pl-2 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
+          <tr className="grid grid-cols-4 text-xs lg:text-sm pl-2 font-medium py-2 border rounded-md mb-4 text-slate-500 bg-slate-50">
             <th className="pr-12">Courier Partner</th>
             <th>Delivery Time</th>
             <th>Shipment Rate</th>
@@ -59,7 +59,7 @@ function ShippingPartner() {
           {courierOptions.map((courier, index) => (
             <tr
               key={index}
-              className="grid grid-cols-4 text-xs lg:text-sm py-4 border rounded-md mb-2"
+              className="grid relative grid-cols-4 text-xs lg:text-sm pt-7 pb-3 border rounded-md mb-2"
               onClick={() =>
                 dispatch(
                   updateShippingPartner({
@@ -69,6 +69,9 @@ function ShippingPartner() {
                 )
               }
             >
+              <p className="text-xs text-red-500 bg-blue-100 rounded-tl-md rounded-tr-md py-0.5 px-3 absolute w-full">
+                Duties will be charged, if applicable.
+              </p>
               <td className="font-semibold text-xs lg:text-sm pl-2 md:pl-8">
                 {courier.name}
               </td>
@@ -92,7 +95,7 @@ function ShippingPartner() {
         <button
           type="submit"
           onClick={onSubmit}
-          className="bg-blue-500 text-white rounded-md px-5 py-2 hover:bg-blue-400"
+          className="bg-blue-800 text-white rounded-md px-5 py-2 hover:bg-blue-700"
         >
           Pay and Order
         </button>
