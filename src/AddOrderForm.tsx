@@ -75,7 +75,7 @@ function AddOrderForm() {
           ))}
         </div>
 
-        <div className="flex flex-col w-1/3 hidden lg:block">
+        <div className="flex-col w-1/3 hidden lg:block">
           <div className="bg-white max-h-max rounded-md px-8 py-3">
             {activeStep === 1 && <QuickTipsContent />}
             <Data
@@ -193,34 +193,17 @@ const Data = ({ activeStep, form1Data, form2Data, pickupAddress }) => {
               </div>
             </div>
             <div className="grid grid-cols-3 gap-y-2 mt-5">
-              {form2Data.items.map((item, index) => (
+              {form2Data.items.map(({item, index}:{item:any,index:any}) => (
                 <React.Fragment key={index}>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Product</p>
-                    <p className="font-medium mt-0.5">{item.product_name}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">HSN</p>
-                    <p className="font-medium mt-0.5">{item.hsn}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">SKU</p>
-                    <p className="font-medium mt-0.5">{item.sku}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Qty</p>
-                    <p className="font-medium mt-0.5">{item.qty}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Unit Price</p>
-                    <p className="font-medium mt-0.5">{item.unit_price}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Total</p>
-                    <p className="font-medium mt-0.5">
-                      {item.qty * item.unit_price}
-                    </p>
-                  </div>
+                  <ItemDetails title="Product" item={item.product_name} />
+                  <ItemDetails title="HSN" item={item.hsn} />
+                  <ItemDetails title="SKU" item={item.sku} />
+                  <ItemDetails title="Qty" item={item.qty} />
+                  <ItemDetails title="Unit Price" item={item.unit_price} />
+                  <ItemDetails
+                    title="Total"
+                    item={item.qty * item.unit_price}
+                  />
                 </React.Fragment>
               ))}
             </div>
@@ -254,3 +237,12 @@ const Summary = ({ shippingPartner }: any) => (
     </div>
   </div>
 );
+
+const ItemDetails = ({ title, item }) => {
+  return (
+    <div className="flex flex-col">
+      <p className="text-gray-500">{title}</p>
+      <p className="font-medium mt-0.5">{item}</p>
+    </div>
+  );
+};
