@@ -5,8 +5,8 @@ import React from "react";
 const BuyerBillingDetails = ({ form, states }) => {
   return (
     <div className="space-y-2">
-      <p className="text-md font-bold pt-4">Billing Address</p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <p className="text-base font-semibold">Billing Address</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
         <SimpleFormFields
           form={form}
           label="Address 1"

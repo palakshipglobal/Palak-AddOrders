@@ -40,7 +40,7 @@ const ItemDetails = ({ form }) => {
   return (
     <div>
       {fields.map((field, index) => (
-        <div className="lg:flex items-center gap-x-2">
+        <div className="lg:flex items-center gap-x-1">
           <div
             key={field.id}
             className="grid grid-cols-1 lg:grid-cols-6 gap-2 mt-2"
@@ -52,7 +52,7 @@ const ItemDetails = ({ form }) => {
                 name={`items.${index}.${itemField}` as const}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
+                    <FormLabel className="text-sm font-normal">
                       {itemField === "product_name"
                         ? "Product Name"
                         : itemField === "sku"
@@ -61,7 +61,7 @@ const ItemDetails = ({ form }) => {
                         ? "HSN"
                         : itemField === "qty"
                         ? "Qty"
-                        : "Unit Price(INR)"}
+                        : `Unit Price (${currency})`}
                       {itemField !== "sku" && (
                         <span className="text-red-500 ml-1">*</span>
                       )}
@@ -85,8 +85,9 @@ const ItemDetails = ({ form }) => {
               control={form.control}
               name={`items.${index}.igst` as const}
               render={({ field }) => (
+                
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="text-sm font-normal">
                     IGST <span className="text-red-500">*</span>
                   </FormLabel>
                   <Select
@@ -111,14 +112,14 @@ const ItemDetails = ({ form }) => {
               )}
             />
           </div>
-          {index > 1 && (
-            <div onClick={() => remove(index)} className="mt-7">
-              <Trash2 className="w-5 h-5 text-red-500" />
+          {index > 0 && (
+            <div onClick={() => remove(index)}>
+              <Trash2 className="w-5 h-5 text-red-500 mt-7" />
             </div>
           )}
         </div>
       ))}
-      <div className="flex flex-col md:flex-row md:justify-between mt-5">
+      <div className="flex flex-col md:flex-row md:justify-between mt-7">
         <button
           type="button"
           onClick={() =>
@@ -134,9 +135,11 @@ const ItemDetails = ({ form }) => {
           className="flex text-sm items-center gap-2"
         >
           <Plus className="w-4 h-4 text-blue-800" />{" "}
-          <span className="text-blue-800 underline">Add Another Product</span>
+          <span className="text-blue-800 underline font-medium">
+            Add Another Product
+          </span>
         </button>
-        <p className="lg:text-lg  font-bold mt-2">
+        <p className="lg:text-base font-semibold mt-2">
           Total Price : {currency} {totalPrice.toFixed(2)}
         </p>
       </div>

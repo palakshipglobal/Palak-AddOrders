@@ -36,7 +36,7 @@ function SimpleFormFields({
       control={form.control}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel>
+          <FormLabel className="text-sm font-normal">
             {label} {required && <Required />}
           </FormLabel>
           <FormControl>

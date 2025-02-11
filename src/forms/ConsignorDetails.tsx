@@ -37,18 +37,25 @@ function ConsignorDetails({ setActiveStep }) {
     setActiveStep(2);
   }
   return (
-    <div className="px-5 mt-2">
-      <label className="font-medium">Select Pickup address</label>
+    <div className="px-3 md:px-7 py-4">
       <Form {...ConsignorForm}>
-        <form onSubmit={ConsignorForm.handleSubmit(onSubmit)} className="mt-2">
-          <CustomerSelect form={ConsignorForm} name="pickupAddress" />
-          <p className="text-gray-500 mt-5 font-medium">Pickup Address</p>
-          <p className="">{data}</p>
+        <form
+          onSubmit={ConsignorForm.handleSubmit(onSubmit)}
+          className="mt-2 space-y-3"
+        >
+          <div className="space-y-1">
+            <label className="font-medium">Select Pickup address</label>
+            <CustomerSelect form={ConsignorForm} name="pickupAddress" />
+          </div>
+          <div className="space-y-1 w-5/6">
+            <p className="text-gray-500 font-medium">Pickup Address</p>
+            <p>{data}</p>
+          </div>
 
-          <div className="flex justify-end py-2">
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-blue-800 text-white rounded-md px-5 py-1.5 hover:bg-blue-700"
+              className="bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90"
             >
               Continue
             </button>

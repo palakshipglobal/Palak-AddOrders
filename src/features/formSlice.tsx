@@ -46,7 +46,7 @@ const initialState = {
     ],
   },
   step: 1,
-  shippingPartner: { name: "ShipGlobal", rate: "Rs. 3229" },
+  shippingPartner: { name: "", rate: "" },
   csbNumber: "IV",
   pickupAddress: "",
 };

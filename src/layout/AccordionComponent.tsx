@@ -11,18 +11,20 @@ function AccordionComponent({
 }) {
   return (
     <div
-      className={`cursor-pointer border rounded-md mt-3 w-full ${
+      className={`cursor-pointer border rounded-sm mt-2 w-full ${
         isOpen ? "bg-gray-50" : "bg-white"
       }`}
     >
       <div className="flex flex-row py-2.5 items-center justify-between transition duration-300">
         <div
-          className={`cursor-pointer items-center gap-x-2 flex flex-row font-normal px-2 lg:px-4 text-md `}
+          className={`cursor-pointer items-center gap-x-2 flex flex-row  ${
+            activeStep === stepNumber ? "text-black" : "text-gray-500"
+          } px-2 lg:px-4 text-sm font-medium`}
         >
           <div
-            className={`text-center w-6 h-6 py-0.5 rounded-md text-sm 
+            className={`text-center w-6 h-6 py-0.5 rounded-sm 
               ${activeStep < stepNumber && "bg-gray-200 text-black"}
-                ${activeStep > stepNumber && "bg-green-500 text-black"}
+                ${activeStep > stepNumber && "bg-green-800 text-black"}
                ${activeStep === stepNumber && "bg-black text-white"}
               `}
           >

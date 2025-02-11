@@ -3,7 +3,7 @@ import { CurrencySelect, DateSelect } from "@/layout/ComboboxDemo";
 import SimpleFormFields from "@/layout/SimpleFormFields";
 const OrderItemDetails = ({ form }) => {
   return (
-    <div className="grid mt-2 grid-cols-1 lg:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
       <SimpleFormFields
         form={form}
         label="Invoice Number"

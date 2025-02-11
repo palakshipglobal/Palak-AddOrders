@@ -118,9 +118,9 @@ export function BuyerDetailsForm({ setActiveStep }) {
   }, [countryShipping]);
 
   return (
-    <div className="px-5">
+    <div className="py-4 px-3 md:px-7">
       <Form {...BuyerForm}>
-        <form onSubmit={BuyerForm.handleSubmit(onSubmit)}>
+        <form onSubmit={BuyerForm.handleSubmit(onSubmit)} className="space-y-6">
           <BuyerShippingDetails form={BuyerForm} states={states} />
           <div
             className="flex gap-2 my-5 items-center cursor-pointer"
@@ -136,18 +136,18 @@ export function BuyerDetailsForm({ setActiveStep }) {
                 BuyerForm.setValue("isBillingSame", newValue);
               }}
             />
-            <p className="text-sm font-medium">
-              Shipping & Billing Address are same.
+            <p className="text-sm">
+              Billing Address is same as shipping address.
             </p>
           </div>
           {!isBillingSame && (
             <BuyerBillingDetails form={BuyerForm} states={states} />
           )}
 
-          <div className="flex justify-end py-5">
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-blue-800 text-white rounded-md px-5 py-2 hover:bg-blue-700"
+              className="bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90"
             >
               Continue
             </button>

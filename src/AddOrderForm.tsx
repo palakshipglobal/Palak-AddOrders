@@ -18,23 +18,50 @@ import { updateStep } from "./features/formSlice";
 
 function AddOrderForm() {
   const dispatch = useDispatch();
-  const { step: activeStep, form1Data, form2Data, shippingPartner, pickupAddress } = useSelector(
-    (state: RootState) => state.form
-  );
+  const {
+    step: activeStep,
+    form1Data,
+    form2Data,
+    shippingPartner,
+    pickupAddress,
+  } = useSelector((state: RootState) => state.form);
 
   const formSteps = [
-    { title: "Consignor Details", component: <ConsignorDetails setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
-    { title: "Consignee Details", component: <BuyerDetailsForm setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
-    { title: "Shipment Details", component: <OrderDetails setActiveStep={(step: number) => dispatch(updateStep(step))} /> },
+    {
+      title: "Consignor Details",
+      component: (
+        <ConsignorDetails
+          setActiveStep={(step: number) => dispatch(updateStep(step))}
+        />
+      ),
+    },
+    {
+      title: "Consignee Details",
+      component: (
+        <BuyerDetailsForm
+          setActiveStep={(step: number) => dispatch(updateStep(step))}
+        />
+      ),
+    },
+    {
+      title: "Shipment Details",
+      component: (
+        <OrderDetails
+          setActiveStep={(step: number) => dispatch(updateStep(step))}
+        />
+      ),
+    },
     { title: "Select Shipping Partner", component: <ShippingPartner /> },
   ];
 
   return (
     <div className="bg-gray-50 min-h-screen px-2 pt-5 pb-20 lg:px-12">
-      <p className="text-2xl my-2">Create CSB-IV Order</p>
+      <p className="text-2xl mb-1 font-medium tracking-tight">
+        Create CSB-IV Order
+      </p>
       <BreadCrumb />
-      <div className="flex gap-3 mt-4">
-        <div className="w-full rounded-md bg-white lg:w-2/3 p-5 flex flex-col">
+      <div className="flex gap-3 mt-3">
+        <div className="w-full -mt-3 rounded-md lg:w-2/3 flex flex-col">
           {formSteps.map((step, index) => (
             <AccordionComponent
               key={index}
@@ -48,10 +75,16 @@ function AddOrderForm() {
           ))}
         </div>
 
-       
-        <div className="bg-white rounded-md w-1/3 hidden lg:block px-8 py-3">
-          {activeStep === 1 && <QuickTipsContent />}
-          <Data activeStep={activeStep} form1Data={form1Data} form2Data={form2Data} pickupAddress={pickupAddress} />
+        <div className="flex flex-col w-1/3 hidden lg:block">
+          <div className="bg-white max-h-max rounded-md px-8 py-3">
+            {activeStep === 1 && <QuickTipsContent />}
+            <Data
+              activeStep={activeStep}
+              form1Data={form1Data}
+              form2Data={form2Data}
+              pickupAddress={pickupAddress}
+            />
+          </div>
           {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
         </div>
       </div>
@@ -64,7 +97,7 @@ export default AddOrderForm;
 const QuickTipsContent = () => {
   return (
     <div className="flex flex-col">
-      <p className="font-semibold text-lg mx-auto">Quick Tips</p>
+      <p className="font-semibold text-base mx-auto">Quick Tips</p>
       <img src={box} className="h-44 w-44 mx-auto" />
       <p className="font-semibold text-sm mt-3">Dead Weight:</p>
       <div className="text-xs mt-3">
@@ -97,12 +130,7 @@ const QuickTipsContent = () => {
   );
 };
 
-const Data = ({
-  activeStep,
-  form1Data,
-  form2Data,
-  pickupAddress,
-}) => {
+const Data = ({ activeStep, form1Data, form2Data, pickupAddress }) => {
   return (
     <Accordion
       type="multiple"
@@ -112,9 +140,9 @@ const Data = ({
         <AccordionItem value="consignor">
           <AccordionTrigger>Consignor Details</AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col">              
+            <div className="flex flex-col">
               <p className="text-gray-500 mt-2.5">Address</p>
-              {pickupAddress}
+              <p className="font-medium">{pickupAddress}</p>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -215,7 +243,7 @@ const Summary = ({ shippingPartner }: any) => (
           <p>GST</p>
         </div>
         <div className="grid text-right text-black gap-y-4">
-          <p>Rs. {shippingPartner?.rate}</p>
+          <p>Rs. {shippingPartner?.rate}.00</p>
           <p>Rs. 1223.16</p>
         </div>
       </div>

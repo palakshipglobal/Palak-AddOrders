@@ -24,40 +24,9 @@ import {
 } from "@/components/ui/form";
 import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
+import { addresses, currency, customers, igst } from "./arrays";
 
-const addresses = [
-  { value: "Main St", label: "Main St" },
-  {
-    value: "Oak Street",
-    label: "Oak Street",
-  },
-  { value: "Pine St", label: "Pine St" },
-];
 
-export const currency = [
-  { value: "AED", label: "AED" },
-  { value: "AUD", label: "AUD" },
-  { value: "CAD", label: "CAD" },
-  { value: "EUR", label: "EUR" },
-  { value: "IND", label: "IND" },
-];
-
-const igst = [
-  { value: "0", label: "0%" },
-  { value: "3", label: "3%" },
-  { value: "5", label: "5%" },
-  { value: "12", label: "12%" },
-  { value: "18", label: "18%" },
-];
-
-export const customers = [
-  {
-    value:
-      "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",
-    label:
-      "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",
-  },
-];
 
 function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
@@ -140,7 +109,7 @@ export function CountrySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Country {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">Country {required && <Required />}</FormLabel>
           <FormControl>
             {loading ? (
               <p>Loading...</p>
@@ -166,7 +135,7 @@ export function StateSelect({ form, name, required, states }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>State {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">State {required && <Required />}</FormLabel>
           <FormControl>
             <Combobox
               options={states}
@@ -209,7 +178,7 @@ export function CurrencySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Invoice Currency {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">Invoice Currency {required && <Required />}</FormLabel>
           <FormControl>
             <Combobox
               options={currency}
@@ -231,7 +200,7 @@ export function DateSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Invoice Date {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">Invoice Date {required && <Required />}</FormLabel>
           <FormControl>
             <DatePickerWithPresets name="invoice_date" />
           </FormControl>
@@ -249,7 +218,7 @@ export function IGSTSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">IGST {required && <Required />}</FormLabel>
           <FormControl>
             <Combobox options={igst} placeholder="0%" field={field} />
           </FormControl>
