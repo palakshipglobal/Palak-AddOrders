@@ -10,28 +10,28 @@ const BuyerBillingDetails = ({ form, states }) => {
         <SimpleFormFields
           form={form}
           label="Address 1"
-          name="shipping_address1"
+          name="billing_address1"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
           label="Address 2"
-          name="shipping_address2"
+          name="billing_address2"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
           label="Landmark"
-          name="landmark"
+          name="billing_landmark"
           type="text"
         />
 
-        <CountrySelect form={form} name="shipping_country" required />
+        <CountrySelect form={form} name="billing_country" required />
         <StateSelect
           form={form}
-          name="shipping_state"
+          name="billing_state"
           required
           states={states}
         />
@@ -39,14 +39,14 @@ const BuyerBillingDetails = ({ form, states }) => {
         <SimpleFormFields
           form={form}
           label="Pincode"
-          name="shipping_pincode"
+          name="billing_pincode"
           type="text"
           required
         />
         <SimpleFormFields
           form={form}
           label="City"
-          name="shipping_city"
+          name="billing_city"
           type="text"
           required
         />

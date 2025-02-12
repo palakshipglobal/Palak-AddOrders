@@ -19,14 +19,6 @@ export const csbArray = [
     iconStyle: "text-blue-400 size-8",
   },
 ];
-export const weightData = [
-  { text: "Dead", className: "border border-gray-300" },
-  { text: "Volumetric", className: "border border-gray-300" },
-  {
-    text: "Billed",
-    className: "border border-orange-300 bg-yellow-100 text-orange-500",
-  },
-];
 
 export const partnerData = [
   {
@@ -69,7 +61,7 @@ export const currency = [
   { value: "AUD", label: "AUD" },
   { value: "CAD", label: "CAD" },
   { value: "EUR", label: "EUR" },
-  { value: "INR", label: "IND" },
+  { value: "INR", label: "INR" },
 ];
 
 export const igst = [

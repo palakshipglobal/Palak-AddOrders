@@ -80,11 +80,19 @@ export function BuyerDetailsForm({ setActiveStep }) {
     setActiveStep(3);
   };
 
+  useEffect(() => {
+    console.log("Shipping State:", BuyerForm.watch("shipping_state"));
+    console.log("Bill State:", BuyerForm.watch("billing_state"));
+  }, [BuyerForm.watch("shipping_state"), BuyerForm.watch("billing_state")]);
+
   const countryShipping = BuyerForm.watch("shipping_country");
-  const [states, setStates] = useState([]);
+  const countryBilling = BuyerForm.watch("billing_country");
+  const [shippingStates, setShippingStates] = useState([]);
+  const [billingStates, setBillingStates] = useState([]);
 
   useEffect(() => {
     if (countryShipping) {
+      BuyerForm.setValue("shipping_state", "");
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -102,11 +110,11 @@ export function BuyerDetailsForm({ setActiveStep }) {
           const result = await response.json();
 
           if (result.data && result.data.states) {
-            const formattedStates = result.data.states.map((state) => ({
+            const formattedStates = result.data.states.map((state:any) => ({
               value: state.state_name,
               label: state.state_name,
             }));
-            setStates(formattedStates);
+            setShippingStates(formattedStates);
           }
         } catch (error) {
           console.error("Error fetching states:", error);
@@ -117,11 +125,44 @@ export function BuyerDetailsForm({ setActiveStep }) {
     }
   }, [countryShipping]);
 
+  useEffect(() => {
+    if (countryBilling) {
+      BuyerForm.setValue("billing_state", "");
+      const fetchStates = async () => {
+        try {
+          const response = await fetch(
+            `https://api.fr.stg.shipglobal.in/api/v1/location/states`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                state_country_code: countryBilling,
+              }),
+            }
+          );
+          const result = await response.json();
+          if (result.data && result.data.states) {
+            const formattedStates = result.data.states.map((state) => ({
+              value: state.state_name,
+              label: state.state_name,
+            }));
+            setBillingStates(formattedStates);
+          }
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+      fetchStates();
+    }
+  }, [countryBilling]);
+
   return (
     <div className="py-4 px-3 md:px-7">
       <Form {...BuyerForm}>
         <form onSubmit={BuyerForm.handleSubmit(onSubmit)} className="space-y-6">
-          <BuyerShippingDetails form={BuyerForm} states={states} />
+          <BuyerShippingDetails form={BuyerForm} states={shippingStates} />
           <div
             className="flex gap-2 my-5 items-center cursor-pointer"
             onClick={() => setIsBillingSame(!isBillingSame)}
@@ -141,7 +182,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
             </p>
           </div>
           {!isBillingSame && (
-            <BuyerBillingDetails form={BuyerForm} states={states} />
+            <BuyerBillingDetails form={BuyerForm} states={billingStates} />
           )}
 
           <div className="flex justify-end">

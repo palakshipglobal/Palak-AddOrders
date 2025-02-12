@@ -4,41 +4,38 @@ export const BuyerSchema = z
   .object({
     shipping_firstname: z
       .string()
-      .min(1, "The customer shipping first name is required.")
-      .regex(/^[A-Za-z]+$/, "First name should only contain alphabets."),
+      .min(1, "First name is required.")
+      .regex(/^[A-Za-z]+$/, "Please enter alphabetic characters"),
     shipping_lastname: z
       .string()
-      .min(1, "The customer shipping last name is required.")
-      .regex(/^[A-Za-z]+$/, "Last name should only contain alphabets."),
+      .min(1, "Last name is required.")
+      .regex(/^[A-Za-z]+$/, "Please enter alphabetic characters"),
     shipping_mobile: z
       .string()
       .regex(/^\d{10}$/, "The mobile number should contain exactly 10 digits."),
     shipping_alternate_mobile: z.string().optional(),
     shipping_email: z
       .string()
-      .min(1, "The customer email is required.")
+      .min(1, "Please enter a valid email address.")
       .regex(
         /^[a-zA-Z0-9._#]+@[a-zA-Z0-9._#]+\.[a-zA-Z]{2,}$/,
         "Invalid email format."
       ),
-    shipping_country: z
-      .string()
-      .min(1, "The customer shipping country code is required."),
-    shipping_address1: z
-      .string()
-      .min(1, "The customer shipping address 1 is required."),
-    shipping_address2: z.string().optional(),
+    shipping_country: z.string().min(1, "Please select a country."),
+    shipping_address1: z.string().min(1, "Address 1 is required."),
+    // shipping_country: z.string().optional(),
+
+    shipping_address2: z.string().min(1, "Address 2 is required."),
     shipping_pincode: z
       .string()
-      .min(1, "The pincode is required.")
-      .regex(/^[A-Za-z0-9]{5}$/, "Invalid pincode."),
+      .min(1, "Pincode is required.")
+      .max(20, "Pincode should not be long than 20 characters")
+      .regex(/^[A-Za-z0-9]{6}$/, "Invalid pincode."),
     shipping_city: z
       .string()
-      .min(1, "The customer shipping city is required.")
-      .regex(/^[A-Za-z\s]+$/, "City should only contain alphabets and spaces."),
-    shipping_state: z
-      .string()
-      .min(1, "The customer shipping state is required."),
+      .min(1, "City is required.")
+      .regex(/^[A-Za-z\s]+$/, "Only alphabets and spaces are allowed"),
+    shipping_state: z.string().min(1, "Please select a state."),
     isBillingSame: z.boolean(),
 
     billing_country: z.string().optional(),
@@ -53,7 +50,7 @@ export const BuyerSchema = z
       if (!data.billing_country) {
         ctx.addIssue({
           path: ["billing_country"],
-          message: "The customer billing country is required.",
+          message: "Please select a country.",
           code: "custom",
         });
       }
@@ -61,7 +58,7 @@ export const BuyerSchema = z
       if (!data.billing_address1) {
         ctx.addIssue({
           path: ["billing_address1"],
-          message: "The customer billing address 1 is required.",
+          message: "Address 1 is required.",
           code: "custom",
         });
       }
@@ -69,10 +66,10 @@ export const BuyerSchema = z
       if (!data.billing_pincode) {
         ctx.addIssue({
           path: ["billing_pincode"],
-          message: "The customer billing pincode is required.",
+          message: "Pincode is required.",
           code: "custom",
         });
-      } else if (!/^[A-Za-z0-9]{5}$/.test(data.billing_pincode)) {
+      } else if (!/^[A-Za-z0-9]{6}$/.test(data.billing_pincode)) {
         ctx.addIssue({
           path: ["billing_pincode"],
           message: "Invalid pincode.",
@@ -82,20 +79,20 @@ export const BuyerSchema = z
       if (!data.billing_city) {
         ctx.addIssue({
           path: ["billing_city"],
-          message: "The customer billing city is required.",
+          message: "City is required.",
           code: "custom",
         });
       } else if (!/^[A-Za-z\s]+$/.test(data.billing_city)) {
         ctx.addIssue({
           path: ["billing_city"],
-          message: "City should only contain alphabets.",
+          message: "Only alphabets and spaces are allowed",
           code: "custom",
         });
       }
       if (!data.billing_state) {
         ctx.addIssue({
           path: ["billing_state"],
-          message: "The customer billing state is required.",
+          message: "Please select a state.",
           code: "custom",
         });
       }
@@ -105,33 +102,46 @@ export const BuyerSchema = z
 export const OrderSchema = z.object({
   actual_weight: z
     .string()
-    .min(1, "Weight is Required")
-    .regex(/^\d+$/, "The package weight must be a numeric value."),
+    .min(1, "Weight must be atleast 0.01 KG")
+
+    .regex(/^\d+$/, "The package weight must be a numeric value.")
+    .refine((val) => parseFloat(val) <= 300, {
+      message: "Weight must not be more than 300 KG",
+    }),
 
   length: z
     .string()
-    .min(1, "Length is Required")
-    .regex(/^\d+$/, "The package length must be a numeric value."),
+    .min(1, "Length must be atleast 1 cm")
+    .regex(/^\d+$/, "The package length must be a numeric value.")
+    .refine((val) => parseFloat(val) <= 120, {
+      message: "Length must be not more than 120",
+    }),
 
   breadth: z
     .string()
-    .min(1, "Breadth is Required")
-    .regex(/^\d+$/, "The package breadth must be a numeric value."),
+    .min(1, "Breadth must be atleast 1 cm")
+    .regex(/^\d+$/, "The package breadth must be a numeric value.")
+    .refine((val) => parseFloat(val) <= 120, {
+      message: "Breadth must be not more than 120",
+    }),
 
   height: z
     .string()
-    .min(1, "Height is Required")
-    .regex(/^\d+$/, "The package height must be a numeric value."),
+    .min(1, "Height must be atleast 1 cm")
+    .regex(/^\d+$/, "The package height must be a numeric value.")
+    .refine((val) => parseFloat(val) <= 120, {
+      message: "Height must be not more than 120",
+    }),
 
   invoice_no: z
     .string()
-    .min(1, "Invoice No. is Required")
-    .regex(/^[A-Za-z0-9]+$/, "The invoice No. is invalid."),
+    .min(1, "Please enter invoice number")
+    .regex(/^[A-Za-z0-9]+$/, "Please enter alphanumeric characters"),
 
   invoice_date: z
     .union([z.string(), z.date()])
     .refine((val) => val !== "" && val !== null, {
-      message: "Invoice Date is required",
+      message: "Please select invoice date",
     }),
   invoice_currency: z.string().min(1, "Invoice Currency is required"),
   order_id: z.string().optional(),
@@ -147,16 +157,14 @@ export const OrderSchema = z.object({
         ),
 
       sku: z.string().optional(),
-      hsn: z.string().regex(/^\d{8}$/, "HSN must be exactly 8 digits."),
-      qty: z
-        .string()
-        .min(1, "Qty is Required")
-        .regex(/^\d+$/, "Only numbers are allowed."),
+      hsn: z.string().regex(/^\d{8}$/, "HSN must be 8 digits long."),
+      qty: z.string().refine((value) => Number(value) > 0, {
+        message: "Quantity must be greater than zero",
+      }),
 
-      unit_price: z
-        .string()
-        .min(1, "Unit Price is Required")
-        .regex(/^\d+$/, "Only numbers are allowed."),
+      unit_price: z.string().refine((value) => Number(value) > 0, {
+        message: "Unit Price must be greater than zero",
+      }),
 
       igst: z.string().min(1, "IGST is required"),
     })

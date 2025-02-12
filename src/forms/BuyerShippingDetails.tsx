@@ -49,12 +49,13 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Address 2"
           name="shipping_address2"
+          required
           type="text"
         />
         <SimpleFormFields
           form={form}
           label="Landmark"
-          name="landmark"
+          name="shipping_landmark"
           type="text"
         />
 

@@ -9,7 +9,7 @@ const ShipmentDetails = ({ form }) => {
           form={form}
           label="Weight"
           name="actual_weight"
-          type="text"
+          type="number"
           className="w-full"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
@@ -23,7 +23,7 @@ const ShipmentDetails = ({ form }) => {
           form={form}
           label="Length"
           name="length"
-          type="text"
+          type="number"
           className="w-full"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
@@ -37,7 +37,7 @@ const ShipmentDetails = ({ form }) => {
           form={form}
           label="Breadth"
           name="breadth"
-          type="text"
+          type="number"
           className="w-full"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
@@ -51,7 +51,7 @@ const ShipmentDetails = ({ form }) => {
           form={form}
           label="Height"
           name="height"
-          type="text"
+          type="number"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           className="w-full"
           required

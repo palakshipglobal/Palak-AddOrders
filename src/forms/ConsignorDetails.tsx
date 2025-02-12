@@ -10,7 +10,7 @@ import { z } from "zod";
 
 function ConsignorDetails({ setActiveStep }) {
   const ConsignorSchema = z.object({
-    pickupAddress: z.string().min(1, "This field is required"),
+    pickupAddress: z.string().min(1, "Please select an address"),
   });
 
   const dispatch = useDispatch();
@@ -27,6 +27,7 @@ function ConsignorDetails({ setActiveStep }) {
 
   useEffect(() => {
     ConsignorForm.setValue("pickupAddress", storedPickupAddress);
+    console.log(storedPickupAddress)
   }, [storedPickupAddress, ConsignorForm]);
 
   const data = ConsignorForm.watch("pickupAddress");

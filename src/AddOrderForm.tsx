@@ -26,6 +26,17 @@ function AddOrderForm() {
     pickupAddress,
   } = useSelector((state: RootState) => state.form);
 
+  const selectedCountry = localStorage.getItem("countries");
+  const countries = JSON.parse(selectedCountry);
+  const billingLabel = countries.find(
+    (country: any) => country.value === form1Data.billing_country
+  );
+  const shippingLabel = countries.find(
+    (country: any) => country.value === form1Data.shipping_country
+  );
+  const shippingCountryName = shippingLabel.label;
+  const billingCountryName = billingLabel.label;
+
   const formSteps = [
     {
       title: "Consignor Details",
@@ -83,6 +94,8 @@ function AddOrderForm() {
               form1Data={form1Data}
               form2Data={form2Data}
               pickupAddress={pickupAddress}
+              billingLabel={billingCountryName}
+              shippingLabel={shippingCountryName}
             />
           </div>
           {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
@@ -130,7 +143,14 @@ const QuickTipsContent = () => {
   );
 };
 
-const Data = ({ activeStep, form1Data, form2Data, pickupAddress }) => {
+const Data = ({
+  activeStep,
+  form1Data,
+  form2Data,
+  pickupAddress,
+  billingLabel,
+  shippingLabel,
+}) => {
   return (
     <Accordion
       type="multiple"
@@ -148,33 +168,56 @@ const Data = ({ activeStep, form1Data, form2Data, pickupAddress }) => {
         </AccordionItem>
       )}
       {activeStep > 2 && (
-        <AccordionItem value="consignee">
+        <AccordionItem value="consignee" className="border-t">
           <AccordionTrigger>Consignee Details</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col">
               <p className="text-gray-500">Name</p>
               <p className="font-medium mt-0.5">
-                {form1Data.shipping_firstname}
+                {form1Data.shipping_firstname || ""}
               </p>
 
               <p className="text-gray-500 mt-2.5">Billing Address</p>
               <p className="font-medium mt-0.5">
                 {form1Data.isBillingSame
                   ? "Same as Shipping Address"
-                  : `${form1Data.shipping_address1}, ${form1Data.shipping_landmark}, ${form1Data.shipping_address2}, ${form1Data.shipping_city}, ${form1Data.shipping_country}, ${form1Data.shipping_pincode}`}
+                  : `${
+                      form1Data?.billing_address1
+                        ? form1Data.billing_address1 + ","
+                        : ""
+                    } 
+       ${form1Data?.billing_landmark ? form1Data.billing_landmark + "," : ""} 
+       ${form1Data?.billing_address2 ? form1Data.billing_address2 + "," : ""} 
+       ${form1Data?.billing_city ? form1Data.billing_city + "," : ""}
+       ${form1Data?.billing_state ? form1Data.billing_state + "," : ""} 
+       ${form1Data?.billing_country ? billingLabel + "," : ""} 
+       ${form1Data?.billing_pincode ? form1Data.billing_pincode + "," : ""}`}
               </p>
+
               <p className="text-gray-500 mt-2.5">Shipping Address</p>
               <p className="font-medium mt-0.5">
-                {form1Data.shipping_address1}, {form1Data.shipping_landmark},{" "}
-                {form1Data.shipping_address2}, {form1Data.shipping_city},{" "}
-                {form1Data.shipping_country}, {form1Data.shipping_pincode}
+                {form1Data?.shipping_address1
+                  ? form1Data.shipping_address1 + ", "
+                  : ""}
+                {form1Data?.shipping_landmark
+                  ? form1Data.shipping_landmark + ", "
+                  : ""}
+                {form1Data?.shipping_address2
+                  ? form1Data.shipping_address2 + ", "
+                  : ""}
+                {form1Data?.shipping_city ? form1Data.shipping_city + ", " : ""}
+                {form1Data?.shipping_state
+                  ? form1Data.shipping_state + ", "
+                  : ""}
+                {form1Data?.shipping_country ? shippingLabel + ", " : ""}
+                {form1Data?.shipping_pincode ? form1Data.shipping_pincode : ""}
               </p>
             </div>
           </AccordionContent>
         </AccordionItem>
       )}
       {activeStep > 3 && (
-        <AccordionItem value="item">
+        <AccordionItem value="item" className="border-t">
           <AccordionTrigger>Item Details</AccordionTrigger>
           <AccordionContent>
             <div className="flex justify-between">
@@ -193,17 +236,36 @@ const Data = ({ activeStep, form1Data, form2Data, pickupAddress }) => {
               </div>
             </div>
             <div className="grid grid-cols-3 gap-y-2 mt-5">
-              {form2Data.items.map(({item, index}:{item:any,index:any}) => (
+              {form2Data.items.map((item: any, index: any) => (
                 <React.Fragment key={index}>
-                  <ItemDetails title="Product" item={item.product_name} />
-                  <ItemDetails title="HSN" item={item.hsn} />
-                  <ItemDetails title="SKU" item={item.sku} />
-                  <ItemDetails title="Qty" item={item.qty} />
-                  <ItemDetails title="Unit Price" item={item.unit_price} />
-                  <ItemDetails
-                    title="Total"
-                    item={item.qty * item.unit_price}
-                  />
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Product</p>
+                    <p className="font-medium mt-0.5">{item.product_name}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">HSN</p>
+                    <p className="font-medium mt-0.5">{item.hsn}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">SKU</p>
+                    <p className="font-medium mt-0.5">{item.sku}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Qty</p>
+                    <p className="font-medium mt-0.5">{Number(item.qty)}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Unit Price</p>
+                    <p className="font-medium mt-0.5">
+                      {form2Data.invoice_currency} {Number(item.unit_price)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-500">Total</p>
+                    <p className="font-medium mt-0.5">
+                      {form2Data.invoice_currency} {item.qty * item.unit_price}
+                    </p>
+                  </div>
                 </React.Fragment>
               ))}
             </div>
@@ -237,12 +299,3 @@ const Summary = ({ shippingPartner }: any) => (
     </div>
   </div>
 );
-
-const ItemDetails = ({ title, item }) => {
-  return (
-    <div className="flex flex-col">
-      <p className="text-gray-500">{title}</p>
-      <p className="font-medium mt-0.5">{item}</p>
-    </div>
-  );
-};

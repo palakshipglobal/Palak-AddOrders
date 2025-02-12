@@ -26,8 +26,6 @@ import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
 import { addresses, currency, customers, igst } from "./arrays";
 
-
-
 function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === field.value);
@@ -76,10 +74,13 @@ function Combobox({ options, placeholder, field }) {
 
 export function CountrySelect({ form, name, required }) {
   const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchCountries() {
+    // const storedCountries = localStorage.getItem("countries");
+    // if (storedCountries) {
+    //   setCountries(JSON.parse(storedCountries));
+    // } else {
+    const fetchCountries = async () => {
       try {
         const response = await fetch(
           "https://api.fr.stg.shipglobal.in/api/v1/location/countries"
@@ -87,20 +88,22 @@ export function CountrySelect({ form, name, required }) {
         const result = await response.json();
 
         if (result.data && result.data.countries) {
-          const formattedCountries = result.data.countries.map((country) => ({
-            value: country.country_iso2,
-            label: country.country_display,
-          }));
+          const formattedCountries = result.data.countries.map(
+            (country: any) => ({
+              value: country.country_iso2,
+              label: country.country_display,
+            })
+          );
           setCountries(formattedCountries);
+          localStorage.setItem("countries", JSON.stringify(formattedCountries));
         }
       } catch (error) {
         console.error("Error fetching countries:", error);
-      } finally {
-        setLoading(false);
       }
-    }
+    };
 
     fetchCountries();
+    // }
   }, []);
 
   return (
@@ -109,17 +112,15 @@ export function CountrySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-normal">Country {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            Country {required && <Required />}
+          </FormLabel>
           <FormControl>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <Combobox
-                options={countries}
-                placeholder="Select a Country"
-                field={field}
-              />
-            )}
+            <Combobox
+              options={countries}
+              placeholder="Select a Country"
+              field={field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -135,7 +136,9 @@ export function StateSelect({ form, name, required, states }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-normal">State {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            State {required && <Required />}
+          </FormLabel>
           <FormControl>
             <Combobox
               options={states}
@@ -178,7 +181,9 @@ export function CurrencySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-normal">Invoice Currency {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            Invoice Currency {required && <Required />}
+          </FormLabel>
           <FormControl>
             <Combobox
               options={currency}
@@ -200,7 +205,9 @@ export function DateSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-normal">Invoice Date {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            Invoice Date {required && <Required />}
+          </FormLabel>
           <FormControl>
             <DatePickerWithPresets name="invoice_date" />
           </FormControl>
@@ -218,7 +225,9 @@ export function IGSTSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-sm font-normal">IGST {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            IGST {required && <Required />}
+          </FormLabel>
           <FormControl>
             <Combobox options={igst} placeholder="0%" field={field} />
           </FormControl>

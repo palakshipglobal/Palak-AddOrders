@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { OrderSchema } from "@/layout/schemas";
@@ -7,13 +7,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ItemDetails from "./ItemDetails";
 import OrderItemDetails from "./OrderItemDetails";
 import ShipmentDetails from "./ShipmentDetails";
-import {  updateForm2Data } from "@/features/formSlice";
+import { updateForm2Data } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
+// import { getApi } from "./ShippingPartner";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
   const form2Data = useSelector((state: RootState) => state.form.form2Data);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   type OrderFormData = {
     id: any;
@@ -41,17 +45,27 @@ function OrderDetails({ setActiveStep }) {
     defaultValues: form2Data,
   });
 
+  const watchAllFields = OrderForm.watch();
+  const watchVendorItems = form2Data.items.map((item, index) => ({
+    product_name: OrderForm.watch(`items.${index}.product_name`),
+    sku: OrderForm.watch(`items.${index}.sku`),
+    hsn: OrderForm.watch(`items.${index}.hsn`),
+    qty: OrderForm.watch(`items.${index}.qty`),
+    unit_price: OrderForm.watch(`items.${index}.unit_price`),
+    igst: OrderForm.watch(`items.${index}.igst`),
+  }));
+
   const url =
     "https://api.fr.stg.shipglobal.in/api/v1/orders/validate-order-invoice";
 
   const payload = {
     csbv: "0",
-    currency_code: "AUD",
-    package_breadth: Number(form2Data.breadth),
-    package_height: Number(form2Data.height),
-    package_length: Number(form2Data.length),
-    package_weight: Number(form2Data.actual_weight),
-    vendor_order_item: form2Data.items.map((item) => ({
+    currency_code: watchAllFields.invoice_currency,
+    package_breadth: Number(watchAllFields.breadth),
+    package_height: Number(watchAllFields.height),
+    package_length: Number(watchAllFields.length),
+    package_weight: Number(watchAllFields.actual_weight),
+    vendor_order_item: watchVendorItems.map((item) => ({
       vendor_order_item_name: item.product_name,
       vendor_order_item_sku: item.sku,
       vendor_order_item_hsn: item.hsn,
@@ -62,28 +76,39 @@ function OrderDetails({ setActiveStep }) {
   };
 
   const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMDcgMTI6MTQ6MjIuNjIzMTAzIiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0wOSAxMjoxNDoyMi42MjMxMDYiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6ImVmMDRjZjEyLWUyYzktNDVhNS04Yjk5LTc3OGRmMjAyYjZmNCIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.xMzvtHtyuLP9RxPE7ZhLudUdsj8jlK198612TaQr_Zc";
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTEgMTc6MTY6MTAuNTk0ODQ3IiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMyAxNzoxNjoxMC41OTQ4NDkiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjU0YTVhMDZmLTlmMTItNDNkMS05NjRmLWY0NmU0NDAzZmJlYiIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.Mgqd-wgxjBYG2o9rztEvgrEzuEXxUYjoKXcmmDCg1jw";
 
   const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.error("API Error:", response.status, response.statusText, result);
-      throw new Error("API request failed");
+      if (result.data?.box?.["1"]?.exceeds_limit) {
+        setErrorMessage(result.data.box["1"].exceeds_text);
+        setIsError(true);
+        return;
+      } else {
+        setErrorMessage("");
+        setIsError(false);
+        setActiveStep(4);
+      }
+    } catch (error) {
+      console.error("Error fetching rates:", error);
     }
-    console.log("API Success Response:", result);
-    console.log("BuyerForm Data:", values);
+
+    console.log("OrderForm Data:", values);
     dispatch(updateForm2Data(values));
-    setActiveStep(4);
+
+    if (!isError) {
+      setActiveStep(4);
+    }
   };
 
   return (
@@ -95,6 +120,9 @@ function OrderDetails({ setActiveStep }) {
           <ShipmentDetails form={OrderForm} />
           <p className="text-sm font-semibold pt-5">Item(s) Details</p>
           <ItemDetails form={OrderForm} />
+          {errorMessage && (
+            <div className="mt-4 font-medium text-red-500 text-xs">{errorMessage}</div>
+          )}
           <div className="flex justify-end mt-6">
             <button
               type="submit"
