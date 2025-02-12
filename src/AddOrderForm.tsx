@@ -181,7 +181,7 @@ const Data = ({
   return (
     <Accordion
       type="multiple"
-      defaultValue={["consignor", "consignee", "item", "shipping"]}
+      defaultValue={["consignor", "consignee", "item"]}
     >
       {activeStep > 1 && (
         <AccordionItem value="consignor">
