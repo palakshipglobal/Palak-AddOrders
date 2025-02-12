@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  form1Data: {
+  buyerData: {
     shipping_firstname: "",
     shipping_lastname: "",
     shipping_mobile: "",
@@ -22,7 +22,7 @@ const initialState = {
     isBillingSame: true,
   },
 
-  form2Data: {
+  orderData: {
     id: "",
     csbNumber: "",
     actual_weight: "",
@@ -54,12 +54,12 @@ const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    updateForm1Data: (state, action) => {
-      state.form1Data = action.payload;
+    updateBuyerData: (state, action) => {
+      state.buyerData = action.payload;
     },
 
-    updateForm2Data: (state, action) => {
-      state.form2Data = action.payload;
+    updateOrderData: (state, action) => {
+      state.orderData = action.payload;
     },
 
     updateStep: (state, action) => {
@@ -81,8 +81,8 @@ const formSlice = createSlice({
 });
 
 export const {
-  updateForm1Data,
-  updateForm2Data,
+  updateBuyerData,
+  updateOrderData,
   updateStep,
   updateShippingPartner,
   updateCsbNumber,

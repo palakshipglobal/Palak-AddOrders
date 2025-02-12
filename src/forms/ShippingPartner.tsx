@@ -12,7 +12,7 @@ function ShippingPartner() {
 
   const [courierOptions, setCourierOptions] = useState([]);
 
-  const { form1Data, form2Data } = useSelector(
+  const { buyerData, orderData } = useSelector(
     (state: RootState) => state.form
   );
 
@@ -20,12 +20,12 @@ function ShippingPartner() {
     "https://api.fr.stg.shipglobal.in/api/v1/orders/get-shipper-rates";
 
   const payload = {
-    customer_shipping_country_code: form1Data.shipping_country,
-    customer_shipping_postcode: form1Data.shipping_pincode,
-    package_breadth: form2Data.breadth,
-    package_height: form2Data.height,
-    package_length: form2Data.length,
-    package_weight: form2Data.actual_weight,
+    customer_shipping_country_code: buyerData.shipping_country,
+    customer_shipping_postcode: buyerData.shipping_pincode,
+    package_breadth: orderData.breadth,
+    package_height: orderData.height,
+    package_length: orderData.length,
+    package_weight: orderData.actual_weight,
   };
 
   const token =
@@ -57,7 +57,7 @@ function ShippingPartner() {
       }
     };
     fetchApiData();
-  });
+  }, []);
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
@@ -69,9 +69,9 @@ function ShippingPartner() {
     );
   }
   const volumetricWeight =
-    (Number(form2Data.breadth) *
-      Number(form2Data.length) *
-      Number(form2Data.height)) /
+    (Number(orderData.breadth) *
+      Number(orderData.length) *
+      Number(orderData.height)) /
     50000;
   return (
     <div className="px-3 md:px-7 py-4">
@@ -86,35 +86,38 @@ function ShippingPartner() {
         In case any doubt, please call/whatsapp at{" "}
         <span className="text-blue-800 font-semibold">011-422 77777</span>
       </p>
-      <div className="flex flex-col md:flex-row gap-2 justify-around px-10 md:px-48 mt-5">
+      <div className="flex flex-col md:flex-row items-center gap-2 md:gap-0 md:justify-around px-10 md:px-32 mt-5">
         <div
-          className={`border border-gray-300 text-center bg-gray-50 px-4 py-1 min-w-28 rounded-md`}
+          className={`border border-gray-300 text-center bg-gray-50 px-4 py-2 min-w-32 rounded-md`}
         >
           <p className="font-medium text-base">
-            {Number(form2Data.actual_weight).toFixed(2)}
+            {Number(orderData.actual_weight).toFixed(2)} KG
           </p>
           <p className="text-xs">Dead weight</p>
         </div>
         <div
-          className={`border border-gray-300 text-center bg-gray-50 px-4 py-1 min-w-28 rounded-md`}
+          className={`border border-gray-300 text-center bg-gray-50 px-4 py-2 md:min-w-36 min-w-32 rounded-md`}
         >
-          <p className="font-medium text-base">{volumetricWeight.toFixed(2)}</p>
+          <p className="font-medium text-base">
+            {volumetricWeight.toFixed(2)} KG
+          </p>
           <p className="text-xs">Volumetric weight</p>
         </div>
         <div
-          className={`border border-orange-300 bg-yellow-100 text-orange-500 text-center px-4 py-1 min-w-28 rounded-md`}
+          className={`border border-orange-300 bg-yellow-100 text-orange-500 text-center px-4 py-2 min-w-32 rounded-md`}
         >
           <p className="font-medium text-base">
             {Math.max(
-              Number(form2Data.actual_weight),
+              Number(orderData.actual_weight),
               volumetricWeight
-            ).toFixed(2)}
+            ).toFixed(2)}{" "}
+            KG
           </p>
           <p className="text-xs">Billed weight</p>
         </div>
       </div>
       {courierOptions.length > 1 && (
-        <p className="mt-3 font-semibold">
+        <p className="mt-5 font-semibold">
           Showing {courierOptions.length}{" "}
           {courierOptions.length > 1 ? "results" : "result"}{" "}
         </p>
@@ -133,19 +136,20 @@ function ShippingPartner() {
               </th>
               <th className="border-t border-b">Delivery Time</th>
               <th className="border-t border-b">Shipment Rate</th>
-              <th className="border-t border-b border-r rounded-r-md">
+              <th className="border-t border-b border-r rounded-r-md pr-2">
                 Select
               </th>
             </tr>
           </thead>
           {courierOptions.map((courier, index) => (
-            <tbody className="mb-4">
-              <td className="bg-blue-50 w-full absolute mt-2.5 border-t border-x text-xs rounded-t-sm text-red-500 px-3 py-1">
-                Duties will be charged, if applicable
-              </td>
+            <tbody key={index} className="mb-4 cursor-pointer">
+              <tr>
+                <td className="absolute mt-2.5 w-full border-t bg-blue-50 border-x text-xs rounded-t-sm text-red-500 px-3 py-1">
+                  Duties will be charged, if applicable
+                </td>
+              </tr>
               <tr
-                key={index}
-                className=""
+                className="cursor-pointer"
                 onClick={() =>
                   dispatch(
                     updateShippingPartner({

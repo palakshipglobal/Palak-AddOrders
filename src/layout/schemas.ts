@@ -37,7 +37,8 @@ export const BuyerSchema = z
       .regex(/^[A-Za-z\s]+$/, "Only alphabets and spaces are allowed"),
     shipping_state: z.string().min(1, "Please select a state."),
     isBillingSame: z.boolean(),
-
+    shipping_landmark: z.string().optional(),
+    billing_landmark: z.string().optional(),
     billing_country: z.string().optional(),
     billing_address1: z.string().optional(),
     billing_address2: z.string().optional(),
@@ -59,6 +60,13 @@ export const BuyerSchema = z
         ctx.addIssue({
           path: ["billing_address1"],
           message: "Address 1 is required.",
+          code: "custom",
+        });
+      }
+      if (!data.billing_address2) {
+        ctx.addIssue({
+          path: ["billing_address2"],
+          message: "Address 2 is required.",
           code: "custom",
         });
       }
@@ -102,11 +110,12 @@ export const BuyerSchema = z
 export const OrderSchema = z.object({
   actual_weight: z
     .string()
-    .min(1, "Weight must be atleast 0.01 KG")
-
-    .regex(/^\d+$/, "The package weight must be a numeric value.")
+    .regex(/^\d+(\.\d{1,2})?$/, "The package weight must be a numeric value.")
     .refine((val) => parseFloat(val) <= 300, {
       message: "Weight must not be more than 300 KG",
+    })
+    .refine((val) => Number(val) > 0, {
+      message: "Weight must be atleast 0.01 KG",
     }),
 
   length: z
@@ -115,6 +124,9 @@ export const OrderSchema = z.object({
     .regex(/^\d+$/, "The package length must be a numeric value.")
     .refine((val) => parseFloat(val) <= 120, {
       message: "Length must be not more than 120",
+    })
+    .refine((val) => Number(val) > 0, {
+      message: "Length must be atleast 1 cm",
     }),
 
   breadth: z
@@ -123,6 +135,9 @@ export const OrderSchema = z.object({
     .regex(/^\d+$/, "The package breadth must be a numeric value.")
     .refine((val) => parseFloat(val) <= 120, {
       message: "Breadth must be not more than 120",
+    })
+    .refine((val) => Number(val) > 0, {
+      message: "Breadth must be atleast 1 cm",
     }),
 
   height: z
@@ -131,6 +146,9 @@ export const OrderSchema = z.object({
     .regex(/^\d+$/, "The package height must be a numeric value.")
     .refine((val) => parseFloat(val) <= 120, {
       message: "Height must be not more than 120",
+    })
+    .refine((val) => Number(val) > 0, {
+      message: "Height must be atleast 1 cm",
     }),
 
   invoice_no: z

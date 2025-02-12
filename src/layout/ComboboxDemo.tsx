@@ -28,7 +28,14 @@ import { addresses, currency, customers, igst } from "./arrays";
 
 function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
-  const selectedOption = options.find((option) => option.value === field.value);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredOptions = options.filter(
+    (option:any) => option.label.toLowerCase().includes(searchQuery.toLowerCase()) 
+  );
+
+  const selectedOption = options.find((option:any) => option.value === field.value);
+ 
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -43,28 +50,35 @@ function Combobox({ options, placeholder, field }) {
       </PopoverTrigger>
       <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
         <Command>
-          <CommandInput placeholder={placeholder} />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={() => {
-                    field.onChange(option.value);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={`mr-2 h-4 w-4 ${
-                      field.value === option.value ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+          <CommandInput
+            placeholder={placeholder}
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
+           <CommandList>
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No results found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {filteredOptions.map((option:any) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.label} 
+                    onSelect={() => {
+                      field.onChange(option.value); 
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={`mr-2 h-4 w-4 ${
+                        field.value === option.value ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
+                    {option.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>
@@ -76,10 +90,6 @@ export function CountrySelect({ form, name, required }) {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    // const storedCountries = localStorage.getItem("countries");
-    // if (storedCountries) {
-    //   setCountries(JSON.parse(storedCountries));
-    // } else {
     const fetchCountries = async () => {
       try {
         const response = await fetch(

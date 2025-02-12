@@ -7,14 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ItemDetails from "./ItemDetails";
 import OrderItemDetails from "./OrderItemDetails";
 import ShipmentDetails from "./ShipmentDetails";
-import { updateForm2Data } from "@/features/formSlice";
+import { updateOrderData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 // import { getApi } from "./ShippingPartner";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
-  const form2Data = useSelector((state: RootState) => state.form.form2Data);
+  const orderData = useSelector((state: RootState) => state.form.orderData);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -42,11 +42,11 @@ function OrderDetails({ setActiveStep }) {
 
   const OrderForm = useForm<OrderFormData>({
     resolver: zodResolver(OrderSchema),
-    defaultValues: form2Data,
+    defaultValues: orderData,
   });
 
   const watchAllFields = OrderForm.watch();
-  const watchVendorItems = form2Data.items.map((item, index) => ({
+  const watchVendorItems = orderData.items.map((item, index) => ({
     product_name: OrderForm.watch(`items.${index}.product_name`),
     sku: OrderForm.watch(`items.${index}.sku`),
     hsn: OrderForm.watch(`items.${index}.hsn`),
@@ -104,7 +104,7 @@ function OrderDetails({ setActiveStep }) {
     }
 
     console.log("OrderForm Data:", values);
-    dispatch(updateForm2Data(values));
+    dispatch(updateOrderData(values));
 
     if (!isError) {
       setActiveStep(4);

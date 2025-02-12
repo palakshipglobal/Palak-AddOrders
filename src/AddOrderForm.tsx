@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "./layout/BreadCrumb";
 import AccordionComponent from "./layout/AccordionComponent";
 import box from "./assets/box.jpg";
@@ -20,22 +20,48 @@ function AddOrderForm() {
   const dispatch = useDispatch();
   const {
     step: activeStep,
-    form1Data,
-    form2Data,
+    buyerData,
+    orderData,
     shippingPartner,
     pickupAddress,
   } = useSelector((state: RootState) => state.form);
+  const [countries, setCountries] = useState([]);
+  const [billingLabel, setBillingLabel] = useState(null);
+  const [shippingLabel, setShippingLabel] = useState(null);
 
-  const selectedCountry = localStorage.getItem("countries");
-  const countries = JSON.parse(selectedCountry);
-  const billingLabel = countries.find(
-    (country: any) => country.value === form1Data.billing_country
-  );
-  const shippingLabel = countries.find(
-    (country: any) => country.value === form1Data.shipping_country
-  );
-  const shippingCountryName = shippingLabel.label;
-  const billingCountryName = billingLabel.label;
+  useEffect(() => {
+    const loadCountries = () => {
+      const storedCountries = localStorage.getItem("countries");
+      if (storedCountries) {
+        const parsedCountries = JSON.parse(storedCountries);
+        setCountries(parsedCountries);
+
+        if (buyerData.billing_country) {
+          const billing = parsedCountries.find(
+            (country) => country.value === buyerData.billing_country
+          );
+          setBillingLabel(billing ? billing.label : null);
+        }
+
+        if (buyerData.shipping_country) {
+          const shipping = parsedCountries.find(
+            (country) => country.value === buyerData.shipping_country
+          );
+          setShippingLabel(shipping ? shipping.label : null);
+        }
+      }
+    };
+
+    // Try loading immediately
+    loadCountries();
+
+    // Also listen for event when countries are set
+    window.addEventListener("countriesLoaded", loadCountries);
+
+    return () => {
+      window.removeEventListener("countriesLoaded", loadCountries);
+    };
+  }, [buyerData.billing_country, buyerData.shipping_country]);
 
   const formSteps = [
     {
@@ -91,11 +117,11 @@ function AddOrderForm() {
             {activeStep === 1 && <QuickTipsContent />}
             <Data
               activeStep={activeStep}
-              form1Data={form1Data}
-              form2Data={form2Data}
+              buyerData={buyerData}
+              orderData={orderData}
               pickupAddress={pickupAddress}
-              billingLabel={billingCountryName}
-              shippingLabel={shippingCountryName}
+              billingLabel={billingLabel}
+              shippingLabel={shippingLabel}
             />
           </div>
           {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
@@ -145,12 +171,13 @@ const QuickTipsContent = () => {
 
 const Data = ({
   activeStep,
-  form1Data,
-  form2Data,
+  buyerData,
+  orderData,
   pickupAddress,
   billingLabel,
   shippingLabel,
 }) => {
+  const [showAll, setShowAll] = useState(false);
   return (
     <Accordion
       type="multiple"
@@ -174,43 +201,44 @@ const Data = ({
             <div className="flex flex-col">
               <p className="text-gray-500">Name</p>
               <p className="font-medium mt-0.5">
-                {form1Data.shipping_firstname || ""}
+                {buyerData.shipping_firstname || ""}{" "}
+                {buyerData.shipping_lastname || ""}
               </p>
 
               <p className="text-gray-500 mt-2.5">Billing Address</p>
               <p className="font-medium mt-0.5">
-                {form1Data.isBillingSame
+                {buyerData.isBillingSame
                   ? "Same as Shipping Address"
                   : `${
-                      form1Data?.billing_address1
-                        ? form1Data.billing_address1 + ","
+                      buyerData?.billing_address1
+                        ? buyerData.billing_address1 + ","
                         : ""
                     } 
-       ${form1Data?.billing_landmark ? form1Data.billing_landmark + "," : ""} 
-       ${form1Data?.billing_address2 ? form1Data.billing_address2 + "," : ""} 
-       ${form1Data?.billing_city ? form1Data.billing_city + "," : ""}
-       ${form1Data?.billing_state ? form1Data.billing_state + "," : ""} 
-       ${form1Data?.billing_country ? billingLabel + "," : ""} 
-       ${form1Data?.billing_pincode ? form1Data.billing_pincode + "," : ""}`}
+       ${buyerData?.billing_landmark ? buyerData.billing_landmark + "," : ""} 
+       ${buyerData?.billing_address2 ? buyerData.billing_address2 + "," : ""} 
+       ${buyerData?.billing_city ? buyerData.billing_city + "," : ""}
+       ${buyerData?.billing_state ? buyerData.billing_state + "," : ""} 
+       ${buyerData?.billing_country ? billingLabel + "," : ""} 
+       ${buyerData?.billing_pincode ? buyerData.billing_pincode + "," : ""}`}
               </p>
 
               <p className="text-gray-500 mt-2.5">Shipping Address</p>
               <p className="font-medium mt-0.5">
-                {form1Data?.shipping_address1
-                  ? form1Data.shipping_address1 + ", "
+                {buyerData?.shipping_address1
+                  ? buyerData.shipping_address1 + ", "
                   : ""}
-                {form1Data?.shipping_landmark
-                  ? form1Data.shipping_landmark + ", "
+                {buyerData?.shipping_landmark
+                  ? buyerData.shipping_landmark + ", "
                   : ""}
-                {form1Data?.shipping_address2
-                  ? form1Data.shipping_address2 + ", "
+                {buyerData?.shipping_address2
+                  ? buyerData.shipping_address2 + ", "
                   : ""}
-                {form1Data?.shipping_city ? form1Data.shipping_city + ", " : ""}
-                {form1Data?.shipping_state
-                  ? form1Data.shipping_state + ", "
+                {buyerData?.shipping_city ? buyerData.shipping_city + ", " : ""}
+                {buyerData?.shipping_state
+                  ? buyerData.shipping_state + ", "
                   : ""}
-                {form1Data?.shipping_country ? shippingLabel + ", " : ""}
-                {form1Data?.shipping_pincode ? form1Data.shipping_pincode : ""}
+                {buyerData?.shipping_country ? shippingLabel + ", " : ""}
+                {buyerData?.shipping_pincode ? buyerData.shipping_pincode : ""}
               </p>
             </div>
           </AccordionContent>
@@ -224,50 +252,80 @@ const Data = ({
               <div className="flex flex-col">
                 <p className="text-gray-500">Billed Weight</p>
                 <p className="font-medium mt-0.5">
-                  {form2Data.actual_weight} KG
+                  {orderData.actual_weight} KG
                 </p>
               </div>
               <div className="flex flex-col">
                 <p className="text-gray-500">Dimensions</p>
                 <p className="font-medium mt-0.5">
-                  {form2Data.length}cm X {form2Data.breadth}cm X{" "}
-                  {form2Data.height}cm
+                  {orderData.length}cm X {orderData.breadth}cm X{" "}
+                  {orderData.height}cm
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-y-2 mt-5">
-              {form2Data.items.map((item: any, index: any) => (
-                <React.Fragment key={index}>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Product</p>
-                    <p className="font-medium mt-0.5">{item.product_name}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">HSN</p>
-                    <p className="font-medium mt-0.5">{item.hsn}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">SKU</p>
-                    <p className="font-medium mt-0.5">{item.sku}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Qty</p>
-                    <p className="font-medium mt-0.5">{Number(item.qty)}</p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Unit Price</p>
-                    <p className="font-medium mt-0.5">
-                      {form2Data.invoice_currency} {Number(item.unit_price)}
+            <div>
+              <div className="grid grid-cols-3 gap-y-3 mt-5">
+                {orderData.items.map((item: any, index: number) => {
+                  if (!showAll && index > 0) return null;
+
+                  return (
+                    <React.Fragment key={index}>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">Product</p>
+                        <p className="font-medium mt-0.5">
+                          {item.product_name}
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">HSN</p>
+                        <p className="font-medium mt-0.5">{item.hsn}</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">SKU</p>
+                        <p className="font-medium mt-0.5">{item.sku}</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">Qty</p>
+                        <p className="font-medium mt-0.5">{Number(item.qty)}</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">Unit Price</p>
+                        <p className="font-medium mt-0.5">
+                          {orderData.invoice_currency}{" "}
+                          {Number(item.unit_price).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-gray-500">Total</p>
+                        <p className="font-medium mt-0.5">
+                          {orderData.invoice_currency}{" "}
+                          {Number(item.qty * item.unit_price).toFixed(2)}
+                        </p>
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+              <div className="mt-5 flex justify-between">
+                <div>
+                  {!showAll && (
+                    <p className="text-orange-500 font-medium">
+                      + {orderData.items.length - 1} more products...
                     </p>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500">Total</p>
-                    <p className="font-medium mt-0.5">
-                      {form2Data.invoice_currency} {item.qty * item.unit_price}
-                    </p>
-                  </div>
-                </React.Fragment>
-              ))}
+                  )}
+                </div>
+
+                <div className="flex justify-end items-end">
+                  {orderData.items.length > 1 && (
+                    <button
+                      onClick={() => setShowAll(!showAll)}
+                      className="font-medium hover:underline text-blue-800 cursor-pointer"
+                    >
+                      {showAll ? "Hide" : "View"}
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>

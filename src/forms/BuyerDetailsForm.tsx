@@ -8,14 +8,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import BuyerShippingDetails from "./BuyerShippingDetails";
 import BuyerBillingDetails from "./BuyerBillingDetails";
 import { useDispatch, useSelector } from "react-redux";
-import { updateForm1Data } from "@/features/formSlice";
+import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
 
 export function BuyerDetailsForm({ setActiveStep }) {
   const [isBillingSame, setIsBillingSame] = useState(true);
 
   const dispatch = useDispatch();
-  const form1Data = useSelector((state: RootState) => state.form.form1Data);
+  const buyerData = useSelector((state: RootState) => state.form.buyerData);
 
   type BuyerFormData = {
     shipping_firstname: string;
@@ -41,7 +41,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   const BuyerForm = useForm<BuyerFormData>({
     resolver: zodResolver(BuyerSchema),
-    defaultValues: form1Data,
+    defaultValues: buyerData,
   });
 
   useEffect(() => {
@@ -64,19 +64,11 @@ export function BuyerDetailsForm({ setActiveStep }) {
       BuyerForm.setValue("billing_city", shippingValues[5]);
       BuyerForm.setValue("billing_state", shippingValues[6]);
     }
-  }, [
-    isBillingSame,
-    BuyerForm.watch("shipping_country"),
-    BuyerForm.watch("shipping_address1"),
-    BuyerForm.watch("shipping_address2"),
-    BuyerForm.watch("shipping_pincode"),
-    BuyerForm.watch("shipping_city"),
-    BuyerForm.watch("shipping_state"),
-  ]);
+  }, [isBillingSame]);
 
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
-    dispatch(updateForm1Data(values));
+    dispatch(updateBuyerData(values));
     setActiveStep(3);
   };
 
@@ -89,10 +81,9 @@ export function BuyerDetailsForm({ setActiveStep }) {
   const countryBilling = BuyerForm.watch("billing_country");
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
-
   useEffect(() => {
     if (countryShipping) {
-      BuyerForm.setValue("shipping_state", "");
+      BuyerForm.setValue("shipping_state", BuyerForm.watch("shipping_state"));
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -110,7 +101,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
           const result = await response.json();
 
           if (result.data && result.data.states) {
-            const formattedStates = result.data.states.map((state:any) => ({
+            const formattedStates = result.data.states.map((state: any) => ({
               value: state.state_name,
               label: state.state_name,
             }));
@@ -123,11 +114,11 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
       fetchStates();
     }
-  }, [countryShipping]);
+  }, [countryShipping, isBillingSame]);
 
   useEffect(() => {
     if (countryBilling) {
-      BuyerForm.setValue("billing_state", "");
+      BuyerForm.setValue("billing_state",BuyerForm.watch("billing_state"));
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -144,7 +135,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
           );
           const result = await response.json();
           if (result.data && result.data.states) {
-            const formattedStates = result.data.states.map((state) => ({
+            const formattedStates = result.data.states.map((state: any) => ({
               value: state.state_name,
               label: state.state_name,
             }));
@@ -156,7 +147,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
       };
       fetchStates();
     }
-  }, [countryBilling]);
+  }, [countryBilling, isBillingSame]);
 
   return (
     <div className="py-4 px-3 md:px-7">
