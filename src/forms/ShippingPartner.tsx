@@ -57,7 +57,7 @@ function ShippingPartner() {
       }
     };
     fetchApiData();
-  }, []);
+  }, [payload]);
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));

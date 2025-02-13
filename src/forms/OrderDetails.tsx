@@ -10,7 +10,6 @@ import ShipmentDetails from "./ShipmentDetails";
 import { updateOrderData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-// import { getApi } from "./ShippingPartner";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -104,7 +103,12 @@ function OrderDetails({ setActiveStep }) {
     }
 
     console.log("OrderForm Data:", values);
-    dispatch(updateOrderData(values));
+    const formattedValues = {
+      ...values,
+      invoice_date: values.invoice_date ? new Date(values.invoice_date).toISOString() : "",
+    };
+  
+    dispatch(updateOrderData(formattedValues)); //.toISOString() method converts the Date object to a string format (YYYY-MM-DDTHH:mm:ss.sssZ), which is serializable
 
     if (!isError) {
       setActiveStep(4);
