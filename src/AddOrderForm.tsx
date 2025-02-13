@@ -308,7 +308,7 @@ const Data = ({
               </div>
               <div className="mt-5 flex justify-between">
                 <div>
-                  {!showAll && (
+                  {!showAll && orderData.items.length > 1 && (
                     <p className="text-orange-500 font-medium">
                       + {orderData.items.length - 1} more products...
                     </p>
