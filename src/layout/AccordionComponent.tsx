@@ -24,7 +24,7 @@ function AccordionComponent({
           <div
             className={`text-center w-6 h-6 py-0.5 rounded-sm 
               ${activeStep < stepNumber && "bg-gray-200 text-black"}
-                ${activeStep > stepNumber && "bg-green-800 text-black"}
+                ${activeStep > stepNumber && "bg-green-500 text-black"}
                ${activeStep === stepNumber && "bg-black text-white"}
               `}
           >

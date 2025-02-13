@@ -260,6 +260,7 @@ export function CustomerSelect({ form, name }) {
               options={customers}
               placeholder="Select Pickup Address"
               field={field}
+              
             />
           </FormControl>
           <FormMessage />

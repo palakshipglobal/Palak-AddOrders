@@ -12,7 +12,7 @@ function ShippingPartner() {
 
   const [courierOptions, setCourierOptions] = useState([]);
 
-  const { buyerData, orderData } = useSelector(
+  const { buyerData, orderData,step } = useSelector(
     (state: RootState) => state.form
   );
 
@@ -32,32 +32,42 @@ function ShippingPartner() {
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTAgMTY6NTg6NDguNTc2NzgyIiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMiAxNjo1ODo0OC41NzY3ODMiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjViYjM5M2ZmLWY3ZWUtNDE4My04YmE3LTg0MTFjZGJmMmVmOSIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.e374_FSMTBZt98yC6fx3Hqq1mvrKfHrytRQx_hRStsw";
 
   useEffect(() => {
-    const fetchApiData = async () => {
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const data = await response.json();
-        if (data?.data?.rate) {
-          setCourierOptions(
-            data.data.rate.map((rate: any) => ({
-              name: rate.display_name,
-              time: rate.transit_time,
-              rate: rate.rate,
-            }))
-          );
+    if(step === 4){
+      const fetchApiData = async () => {
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json();
+          if (data?.data?.rate) {
+            setCourierOptions(
+              data.data.rate.map((rate: any) => ({
+                name: rate.display_name,
+                time: rate.transit_time,
+                rate: rate.rate,
+              }))
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching rates:", error);
         }
-      } catch (error) {
-        console.error("Error fetching rates:", error);
-      }
-    };
-    fetchApiData();
-  }, [payload]);
+      };
+      fetchApiData();
+    }
+  }, [
+    step,
+    buyerData.shipping_country,
+    buyerData.shipping_pincode,
+    orderData.breadth,
+    orderData.height,
+    orderData.length,
+    orderData.actual_weight,
+  ]);
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
@@ -86,7 +96,7 @@ function ShippingPartner() {
         In case any doubt, please call/whatsapp at{" "}
         <span className="text-blue-800 font-semibold">011-422 77777</span>
       </p>
-      <div className="flex flex-col md:flex-row items-center gap-2 md:gap-0 md:justify-around px-10 md:px-32 mt-5">
+      <div className="flex flex-col md:flex-row items-center gap-2 justify-center px-10 md:px-32 mt-5">
         <div
           className={`border border-gray-300 text-center bg-gray-50 px-4 py-2 min-w-32 rounded-md`}
         >
@@ -185,7 +195,9 @@ function ShippingPartner() {
           onClick={onSubmit}
           disabled={!selectedPartner.name}
           className={`bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90 ${
-            !selectedPartner.name ? "opacity-35 cursor-not-allowed" : "opacity-100"
+            !selectedPartner.name
+              ? "opacity-35 cursor-not-allowed"
+              : "opacity-100"
           }`}
         >
           Pay and Order

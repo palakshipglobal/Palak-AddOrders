@@ -12,8 +12,6 @@ import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
 
 export function BuyerDetailsForm({ setActiveStep }) {
-  const [isBillingSame, setIsBillingSame] = useState(true);
-
   const dispatch = useDispatch();
   const buyerData = useSelector((state: RootState) => state.form.buyerData);
 
@@ -44,46 +42,34 @@ export function BuyerDetailsForm({ setActiveStep }) {
     defaultValues: buyerData,
   });
 
-  useEffect(() => {
-    if (isBillingSame) {
-      const shippingValues = BuyerForm.getValues([
-        "shipping_country",
-        "shipping_address1",
-        "shipping_address2",
-        "shipping_pincode",
-        "shipping_landmark",
-        "shipping_city",
-        "shipping_state",
-      ]);
+  const [isBillingSame, setIsBillingSame] = useState(buyerData.isBillingSame);
 
-      BuyerForm.setValue("billing_country", shippingValues[0]);
-      BuyerForm.setValue("billing_address1", shippingValues[1]);
-      BuyerForm.setValue("billing_address2", shippingValues[2]);
-      BuyerForm.setValue("billing_pincode", shippingValues[3]);
-      BuyerForm.setValue("billing_landmark", shippingValues[4]);
-      BuyerForm.setValue("billing_city", shippingValues[5]);
-      BuyerForm.setValue("billing_state", shippingValues[6]);
-    }
-  }, [isBillingSame]);
+  console.log(BuyerForm.watch());
 
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
+    // console.log(billingStates);
     dispatch(updateBuyerData(values));
     setActiveStep(3);
   };
-
-  useEffect(() => {
-    console.log("Shipping State:", BuyerForm.watch("shipping_state"));
-    console.log("Bill State:", BuyerForm.watch("billing_state"));
-  }, [BuyerForm.watch("shipping_state"), BuyerForm.watch("billing_state")]);
 
   const countryShipping = BuyerForm.watch("shipping_country");
   const countryBilling = BuyerForm.watch("billing_country");
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
+
+  console.log(BuyerForm.watch("shipping_state"));
+
+
   useEffect(() => {
     if (countryShipping) {
-      BuyerForm.setValue("shipping_state", BuyerForm.watch("shipping_state"));
+      // Only reset state if the selected country actually changes
+      const prevCountry = buyerData?.shipping_country;
+      if (prevCountry !== countryShipping) {
+        BuyerForm.setValue("shipping_state", ""); // Clear state when country changes
+        setShippingStates([]); // Reset state options
+      }
+  
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -99,26 +85,31 @@ export function BuyerDetailsForm({ setActiveStep }) {
             }
           );
           const result = await response.json();
-
           if (result.data && result.data.states) {
             const formattedStates = result.data.states.map((state: any) => ({
               value: state.state_name,
               label: state.state_name,
             }));
+  
             setShippingStates(formattedStates);
           }
         } catch (error) {
           console.error("Error fetching states:", error);
         }
       };
-
+  
       fetchStates();
     }
-  }, [countryShipping, isBillingSame]);
-
+  }, [countryShipping]);
+  
   useEffect(() => {
     if (countryBilling) {
-      BuyerForm.setValue("billing_state",BuyerForm.watch("billing_state"));
+      const prevBillingCountry = buyerData?.billing_country;
+      if (prevBillingCountry !== countryBilling) {
+        BuyerForm.setValue("billing_state", ""); 
+        setBillingStates([]);
+      }
+  
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -139,40 +130,88 @@ export function BuyerDetailsForm({ setActiveStep }) {
               value: state.state_name,
               label: state.state_name,
             }));
+  
             setBillingStates(formattedStates);
           }
         } catch (error) {
           console.error("Error fetching states:", error);
         }
       };
+  
       fetchStates();
     }
-  }, [countryBilling, isBillingSame]);
-
+  }, [countryBilling]);
+  
+  useEffect(() => {
+    if (isBillingSame) {
+      BuyerForm.setValue(
+        "billing_address1",
+        BuyerForm.getValues("shipping_address1")
+      );
+      BuyerForm.setValue(
+        "billing_landmark",
+        BuyerForm.getValues("shipping_landmark")
+      );
+      BuyerForm.setValue(
+        "billing_address2",
+        BuyerForm.getValues("shipping_address2")
+      );
+      BuyerForm.setValue(
+        "billing_pincode",
+        BuyerForm.getValues("shipping_pincode")
+      );
+      BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
+      BuyerForm.setValue(
+        "billing_country",
+        BuyerForm.getValues("shipping_country")
+      );
+      BuyerForm.setValue(
+        "billing_state",
+        BuyerForm.getValues("shipping_state")
+      );
+    }
+  }, [
+    isBillingSame,
+    //BuyerForm,
+    BuyerForm.watch("shipping_address1"),
+    BuyerForm.watch("shipping_address2"),
+    BuyerForm.watch("shipping_city"),
+    BuyerForm.watch("shipping_country"),
+    BuyerForm.watch("shipping_state"),
+    BuyerForm.watch("shipping_pincode"),
+    BuyerForm.watch("shipping_landmark"),
+  ]);
   return (
     <div className="py-4 px-3 md:px-7">
       <Form {...BuyerForm}>
         <form onSubmit={BuyerForm.handleSubmit(onSubmit)} className="space-y-6">
           <BuyerShippingDetails form={BuyerForm} states={shippingStates} />
-          <div
-            className="flex gap-2 my-5 items-center cursor-pointer"
-            onClick={() => setIsBillingSame(!isBillingSame)}
-          >
+          <label className="flex gap-2 my-5 items-center max-w-max cursor-pointer">
             <input
               type="checkbox"
               className="w-4 h-4 cursor-pointer"
-              checked={isBillingSame}
+              checked={BuyerForm.watch("isBillingSame")}
               onChange={() => {
-                const newValue = !isBillingSame;
+                const newValue = !BuyerForm.getValues("isBillingSame");
                 setIsBillingSame(newValue);
                 BuyerForm.setValue("isBillingSame", newValue);
+                if (newValue) {
+                  BuyerForm.setValue("billing_address1", BuyerForm.getValues("shipping_address1"));
+                  BuyerForm.setValue("billing_address2", BuyerForm.getValues("shipping_address2"));
+                  BuyerForm.setValue("billing_landmark", BuyerForm.getValues("shipping_landmark"));
+                  BuyerForm.setValue("billing_pincode", BuyerForm.getValues("shipping_pincode"));
+                  BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
+                  BuyerForm.setValue("billing_country", BuyerForm.getValues("shipping_country"));
+                  BuyerForm.setValue("billing_state", BuyerForm.getValues("shipping_state")); 
+                }
               }}
             />
-            <p className="text-sm">
+            <p className="text-sm select-none">
               Billing Address is same as shipping address.
             </p>
-          </div>
-          {!isBillingSame && (
+          </label>
+
+          {BuyerForm.watch("isBillingSame") === false && (
             <BuyerBillingDetails form={BuyerForm} states={billingStates} />
           )}
 

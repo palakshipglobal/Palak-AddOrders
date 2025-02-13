@@ -41,7 +41,10 @@ function OrderDetails({ setActiveStep }) {
 
   const OrderForm = useForm<OrderFormData>({
     resolver: zodResolver(OrderSchema),
-    defaultValues: orderData,
+    defaultValues: {
+      ...orderData,
+      invoice_currency: orderData.invoice_currency || "INR",
+    },
   });
 
   const watchAllFields = OrderForm.watch();
@@ -105,9 +108,11 @@ function OrderDetails({ setActiveStep }) {
     console.log("OrderForm Data:", values);
     const formattedValues = {
       ...values,
-      invoice_date: values.invoice_date ? new Date(values.invoice_date).toISOString() : "",
+      invoice_date: values.invoice_date
+        ? new Date(values.invoice_date).toISOString()
+        : "",
     };
-  
+
     dispatch(updateOrderData(formattedValues)); //.toISOString() method converts the Date object to a string format (YYYY-MM-DDTHH:mm:ss.sssZ), which is serializable
 
     if (!isError) {
@@ -122,10 +127,17 @@ function OrderDetails({ setActiveStep }) {
           <OrderItemDetails form={OrderForm} />
           <p className="text-sm font-semibold pt-5">Box Measurements</p>
           <ShipmentDetails form={OrderForm} />
-          <p className="text-sm font-semibold pt-5">Item(s) Details</p>
+          <p className="text-sm font-semibold pt-5">
+            Item(s) Details
+            <span className="ml-2 font-normal bg-red-50 text-red-500 text-xs rounded-md px-1 py-0.5">
+              Items that can export
+            </span>
+          </p>{" "}
           <ItemDetails form={OrderForm} />
           {errorMessage && (
-            <div className="mt-4 font-medium text-red-500 text-xs">{errorMessage}</div>
+            <div className="mt-4 font-medium text-red-500 text-xs">
+              {errorMessage}
+            </div>
           )}
           <div className="flex justify-end mt-6">
             <button

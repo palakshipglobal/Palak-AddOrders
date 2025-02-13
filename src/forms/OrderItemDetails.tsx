@@ -8,6 +8,7 @@ const OrderItemDetails = ({ form }) => {
         form={form}
         label="Invoice Number"
         name="invoice_no"
+        placeholder="Enter Invoice Number..."
         type="text"
         required
       />
@@ -18,11 +19,13 @@ const OrderItemDetails = ({ form }) => {
         label="Order/Reference Id"
         name="order_id"
         type="text"
+        placeholder="Enter Order/Reference Id..."
       />
       <SimpleFormFields
         form={form}
         label="IOSS Number:"
         name="ioss_number"
+        placeholder="Enter IOSS Number..."
         type="text"
       />
     </div>

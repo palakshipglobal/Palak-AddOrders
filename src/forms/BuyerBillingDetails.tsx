@@ -11,6 +11,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           form={form}
           label="Address 1"
           name="billing_address1"
+          placeholder="Enter Address 1..."
           type="text"
           required
         />
@@ -18,6 +19,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           form={form}
           label="Address 2"
           name="billing_address2"
+          placeholder="Enter Address 2..."
           type="text"
           required
         />
@@ -25,6 +27,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           form={form}
           label="Landmark"
           name="billing_landmark"
+          placeholder="Enter Landmark..."
           type="text"
         />
 
@@ -41,6 +44,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           label="Pincode"
           name="billing_pincode"
           type="text"
+          placeholder="Enter Pincode..."
           required
         />
         <SimpleFormFields
@@ -48,6 +52,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           label="City"
           name="billing_city"
           type="text"
+          placeholder="Enter City..."
           required
         />
       </div>

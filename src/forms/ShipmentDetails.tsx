@@ -10,6 +10,7 @@ const ShipmentDetails = ({ form }) => {
           label="Weight"
           name="actual_weight"
           type="number"
+          placeholder="Eg: 1.25"
           className="w-full"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
@@ -25,6 +26,7 @@ const ShipmentDetails = ({ form }) => {
           name="length"
           type="number"
           className="w-full"
+          placeholder="Eg: 10"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
@@ -39,6 +41,7 @@ const ShipmentDetails = ({ form }) => {
           name="breadth"
           type="number"
           className="w-full"
+          placeholder="Eg: 10"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           required
         />
@@ -54,6 +57,7 @@ const ShipmentDetails = ({ form }) => {
           type="number"
           inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
           className="w-full"
+          placeholder="Eg: 10"
           required
         />
         <div className="bg-gray-100 p-1.5 h-9 mt-8 text-sm rounded-r-md border-r border-t border-b border-gray-200">

@@ -27,7 +27,7 @@ function ConsignorDetails({ setActiveStep }) {
 
   useEffect(() => {
     ConsignorForm.setValue("pickupAddress", storedPickupAddress);
-    console.log(storedPickupAddress)
+    console.log(storedPickupAddress);
   }, [storedPickupAddress, ConsignorForm]);
 
   const data = ConsignorForm.watch("pickupAddress");
@@ -46,12 +46,17 @@ function ConsignorDetails({ setActiveStep }) {
         >
           <div className="space-y-1">
             <label className="font-medium">Select Pickup address</label>
-            <CustomerSelect form={ConsignorForm} name="pickupAddress" />
+            <div className="w-5/6">
+              {" "}
+              <CustomerSelect form={ConsignorForm} name="pickupAddress" />
+            </div>
           </div>
-          <div className="space-y-1 w-5/6">
-            <p className="text-gray-500 font-medium">Pickup Address</p>
-            <p>{data}</p>
-          </div>
+          {data && (
+            <div className="space-y-1 w-5/6">
+              <p className="text-gray-500 font-medium">Pickup Address</p>
+              <p>{data}</p>
+            </div>
+          )}
 
           <div className="flex justify-end">
             <button

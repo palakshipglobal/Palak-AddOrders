@@ -12,7 +12,7 @@ export const BuyerSchema = z
       .regex(/^[A-Za-z]+$/, "Please enter alphabetic characters"),
     shipping_mobile: z
       .string()
-      .regex(/^\d{10}$/, "The mobile number should contain exactly 10 digits."),
+      .regex(/^\d{1,10}$/, "Mobile number is required"),
     shipping_alternate_mobile: z.string().optional(),
     shipping_email: z
       .string()

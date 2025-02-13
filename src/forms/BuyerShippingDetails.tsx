@@ -11,6 +11,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="First Name"
           name="shipping_firstname"
+          placeholder="Enter First Name..."
           type="text"
           required
         />
@@ -18,6 +19,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Last Name"
           name="shipping_lastname"
+          placeholder="Enter Last Name..."
           type="text"
           required
         />
@@ -25,6 +27,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Mobile Number"
           name="shipping_mobile"
+          placeholder="Enter Mobile Number..."
           type="text"
           required
         />
@@ -32,6 +35,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Email"
           name="shipping_email"
+          placeholder="Enter Email ID..."
           type="email"
           required
         />
@@ -42,6 +46,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Address 1"
           name="shipping_address1"
+          placeholder="Enter Address 1..."
           type="text"
           required
         />
@@ -49,6 +54,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Address 2"
           name="shipping_address2"
+          placeholder="Enter Address 2..."
           required
           type="text"
         />
@@ -56,6 +62,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Landmark"
           name="shipping_landmark"
+          placeholder="Enter Landmark..."
           type="text"
         />
 
@@ -65,11 +72,13 @@ const BuyerShippingDetails = ({ form, states }) => {
           name="shipping_state"
           required
           states={states}
+          
         />
         <SimpleFormFields
           form={form}
           label="City"
           name="shipping_city"
+          placeholder="Enter City..."
           type="text"
           required
         />
@@ -77,6 +86,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           form={form}
           label="Pincode"
           name="shipping_pincode"
+          placeholder="Enter Pincode..."
           type="text"
           required
         />

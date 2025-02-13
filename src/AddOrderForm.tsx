@@ -123,8 +123,14 @@ function AddOrderForm() {
               billingLabel={billingLabel}
               shippingLabel={shippingLabel}
             />
+            {activeStep > 3 && (
+              <ItemDetails orderData={orderData} activeStep={activeStep} />
+            )}
           </div>
-          {activeStep === 4 && <Summary shippingPartner={shippingPartner} />}
+
+          {activeStep === 4 && shippingPartner.name && (
+            <Summary shippingPartner={shippingPartner} />
+          )}
         </div>
       </div>
     </div>
@@ -244,93 +250,86 @@ const Data = ({
           </AccordionContent>
         </AccordionItem>
       )}
-      {activeStep > 3 && (
-        <AccordionItem value="item" className="border-t">
-          <AccordionTrigger>Item Details</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex justify-between">
-              <div className="flex flex-col">
-                <p className="text-gray-500">Billed Weight</p>
-                <p className="font-medium mt-0.5">
-                  {orderData.actual_weight} KG
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">Dimensions</p>
-                <p className="font-medium mt-0.5">
-                  {orderData.length}cm X {orderData.breadth}cm X{" "}
-                  {orderData.height}cm
-                </p>
-              </div>
-            </div>
-            <div>
-              <div className="grid grid-cols-3 gap-y-3 mt-5">
-                {orderData.items.map((item: any, index: number) => {
-                  if (!showAll && index > 0) return null;
-
-                  return (
-                    <React.Fragment key={index}>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">Product</p>
-                        <p className="font-medium mt-0.5">
-                          {item.product_name}
-                        </p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">HSN</p>
-                        <p className="font-medium mt-0.5">{item.hsn}</p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">SKU</p>
-                        <p className="font-medium mt-0.5">{item.sku}</p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">Qty</p>
-                        <p className="font-medium mt-0.5">{Number(item.qty)}</p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">Unit Price</p>
-                        <p className="font-medium mt-0.5">
-                          {orderData.invoice_currency}{" "}
-                          {Number(item.unit_price).toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-gray-500">Total</p>
-                        <p className="font-medium mt-0.5">
-                          {orderData.invoice_currency}{" "}
-                          {Number(item.qty * item.unit_price).toFixed(2)}
-                        </p>
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-              <div className="mt-5 flex justify-between">
-                <div>
-                  {!showAll && orderData.items.length > 1 && (
-                    <p className="text-orange-500 font-medium">
-                      + {orderData.items.length - 1} more products...
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex justify-end items-end">
-                  {orderData.items.length > 1 && (
-                    <button
-                      onClick={() => setShowAll(!showAll)}
-                      className="font-medium hover:underline text-blue-800 cursor-pointer"
-                    >
-                      {showAll ? "Hide" : "View"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      )}
     </Accordion>
+  );
+};
+
+const ItemDetails = ({ activeStep, orderData }) => {
+  const [showAll, setShowAll] = useState(false);
+
+  if (activeStep <= 3) return null;
+
+  return (
+    <div className="border-t pt-4">
+      <h3 className="text-lg font-semibold">Item Details</h3>
+      <div className="flex justify-between text-sm mt-3">
+        <div className="flex flex-col">
+          <p className="text-gray-500">Billed Weight</p>
+          <p className="font-medium mt-0.5">{orderData.actual_weight} KG</p>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-gray-500">Dimensions</p>
+          <p className="font-medium mt-0.5">
+            {orderData.length}cm X {orderData.breadth}cm X {orderData.height}cm
+          </p>
+        </div>
+      </div>
+      <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
+        {orderData.items.map((item:any, index:any) => {
+          if (!showAll && index > 0) return null;
+
+          return (
+            <React.Fragment key={index}>
+              <div className="flex flex-col">
+                <p className="text-gray-500">Product</p>
+                <p className="font-medium mt-0.5">{item.product_name}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">HSN</p>
+                <p className="font-medium mt-0.5">{item.hsn}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">SKU</p>
+                <p className="font-medium mt-0.5">{item.sku}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">Qty</p>
+                <p className="font-medium mt-0.5">{Number(item.qty)}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">Unit Price</p>
+                <p className="font-medium mt-0.5">
+                  {orderData.invoice_currency}{" "}
+                  {Number(item.unit_price).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-gray-500">Total</p>
+                <p className="font-medium mt-0.5">
+                  {orderData.invoice_currency}{" "}
+                  {Number(item.qty * item.unit_price).toFixed(2)}
+                </p>
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <div className="mt-5 flex justify-between">
+        {!showAll && orderData.items.length > 1 && (
+          <p className="text-orange-500 font-medium">
+            + {orderData.items.length - 1} more products...
+          </p>
+        )}
+        {orderData.items.length > 1 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="font-medium hover:underline text-blue-800 cursor-pointer"
+          >
+            {showAll ? "Hide" : "View"}
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 
