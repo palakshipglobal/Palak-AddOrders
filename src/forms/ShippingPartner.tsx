@@ -12,19 +12,21 @@ function ShippingPartner() {
   );
 
   const [courierOptions, setCourierOptions] = useState([]);
+  const [loadingPartner, setLoadingPartner] = useState<string | null>(null);
 
   const { buyerData, orderData, step } = useSelector(
     (state: RootState) => state.form
   );
 
-  const payload = {
-    customer_shipping_country_code: buyerData.shipping_country,
-    customer_shipping_postcode: buyerData.shipping_pincode,
-    package_breadth: orderData.breadth,
-    package_height: orderData.height,
-    package_length: orderData.length,
-    package_weight: orderData.actual_weight,
-  };
+  function handleSelectPartner(courier: any) {
+    setLoadingPartner(courier.name);
+    setTimeout(() => {
+      dispatch(
+        updateShippingPartner({ name: courier.name, rate: courier.rate })
+      );
+      setLoadingPartner(null);
+    }, 1000);
+  }
 
   useEffect(() => {
     if (step === 4) {
@@ -124,14 +126,7 @@ function ShippingPartner() {
               </tr>
               <tr
                 className="cursor-pointer"
-                onClick={() =>
-                  dispatch(
-                    updateShippingPartner({
-                      name: courier.name,
-                      rate: courier.rate,
-                    })
-                  )
-                }
+                onClick={() => handleSelectPartner(courier)}
               >
                 <td className="font-medium pt-8 pb-4 pl-5 border-t border-b border-l rounded-l-md">
                   {courier.name}
@@ -139,13 +134,17 @@ function ShippingPartner() {
                 <td className="border-t border-b pt-4">{courier.time}</td>
                 <td className="border-t border-b pt-4">{courier.rate}</td>
                 <td className="border-t border-b pt-4 border-r rounded-r-md">
-                  <CircleCheck
-                    className={`h-6 w-6 cursor-pointer transition-colors ${
-                      selectedPartner?.name === courier.name
-                        ? "fill-green-500 text-white"
-                        : "text-white fill-gray-300"
-                    }`}
-                  />
+                  {loadingPartner === courier.name ? (
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-2 border-t-green-500 rounded-full animate-spin"></div>
+                  ) : (
+                    <CircleCheck
+                      className={`h-6 w-6 cursor-pointer transition-colors ${
+                        selectedPartner?.name === courier.name
+                          ? "fill-green-500 text-white"
+                          : "text-white fill-gray-300"
+                      }`}
+                    />
+                  )}
                 </td>
               </tr>
             </tbody>
