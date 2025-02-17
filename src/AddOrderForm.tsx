@@ -25,7 +25,7 @@ function AddOrderForm() {
     shippingPartner,
     pickupAddress,
   } = useSelector((state: RootState) => state.form);
-  const [countries, setCountries] = useState([]);
+ 
   const [billingLabel, setBillingLabel] = useState(null);
   const [shippingLabel, setShippingLabel] = useState(null);
 
@@ -34,18 +34,17 @@ function AddOrderForm() {
       const storedCountries = localStorage.getItem("countries");
       if (storedCountries) {
         const parsedCountries = JSON.parse(storedCountries);
-        setCountries(parsedCountries);
 
         if (buyerData.billing_country) {
           const billing = parsedCountries.find(
-            (country) => country.value === buyerData.billing_country
+            (country:any) => country.value === buyerData.billing_country
           );
           setBillingLabel(billing ? billing.label : null);
         }
 
         if (buyerData.shipping_country) {
           const shipping = parsedCountries.find(
-            (country) => country.value === buyerData.shipping_country
+            (country:any) => country.value === buyerData.shipping_country
           );
           setShippingLabel(shipping ? shipping.label : null);
         }
@@ -97,7 +96,7 @@ function AddOrderForm() {
               title={step.title}
               activeStep={activeStep}
               isOpen={activeStep === index + 1}
-              setActiveStep={(step) => dispatch(updateStep(step))}
+              setActiveStep={(step:number) => dispatch(updateStep(step))}
               stepNumber={index + 1}
               childElement={step.component}
             />

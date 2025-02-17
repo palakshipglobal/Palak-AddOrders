@@ -55,7 +55,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
 
-
   useEffect(() => {
     if (countryShipping) {
       // Only reset state if the selected country actually changes
@@ -64,7 +63,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
         BuyerForm.setValue("shipping_state", ""); // Clear state when country changes
         setShippingStates([]);
       }
-  
+
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -85,26 +84,26 @@ export function BuyerDetailsForm({ setActiveStep }) {
               value: state.state_name,
               label: state.state_name,
             }));
-  
+
             setShippingStates(formattedStates);
           }
         } catch (error) {
           console.error("Error fetching states:", error);
         }
       };
-  
+
       fetchStates();
     }
   }, [countryShipping]);
-  
+
   useEffect(() => {
     if (countryBilling) {
       const prevBillingCountry = buyerData?.billing_country;
       if (prevBillingCountry !== countryBilling) {
-        BuyerForm.setValue("billing_state", ""); 
+        BuyerForm.setValue("billing_state", "");
         setBillingStates([]);
       }
-  
+
       const fetchStates = async () => {
         try {
           const response = await fetch(
@@ -125,18 +124,18 @@ export function BuyerDetailsForm({ setActiveStep }) {
               value: state.state_name,
               label: state.state_name,
             }));
-  
+
             setBillingStates(formattedStates);
           }
         } catch (error) {
           console.error("Error fetching states:", error);
         }
       };
-  
+
       fetchStates();
     }
   }, [countryBilling]);
-  
+
   useEffect(() => {
     if (isBillingSame) {
       BuyerForm.setValue(
@@ -190,13 +189,34 @@ export function BuyerDetailsForm({ setActiveStep }) {
                 setIsBillingSame(newValue);
                 BuyerForm.setValue("isBillingSame", newValue);
                 if (newValue) {
-                  BuyerForm.setValue("billing_address1", BuyerForm.getValues("shipping_address1"));
-                  BuyerForm.setValue("billing_address2", BuyerForm.getValues("shipping_address2"));
-                  BuyerForm.setValue("billing_landmark", BuyerForm.getValues("shipping_landmark"));
-                  BuyerForm.setValue("billing_pincode", BuyerForm.getValues("shipping_pincode"));
-                  BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
-                  BuyerForm.setValue("billing_country", BuyerForm.getValues("shipping_country"));
-                  BuyerForm.setValue("billing_state", BuyerForm.getValues("shipping_state")); 
+                  BuyerForm.setValue(
+                    "billing_address1",
+                    BuyerForm.getValues("shipping_address1")
+                  );
+                  BuyerForm.setValue(
+                    "billing_address2",
+                    BuyerForm.getValues("shipping_address2")
+                  );
+                  BuyerForm.setValue(
+                    "billing_landmark",
+                    BuyerForm.getValues("shipping_landmark")
+                  );
+                  BuyerForm.setValue(
+                    "billing_pincode",
+                    BuyerForm.getValues("shipping_pincode")
+                  );
+                  BuyerForm.setValue(
+                    "billing_city",
+                    BuyerForm.getValues("shipping_city")
+                  );
+                  BuyerForm.setValue(
+                    "billing_country",
+                    BuyerForm.getValues("shipping_country")
+                  );
+                  BuyerForm.setValue(
+                    "billing_state",
+                    BuyerForm.getValues("shipping_state")
+                  );
                 }
               }}
             />
