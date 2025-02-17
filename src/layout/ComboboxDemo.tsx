@@ -26,7 +26,14 @@ import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
 import { addresses, currency, igst, pickupAddress } from "./arrays";
 
-function Combobox({ options, placeholder, field }) {
+interface ComboboxProps {
+  options: any;
+  placeholder: string;
+  field: any;
+  disabled?: boolean;
+}
+
+function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -39,11 +46,12 @@ function Combobox({ options, placeholder, field }) {
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open && !disabled} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full bg-gray-100 h-9 text-gray-600 justify-between overflow-hidden text-ellipsis truncate"
+          className="w-full h-9 text-gray-600 justify-between overflow-hidden truncate"           
+          disabled={disabled}
         >
           <span className="truncate">
             {selectedOption ? selectedOption.label : placeholder}
@@ -51,42 +59,44 @@ function Combobox({ options, placeholder, field }) {
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
-        <Command>
-          <CommandInput
-            placeholder={placeholder}
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
-          <CommandList>
-            {filteredOptions.length === 0 ? (
-              <CommandEmpty>No results found.</CommandEmpty>
-            ) : (
-              <CommandGroup>
-                {filteredOptions.map((option: any) => (
-                  <CommandItem
-                    key={option.value}
-                    value={option.label}
-                    onSelect={() => {
-                      field.onChange(option.value);
-                      setOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={`mr-2 truncate h-4 w-4 ${
-                        field.value === option.value
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }`}
-                    />
-                    {option.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
+      {!disabled && (
+        <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
+          <Command>
+            <CommandInput
+              placeholder={placeholder}
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
+            <CommandList>
+              {filteredOptions.length === 0 ? (
+                <CommandEmpty>No results found.</CommandEmpty>
+              ) : (
+                <CommandGroup>
+                  {filteredOptions.map((option: any) => (
+                    <CommandItem
+                      key={option.value}
+                      value={option.label}
+                      onSelect={() => {
+                        field.onChange(option.value);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={`mr-2 truncate h-4 w-4 ${
+                          field.value === option.value
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      />
+                      {option.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      )}
     </Popover>
   );
 }
@@ -118,7 +128,6 @@ export function CountrySelect({ form, name, required }) {
     };
 
     fetchCountries();
-    // }
   }, []);
 
   return (
@@ -244,7 +253,12 @@ export function IGSTSelect({ form, name, required }) {
             IGST {required && <Required />}
           </FormLabel>
           <FormControl>
-            <Combobox options={igst} placeholder="0%" field={field} />
+            <Combobox
+              options={igst}
+              placeholder="0%"
+              field={field}
+              disabled={true}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

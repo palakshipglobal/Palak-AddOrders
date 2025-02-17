@@ -10,6 +10,7 @@ import React from "react";
 import { useFieldArray } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 import { IGSTSelect } from "@/layout/ComboboxDemo";
+import { Button } from "@/components/ui/button";
 
 const ItemDetails = ({ form }) => {
   const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];
@@ -96,8 +97,9 @@ const ItemDetails = ({ form }) => {
       ))}
 
       <div className="flex flex-col md:flex-row md:justify-between mt-7">
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={() =>
             append({
               product_name: "",
@@ -108,13 +110,12 @@ const ItemDetails = ({ form }) => {
               igst: "0",
             })
           }
-          className="flex text-sm max-w-max items-center gap-2"
         >
-          <Plus className="w-4 h-4 text-blue-800" />{" "}
+          <Plus className="w-4 h-4 text-blue-800" />
           <span className="text-blue-800 underline font-medium">
             Add Another Product
           </span>
-        </button>
+        </Button>
         <p className="lg:text-base font-semibold mt-2">
           Total Price : {currency} {totalPrice.toFixed(2)}
         </p>
