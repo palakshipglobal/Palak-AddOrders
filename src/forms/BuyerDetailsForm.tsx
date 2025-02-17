@@ -133,26 +133,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
                 BuyerForm.setValue("isBillingSame", newValue);
                 if (newValue) {
                   BuyerForm.setValue(
-                    "billing_address1",
-                    BuyerForm.getValues("shipping_address1")
-                  );
-                  BuyerForm.setValue(
-                    "billing_address2",
-                    BuyerForm.getValues("shipping_address2")
-                  );
-                  BuyerForm.setValue(
-                    "billing_landmark",
-                    BuyerForm.getValues("shipping_landmark")
-                  );
-                  BuyerForm.setValue(
-                    "billing_pincode",
-                    BuyerForm.getValues("shipping_pincode")
-                  );
-                  BuyerForm.setValue(
-                    "billing_city",
-                    BuyerForm.getValues("shipping_city")
-                  );
-                  BuyerForm.setValue(
                     "billing_country",
                     BuyerForm.getValues("shipping_country")
                   );

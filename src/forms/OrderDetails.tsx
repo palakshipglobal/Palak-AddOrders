@@ -76,10 +76,10 @@ function OrderDetails({ setActiveStep }) {
     })),
   };
 
-
   const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
     try {
       const result = await validateOrderInvoice(payload);
+
       if (result.data?.box?.["1"]?.exceeds_limit) {
         setErrorMessage(result.data.box["1"].exceeds_text);
         setIsError(true);
@@ -92,7 +92,6 @@ function OrderDetails({ setActiveStep }) {
     } catch (error) {
       console.error("Error validating order invoice:", error);
     }
-
     const formattedValues = {
       ...values,
       invoice_date: values.invoice_date
@@ -127,7 +126,6 @@ function OrderDetails({ setActiveStep }) {
             </div>
           )}
           <div className="flex justify-end mt-6">
-           
             <Button type="submit" className="bg-blue-800 hover:bg-blue-800/90">
               Select Shipping
             </Button>
