@@ -30,21 +30,24 @@ function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredOptions = options.filter(
-    (option:any) => option.label.toLowerCase().includes(searchQuery.toLowerCase()) 
+  const filteredOptions = options.filter((option: any) =>
+    option.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const selectedOption = options.find((option:any) => option.value === field.value);
- 
+  const selectedOption = options.find(
+    (option: any) => option.value === field.value
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full bg-gray-100 h-9 text-gray-600 justify-between overflow-hidden text-ellipsis"
+          className="w-full bg-gray-100 h-9 text-gray-600 justify-between overflow-hidden text-ellipsis truncate"
         >
-          {selectedOption ? selectedOption.label : placeholder}
+          <span className="truncate">
+            {selectedOption ? selectedOption.label : placeholder}
+          </span>
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -55,23 +58,25 @@ function Combobox({ options, placeholder, field }) {
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
-           <CommandList>
+          <CommandList>
             {filteredOptions.length === 0 ? (
               <CommandEmpty>No results found.</CommandEmpty>
             ) : (
               <CommandGroup>
-                {filteredOptions.map((option:any) => (
+                {filteredOptions.map((option: any) => (
                   <CommandItem
                     key={option.value}
-                    value={option.label} 
+                    value={option.label}
                     onSelect={() => {
-                      field.onChange(option.value); 
+                      field.onChange(option.value);
                       setOpen(false);
                     }}
                   >
                     <Check
-                      className={`mr-2 h-4 w-4 ${
-                        field.value === option.value ? "opacity-100" : "opacity-0"
+                      className={`mr-2 truncate h-4 w-4 ${
+                        field.value === option.value
+                          ? "opacity-100"
+                          : "opacity-0"
                       }`}
                     />
                     {option.label}
@@ -260,7 +265,6 @@ export function CustomerSelect({ form, name }) {
               options={customers}
               placeholder="Select Pickup Address"
               field={field}
-              
             />
           </FormControl>
           <FormMessage />

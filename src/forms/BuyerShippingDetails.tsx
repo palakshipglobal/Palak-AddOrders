@@ -6,7 +6,7 @@ const BuyerShippingDetails = ({ form, states }) => {
   return (
     <div className="space-y-2">
       <p className="text-sm font-semibold">Personal Details</p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
+      <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
         <SimpleFormFields
           form={form}
           label="First Name"
@@ -41,7 +41,7 @@ const BuyerShippingDetails = ({ form, states }) => {
         />
       </div>
       <p className="text-sm font-semibold pt-5">Shipping Address</p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
         <SimpleFormFields
           form={form}
           label="Address 1"

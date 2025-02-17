@@ -97,35 +97,16 @@ function ShippingPartner() {
         <span className="text-blue-800 font-semibold">011-422 77777</span>
       </p>
       <div className="flex flex-col md:flex-row items-center gap-2 justify-center px-10 md:px-32 mt-5">
-        <div
-          className={`border border-gray-300 text-center bg-gray-50 px-4 py-2 min-w-32 rounded-md`}
-        >
-          <p className="font-medium text-base">
-            {Number(orderData.actual_weight).toFixed(2)} KG
-          </p>
-          <p className="text-xs">Dead weight</p>
-        </div>
-        <div
-          className={`border border-gray-300 text-center bg-gray-50 px-4 py-2 md:min-w-36 min-w-32 rounded-md`}
-        >
-          <p className="font-medium text-base">
-            {volumetricWeight.toFixed(2)} KG
-          </p>
-          <p className="text-xs">Volumetric weight</p>
-        </div>
-        <div
-          className={`border border-orange-300 bg-yellow-100 text-orange-500 text-center px-4 py-2 min-w-32 rounded-md`}
-        >
-          <p className="font-medium text-base">
-            {Math.max(
-              Number(orderData.actual_weight),
-              volumetricWeight
-            ).toFixed(2)}{" "}
-            KG
-          </p>
-          <p className="text-xs">Billed weight</p>
-        </div>
-      </div>
+      <WeightCard value={Number(orderData.actual_weight)} label="Dead weight" />
+      <WeightCard value={volumetricWeight} label="Volumetric weight" />
+      <WeightCard
+        value={Math.max(Number(orderData.actual_weight), volumetricWeight)}
+        label="Billed weight"
+        borderColor="border-orange-300"
+        bgColor="bg-yellow-100"
+        textColor="text-orange-500"
+      />
+    </div>
       {courierOptions.length > 1 && (
         <p className="mt-5 font-semibold">
           Showing {courierOptions.length}{" "}
@@ -208,3 +189,27 @@ function ShippingPartner() {
 }
 
 export default ShippingPartner;
+
+
+interface WeightCardProps {
+  value: number;
+  label: string;
+  borderColor?: string;
+  bgColor?: string;
+  textColor?: string;
+}
+
+const WeightCard: React.FC<WeightCardProps> = ({
+  value,
+  label,
+  borderColor = "border-gray-300",
+  bgColor = "bg-gray-50",
+  textColor = "text-black",
+}) => {
+  return (
+    <div className={`border ${borderColor} text-center ${bgColor} ${textColor} px-4 py-2 min-w-32 md:min-w-36 rounded-md`}>
+      <p className="font-medium text-base">{value.toFixed(2)} KG</p>
+      <p className="text-xs">{label}</p>
+    </div>
+  );
+};

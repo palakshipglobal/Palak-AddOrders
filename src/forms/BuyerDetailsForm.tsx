@@ -44,11 +44,8 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   const [isBillingSame, setIsBillingSame] = useState(buyerData.isBillingSame);
 
-  console.log(BuyerForm.watch());
-
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
     console.log("BuyerForm Data:", values);
-    // console.log(billingStates);
     dispatch(updateBuyerData(values));
     setActiveStep(3);
   };
@@ -58,8 +55,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
 
-  console.log(BuyerForm.watch("shipping_state"));
-
 
   useEffect(() => {
     if (countryShipping) {
@@ -67,7 +62,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
       const prevCountry = buyerData?.shipping_country;
       if (prevCountry !== countryShipping) {
         BuyerForm.setValue("shipping_state", ""); // Clear state when country changes
-        setShippingStates([]); // Reset state options
+        setShippingStates([]);
       }
   
       const fetchStates = async () => {
@@ -172,7 +167,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
     }
   }, [
     isBillingSame,
-    //BuyerForm,
     BuyerForm.watch("shipping_address1"),
     BuyerForm.watch("shipping_address2"),
     BuyerForm.watch("shipping_city"),

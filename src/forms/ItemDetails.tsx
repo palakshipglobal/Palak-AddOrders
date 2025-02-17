@@ -41,7 +41,7 @@ const ItemDetails = ({ form }) => {
     <div>
       {fields.map((field, index) => (
         <div key={field.id} className="lg:flex items-center gap-x-1">
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-2 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2 mt-2">
             {(itemFields as ItemFields[]).map((itemField) => (
               <FormField
                 key={itemField}

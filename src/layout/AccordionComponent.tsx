@@ -15,7 +15,7 @@ function AccordionComponent({
         isOpen ? "bg-gray-50" : "bg-white"
       }`}
     >
-      <div className="flex flex-row cursor-pointer  py-2.5 items-center justify-between transition duration-300">
+      <div className="flex flex-row cursor-pointer py-2.5 items-center justify-between transition duration-300">
         <div
           className={`cursor-pointer items-center gap-x-2 flex flex-row  ${
             activeStep === stepNumber ? "text-black" : "text-gray-500"

@@ -52,15 +52,7 @@ function AddOrderForm() {
       }
     };
 
-    // Try loading immediately
     loadCountries();
-
-    // Also listen for event when countries are set
-    window.addEventListener("countriesLoaded", loadCountries);
-
-    return () => {
-      window.removeEventListener("countriesLoaded", loadCountries);
-    };
   }, [buyerData.billing_country, buyerData.shipping_country]);
 
   const formSteps = [
@@ -118,7 +110,6 @@ function AddOrderForm() {
             <Data
               activeStep={activeStep}
               buyerData={buyerData}
-              orderData={orderData}
               pickupAddress={pickupAddress}
               billingLabel={billingLabel}
               shippingLabel={shippingLabel}
@@ -178,12 +169,10 @@ const QuickTipsContent = () => {
 const Data = ({
   activeStep,
   buyerData,
-  orderData,
   pickupAddress,
   billingLabel,
   shippingLabel,
 }) => {
-  const [showAll, setShowAll] = useState(false);
   return (
     <Accordion
       type="multiple"
@@ -275,7 +264,7 @@ const ItemDetails = ({ activeStep, orderData }) => {
         </div>
       </div>
       <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
-        {orderData.items.map((item:any, index:any) => {
+        {orderData.items.map((item: any, index: any) => {
           if (!showAll && index > 0) return null;
 
           return (

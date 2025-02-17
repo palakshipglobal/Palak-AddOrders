@@ -440,3 +440,11 @@
 //     billing_state: "",
 //   },
 // });
+
+
+    // Also listen for event when countries are set
+    // window.addEventListener("countriesLoaded", loadCountries);
+
+    // return () => {
+    //   window.removeEventListener("countriesLoaded", loadCountries);
+    // };

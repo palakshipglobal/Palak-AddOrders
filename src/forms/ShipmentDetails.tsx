@@ -3,7 +3,7 @@ import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 mt-2">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
       <div className="flex">
         <SimpleFormFields
           form={form}
