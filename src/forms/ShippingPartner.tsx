@@ -4,6 +4,7 @@ import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { CircleCheck } from "lucide-react";
 import { fetchShipperRates } from "@/layout/api";
+import { Button } from "@/components/ui/button";
 
 function ShippingPartner() {
   const dispatch = useDispatch();
@@ -53,12 +54,6 @@ function ShippingPartner() {
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
-    console.log(
-      "Shipping Partner",
-      selectedPartner,
-      "Rate:",
-      selectedPartner.rate
-    );
   }
   const volumetricWeight =
     (Number(orderData.breadth) *
@@ -73,8 +68,7 @@ function ShippingPartner() {
         billed on the consignee or the shipper. Rates are inclusive of covid &
         fuel surcharge, exclusive of GST and ex-Delhi Hub.
       </p>
-      <br />
-      <p>
+      <p className="mt-2">
         In case any doubt, please call/whatsapp at{" "}
         <span className="text-blue-800 font-semibold">011-422 77777</span>
       </p>
@@ -107,12 +101,12 @@ function ShippingPartner() {
         <table className="mt-5 w-full relative text-xs lg:text-sm border-separate border-spacing-y-2.5">
           <thead>
             <tr className="text-left text-slate-500 bg-slate-50">
-              <th className="p-4 border-t border-b border-l rounded-l-md">
+              <th className="p-4 border border-r-0 rounded-l-md">
                 Courier Partner
               </th>
               <th className="border-t border-b">Delivery Time</th>
               <th className="border-t border-b">Shipment Rate</th>
-              <th className="border-t border-b border-r rounded-r-md pr-2">
+              <th className="border border-l-0 rounded-r-md pr-2">
                 Select
               </th>
             </tr>
@@ -128,7 +122,7 @@ function ShippingPartner() {
                 className="cursor-pointer"
                 onClick={() => handleSelectPartner(courier)}
               >
-                <td className="font-medium pt-8 pb-4 pl-5 border-t border-b border-l rounded-l-md">
+                <td className="font-medium pt-8 pb-4 pl-5 border border-r-0 rounded-l-md">
                   {courier.name}
                 </td>
                 <td className="border-t border-b pt-4">{courier.time}</td>
@@ -153,18 +147,18 @@ function ShippingPartner() {
       )}
 
       <div className="flex justify-end py-5">
-        <button
+        <Button
           type="submit"
           onClick={onSubmit}
           disabled={!selectedPartner.name}
-          className={`bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90 ${
+          className={`bg-blue-800 hover:bg-blue-800/90 ${
             !selectedPartner.name
               ? "opacity-35 cursor-not-allowed"
               : "opacity-100"
           }`}
         >
           Pay and Order
-        </button>
+        </Button>
       </div>
     </div>
   );

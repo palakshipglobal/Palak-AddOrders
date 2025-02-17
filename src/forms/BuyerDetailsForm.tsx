@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { fetchStates } from "@/layout/api";
+import { Button } from "@/components/ui/button";
 
 export function BuyerDetailsForm({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -46,7 +47,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
   const [isBillingSame, setIsBillingSame] = useState(buyerData.isBillingSame);
 
   const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
-    console.log("BuyerForm Data:", values);
     dispatch(updateBuyerData(values));
     setActiveStep(3);
   };
@@ -59,10 +59,9 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   useEffect(() => {
     if (countryShipping) {
-      // Only reset state if the selected country actually changes
       const prevCountry = buyerData?.shipping_country;
       if (prevCountry !== countryShipping) {
-        BuyerForm.setValue("shipping_state", ""); // Clear state when country changes
+        BuyerForm.setValue("shipping_state", "");
         setShippingStates([]);
       }
       fetchStates(countryShipping).then(setShippingStates);
@@ -78,7 +77,6 @@ export function BuyerDetailsForm({ setActiveStep }) {
       }
       fetchStates(countryBilling).then(setBillingStates);
     }
-    
   }, [countryBilling]);
 
   useEffect(() => {
@@ -175,12 +173,9 @@ export function BuyerDetailsForm({ setActiveStep }) {
           )}
 
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90"
-            >
+            <Button type="submit" className="bg-blue-800 hover:bg-blue-800/90">
               Continue
-            </button>
+            </Button>
           </div>
         </form>
       </Form>

@@ -1,6 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { updatePickupAddress } from "@/features/formSlice";
-import { CustomerSelect } from "@/layout/ComboboxDemo";
+import { PickupAddressSelect } from "@/layout/ComboboxDemo";
+import { ConsignorSchema } from "@/layout/schemas";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
@@ -9,10 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
 
 function ConsignorDetails({ setActiveStep }) {
-  const ConsignorSchema = z.object({
-    pickupAddress: z.string().min(1, "Please select an address"),
-  });
-
   const dispatch = useDispatch();
   const storedPickupAddress = useSelector(
     (state: RootState) => state.form.pickupAddress
@@ -27,7 +25,6 @@ function ConsignorDetails({ setActiveStep }) {
 
   useEffect(() => {
     ConsignorForm.setValue("pickupAddress", storedPickupAddress);
-    if (storedPickupAddress) console.log(storedPickupAddress);
   }, [storedPickupAddress, ConsignorForm]);
 
   const data = ConsignorForm.watch("pickupAddress");
@@ -44,10 +41,9 @@ function ConsignorDetails({ setActiveStep }) {
           className="mt-2 space-y-3"
         >
           <div className="space-y-1">
-            <label className="font-medium">Select Pickup address</label>
+            <p className="font-medium">Select Pickup address</p>
             <div className="w-5/6">
-              {" "}
-              <CustomerSelect form={ConsignorForm} name="pickupAddress" />
+              <PickupAddressSelect form={ConsignorForm} name="pickupAddress" />
             </div>
           </div>
           {data && (
@@ -58,12 +54,9 @@ function ConsignorDetails({ setActiveStep }) {
           )}
 
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90"
-            >
+            <Button type="submit" className="bg-blue-800 hover:bg-blue-800/90">
               Continue
-            </button>
+            </Button>
           </div>
         </form>
       </Form>

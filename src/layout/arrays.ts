@@ -72,7 +72,7 @@ export const igst = [
   { value: "18", label: "18%" },
 ];
 
-export const customers = [
+export const pickupAddress = [
   {
     value:
       "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",

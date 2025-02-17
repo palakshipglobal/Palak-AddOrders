@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import BreadCrumb from "./layout/BreadCrumb";
-import AccordionComponent from "./layout/AccordionComponent";
-import box from "./assets/box.jpg";
-import { BuyerDetailsForm } from "./forms/BuyerDetailsForm";
-import OrderDetails from "./forms/OrderDetails";
-import ShippingPartner from "./forms/ShippingPartner";
+import BreadCrumb from "@/layout/BreadCrumb";
+import AccordionComponent from "@/layout/AccordionComponent";
+import box from "@/assets/box.jpg";
+import { BuyerDetailsForm } from "@/forms/BuyerDetailsForm";
+import OrderDetails from "@/forms/OrderDetails";
+import ShippingPartner from "@/forms/ShippingPartner";
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import ConsignorDetails from "./forms/ConsignorDetails";
 import { updateStep } from "./features/formSlice";
+import { BillingAddress, ShippingAddress } from "./lib/utils";
 
 function AddOrderForm() {
   const dispatch = useDispatch();
@@ -25,32 +26,32 @@ function AddOrderForm() {
     shippingPartner,
     pickupAddress,
   } = useSelector((state: RootState) => state.form);
- 
+
   const [billingLabel, setBillingLabel] = useState(null);
   const [shippingLabel, setShippingLabel] = useState(null);
 
-  useEffect(() => {
-    const loadCountries = () => {
-      const storedCountries = localStorage.getItem("countries");
-      if (storedCountries) {
-        const parsedCountries = JSON.parse(storedCountries);
+  const loadCountries = () => {
+    const storedCountries = localStorage.getItem("countries");
+    if (storedCountries) {
+      const parsedCountries = JSON.parse(storedCountries);
 
-        if (buyerData.billing_country) {
-          const billing = parsedCountries.find(
-            (country:any) => country.value === buyerData.billing_country
-          );
-          setBillingLabel(billing ? billing.label : null);
-        }
-
-        if (buyerData.shipping_country) {
-          const shipping = parsedCountries.find(
-            (country:any) => country.value === buyerData.shipping_country
-          );
-          setShippingLabel(shipping ? shipping.label : null);
-        }
+      if (buyerData.billing_country) {
+        const billing = parsedCountries.find(
+          (country: any) => country.value === buyerData.billing_country
+        );
+        setBillingLabel(billing ? billing.label : null);
       }
-    };
 
+      if (buyerData.shipping_country) {
+        const shipping = parsedCountries.find(
+          (country: any) => country.value === buyerData.shipping_country
+        );
+        setShippingLabel(shipping ? shipping.label : null);
+      }
+    }
+  };
+
+  useEffect(() => {
     loadCountries();
   }, [buyerData.billing_country, buyerData.shipping_country]);
 
@@ -96,7 +97,7 @@ function AddOrderForm() {
               title={step.title}
               activeStep={activeStep}
               isOpen={activeStep === index + 1}
-              setActiveStep={(step:number) => dispatch(updateStep(step))}
+              setActiveStep={(step: number) => dispatch(updateStep(step))}
               stepNumber={index + 1}
               childElement={step.component}
             />
@@ -201,38 +202,12 @@ const Data = ({
 
               <p className="text-gray-500 mt-2.5">Billing Address</p>
               <p className="font-medium mt-0.5">
-                {buyerData.isBillingSame
-                  ? "Same as Shipping Address"
-                  : `${
-                      buyerData?.billing_address1
-                        ? buyerData.billing_address1 + ","
-                        : ""
-                    } 
-       ${buyerData?.billing_landmark ? buyerData.billing_landmark + "," : ""} 
-       ${buyerData?.billing_address2 ? buyerData.billing_address2 + "," : ""} 
-       ${buyerData?.billing_city ? buyerData.billing_city + "," : ""}
-       ${buyerData?.billing_state ? buyerData.billing_state + "," : ""} 
-       ${buyerData?.billing_country ? billingLabel + "," : ""} 
-       ${buyerData?.billing_pincode ? buyerData.billing_pincode + "," : ""}`}
+                {BillingAddress(buyerData, { billingLabel })}
               </p>
 
               <p className="text-gray-500 mt-2.5">Shipping Address</p>
               <p className="font-medium mt-0.5">
-                {buyerData?.shipping_address1
-                  ? buyerData.shipping_address1 + ", "
-                  : ""}
-                {buyerData?.shipping_landmark
-                  ? buyerData.shipping_landmark + ", "
-                  : ""}
-                {buyerData?.shipping_address2
-                  ? buyerData.shipping_address2 + ", "
-                  : ""}
-                {buyerData?.shipping_city ? buyerData.shipping_city + ", " : ""}
-                {buyerData?.shipping_state
-                  ? buyerData.shipping_state + ", "
-                  : ""}
-                {buyerData?.shipping_country ? shippingLabel + ", " : ""}
-                {buyerData?.shipping_pincode ? buyerData.shipping_pincode : ""}
+              {ShippingAddress(buyerData, { shippingLabel })}
               </p>
             </div>
           </AccordionContent>
@@ -268,56 +243,60 @@ const ItemDetails = ({ activeStep, orderData }) => {
 
           return (
             <React.Fragment key={index}>
-              <div className="flex flex-col">
-                <p className="text-gray-500">Product</p>
-                <p className="font-medium mt-0.5">{item.product_name}</p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">HSN</p>
-                <p className="font-medium mt-0.5">{item.hsn}</p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">SKU</p>
-                <p className="font-medium mt-0.5">{item.sku}</p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">Qty</p>
-                <p className="font-medium mt-0.5">{Number(item.qty)}</p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">Unit Price</p>
-                <p className="font-medium mt-0.5">
-                  {orderData.invoice_currency}{" "}
-                  {Number(item.unit_price).toFixed(2)}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-gray-500">Total</p>
-                <p className="font-medium mt-0.5">
-                  {orderData.invoice_currency}{" "}
-                  {Number(item.qty * item.unit_price).toFixed(2)}
-                </p>
-              </div>
+              <OrderItemDetail
+                item={item}
+                orderCurrency={orderData.invoice_currency}
+              />
             </React.Fragment>
           );
         })}
       </div>
       <div className="mt-5 flex justify-between">
         {!showAll && orderData.items.length > 1 && (
-          <p className="text-orange-500 font-medium">
+          <p className="text-orange-500 text-sm font-medium">
             + {orderData.items.length - 1} more products...
           </p>
         )}
         {orderData.items.length > 1 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="font-medium hover:underline text-blue-800 cursor-pointer"
+            className="font-medium text-sm hover:underline text-blue-800 cursor-pointer"
           >
             {showAll ? "Hide" : "View"}
           </button>
         )}
       </div>
     </div>
+  );
+};
+
+const OrderItemDetail = ({ item, orderCurrency }) => {
+  const fields = [
+    { label: "Product", value: item.product_name },
+    { label: "HSN", value: item.hsn },
+    { label: "SKU", value: item.sku },
+    { label: "Qty", value: Number(item.qty) },
+    {
+      label: "Unit Price",
+      value: `${orderCurrency} ${Number(item.unit_price).toFixed(2)}`,
+    },
+    {
+      label: "Total",
+      value: `${orderCurrency} ${Number(item.qty * item.unit_price).toFixed(
+        2
+      )}`,
+    },
+  ];
+
+  return (
+    <>
+      {fields.map((field, index) => (
+        <div key={index} className="flex flex-col">
+          <p className="text-gray-500">{field.label}</p>
+          <p className="font-medium mt-0.5">{field.value}</p>
+        </div>
+      ))}
+    </>
   );
 };
 

@@ -8,14 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { useFieldArray } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
+import { IGSTSelect } from "@/layout/ComboboxDemo";
 
 const ItemDetails = ({ form }) => {
   const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];
@@ -42,82 +36,55 @@ const ItemDetails = ({ form }) => {
       {fields.map((field, index) => (
         <div key={field.id} className="lg:flex items-center gap-x-1">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2 mt-2">
-            {(itemFields as ItemFields[]).map((itemField) => (
-              <FormField
-                key={itemField}
-                control={form.control}
-                name={`items.${index}.${itemField}` as const}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-normal">
-                      {itemField === "product_name"
-                        ? "Product Name"
-                        : itemField === "sku"
-                        ? "SKU"
-                        : itemField === "hsn"
-                        ? "HSN"
-                        : itemField === "qty"
-                        ? "Qty"
-                        : `Unit Price (${currency})`}
-                      {itemField !== "sku" && (
-                        <span className="text-red-500 ml-1">*</span>
-                      )}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={
-                          itemField === "product_name"
-                            ? "Enter Product Name..."
-                            : itemField === "sku"
-                            ? "Enter SKU..."
-                            : itemField === "hsn"
-                            ? "Enter HSN..."
-                            : itemField === "qty"
-                            ? "Enter Qty..."
-                            : "Enter Unit Price..."
-                        }
-                        {...field}
-                        type={
-                          itemField === "qty" || itemField === "unit_price"
-                            ? "number"
-                            : "text"
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-            <FormField
-              control={form.control}
-              name={`items.${index}.igst` as const}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-normal">
-                    IGST <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select IGST" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">0%</SelectItem>
-                      <SelectItem value="5">5%</SelectItem>
-                      <SelectItem value="12">12%</SelectItem>
-                      <SelectItem value="18">18%</SelectItem>
-                      <SelectItem value="28">28%</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {(itemFields as ItemFields[]).map((itemField) => {
+              const labelMap = {
+                product_name: "Product Name",
+                sku: "SKU",
+                hsn: "HSN",
+                qty: "Qty",
+                unit_price: `Unit Price (${currency})`,
+              };
+
+              const placeholderMap = {
+                product_name: "Enter Product Name...",
+                sku: "Enter SKU...",
+                hsn: "Enter HSN...",
+                qty: "Enter Qty...",
+                unit_price: "Enter Unit Price...",
+              };
+
+              return (
+                <FormField
+                  key={itemField}
+                  control={form.control}
+                  name={`items.${index}.${itemField}`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-normal">
+                        {labelMap[itemField]}
+                        {itemField !== "sku" && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={placeholderMap[itemField]}
+                          className="truncate"
+                          {...field}
+                          type={
+                            itemField === "qty" || itemField === "unit_price"
+                              ? "number"
+                              : "text"
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              );
+            })}
+            <IGSTSelect form={form} name={`items.${index}.igst`} required />
           </div>
           {index > 0 && (
             <Trash2

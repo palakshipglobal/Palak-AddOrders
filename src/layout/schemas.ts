@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const ConsignorSchema = z.object({
+    pickupAddress: z.string().min(1, "Please select an address"),
+  });
+
 export const BuyerSchema = z
   .object({
     shipping_firstname: z

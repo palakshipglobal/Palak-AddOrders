@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import Required from "./Required";
 import { DatePickerWithPresets } from "./DatePicker";
-import { addresses, currency, customers, igst } from "./arrays";
+import { addresses, currency, igst, pickupAddress } from "./arrays";
 
 function Combobox({ options, placeholder, field }) {
   const [open, setOpen] = useState(false);
@@ -253,7 +253,7 @@ export function IGSTSelect({ form, name, required }) {
   );
 }
 
-export function CustomerSelect({ form, name }) {
+export function PickupAddressSelect({ form, name }) {
   return (
     <FormField
       control={form.control}
@@ -262,7 +262,7 @@ export function CustomerSelect({ form, name }) {
         <FormItem>
           <FormControl>
             <Combobox
-              options={customers}
+              options={pickupAddress}
               placeholder="Select Pickup Address"
               field={field}
             />

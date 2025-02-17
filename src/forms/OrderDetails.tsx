@@ -11,6 +11,7 @@ import { updateOrderData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { validateOrderInvoice } from "@/layout/api";
+import { Button } from "@/components/ui/button";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -75,40 +76,36 @@ function OrderDetails({ setActiveStep }) {
     })),
   };
 
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTEgMTc6MTY6MTAuNTk0ODQ3IiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMyAxNzoxNjoxMC41OTQ4NDkiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjU0YTVhMDZmLTlmMTItNDNkMS05NjRmLWY0NmU0NDAzZmJlYiIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.Mgqd-wgxjBYG2o9rztEvgrEzuEXxUYjoKXcmmDCg1jw";
 
-    const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
-      try {
-        const result = await validateOrderInvoice(payload, token);
-  
-        if (result.data?.box?.["1"]?.exceeds_limit) {
-          setErrorMessage(result.data.box["1"].exceeds_text);
-          setIsError(true);
-          return;
-        } else {
-          setErrorMessage("");
-          setIsError(false);
-          setActiveStep(4);
-        }
-      } catch (error) {
-        console.error("Error validating order invoice:", error);
-      }
-  
-      console.log("OrderForm Data:", values);
-      const formattedValues = {
-        ...values,
-        invoice_date: values.invoice_date
-          ? new Date(values.invoice_date).toISOString()
-          : "",
-      };
-  
-      dispatch(updateOrderData(formattedValues));
-  
-      if (!isError) {
+  const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
+    try {
+      const result = await validateOrderInvoice(payload);
+      if (result.data?.box?.["1"]?.exceeds_limit) {
+        setErrorMessage(result.data.box["1"].exceeds_text);
+        setIsError(true);
+        return;
+      } else {
+        setErrorMessage("");
+        setIsError(false);
         setActiveStep(4);
       }
+    } catch (error) {
+      console.error("Error validating order invoice:", error);
+    }
+
+    const formattedValues = {
+      ...values,
+      invoice_date: values.invoice_date
+        ? new Date(values.invoice_date).toISOString()
+        : "",
     };
+
+    dispatch(updateOrderData(formattedValues));
+
+    if (!isError) {
+      setActiveStep(4);
+    }
+  };
 
   return (
     <div className="px-3 md:px-7 py-4">
@@ -130,12 +127,10 @@ function OrderDetails({ setActiveStep }) {
             </div>
           )}
           <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="bg-blue-800 text-sm font-medium text-white rounded-md px-4 py-2 hover:bg-blue-800/90"
-            >
+           
+            <Button type="submit" className="bg-blue-800 hover:bg-blue-800/90">
               Select Shipping
-            </button>
+            </Button>
           </div>
         </form>
       </Form>
