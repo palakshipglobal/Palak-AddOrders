@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { CircleCheck } from "lucide-react";
+import { fetchShipperRates } from "@/layout/api";
 
 function ShippingPartner() {
   const dispatch = useDispatch();
@@ -12,12 +13,9 @@ function ShippingPartner() {
 
   const [courierOptions, setCourierOptions] = useState([]);
 
-  const { buyerData, orderData,step } = useSelector(
+  const { buyerData, orderData, step } = useSelector(
     (state: RootState) => state.form
   );
-
-  const url =
-    "https://api.fr.stg.shipglobal.in/api/v1/orders/get-shipper-rates";
 
   const payload = {
     customer_shipping_country_code: buyerData.shipping_country,
@@ -28,46 +26,28 @@ function ShippingPartner() {
     package_weight: orderData.actual_weight,
   };
 
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTAgMTY6NTg6NDguNTc2NzgyIiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMiAxNjo1ODo0OC41NzY3ODMiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjViYjM5M2ZmLWY3ZWUtNDE4My04YmE3LTg0MTFjZGJmMmVmOSIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.e374_FSMTBZt98yC6fx3Hqq1mvrKfHrytRQx_hRStsw";
-
   useEffect(() => {
-    if(step === 4){
-      const fetchApiData = async () => {
-        try {
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-          });
-          const data = await response.json();
-          if (data?.data?.rate) {
-            setCourierOptions(
-              data.data.rate.map((rate: any) => ({
-                name: rate.display_name,
-                time: rate.transit_time,
-                rate: rate.rate,
-              }))
-            );
-          }
-        } catch (error) {
-          console.error("Error fetching rates:", error);
-        }
+    if (step === 4) {
+      const payload = {
+        customer_shipping_country_code: buyerData.shipping_country,
+        customer_shipping_postcode: buyerData.shipping_pincode,
+        package_breadth: orderData.breadth,
+        package_height: orderData.height,
+        package_length: orderData.length,
+        package_weight: orderData.actual_weight,
       };
-      fetchApiData();
+
+      fetchShipperRates(payload).then((rates) => {
+        setCourierOptions(
+          rates.map((rate: any) => ({
+            name: rate.display_name,
+            time: rate.transit_time,
+            rate: rate.rate,
+          }))
+        );
+      });
     }
-  }, [
-    step,
-    buyerData.shipping_country,
-    buyerData.shipping_pincode,
-    orderData.breadth,
-    orderData.height,
-    orderData.length,
-    orderData.actual_weight,
-  ]);
+  }, [step, buyerData, orderData]);
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
@@ -97,16 +77,19 @@ function ShippingPartner() {
         <span className="text-blue-800 font-semibold">011-422 77777</span>
       </p>
       <div className="flex flex-col md:flex-row items-center gap-2 justify-center px-10 md:px-32 mt-5">
-      <WeightCard value={Number(orderData.actual_weight)} label="Dead weight" />
-      <WeightCard value={volumetricWeight} label="Volumetric weight" />
-      <WeightCard
-        value={Math.max(Number(orderData.actual_weight), volumetricWeight)}
-        label="Billed weight"
-        borderColor="border-orange-300"
-        bgColor="bg-yellow-100"
-        textColor="text-orange-500"
-      />
-    </div>
+        <WeightCard
+          value={Number(orderData.actual_weight)}
+          label="Dead weight"
+        />
+        <WeightCard value={volumetricWeight} label="Volumetric weight" />
+        <WeightCard
+          value={Math.max(Number(orderData.actual_weight), volumetricWeight)}
+          label="Billed weight"
+          borderColor="border-orange-300"
+          bgColor="bg-yellow-100"
+          textColor="text-orange-500"
+        />
+      </div>
       {courierOptions.length > 1 && (
         <p className="mt-5 font-semibold">
           Showing {courierOptions.length}{" "}
@@ -190,7 +173,6 @@ function ShippingPartner() {
 
 export default ShippingPartner;
 
-
 interface WeightCardProps {
   value: number;
   label: string;
@@ -199,15 +181,17 @@ interface WeightCardProps {
   textColor?: string;
 }
 
-const WeightCard: React.FC<WeightCardProps> = ({
+const WeightCard = ({
   value,
   label,
   borderColor = "border-gray-300",
   bgColor = "bg-gray-50",
   textColor = "text-black",
-}) => {
+}: WeightCardProps) => {
   return (
-    <div className={`border ${borderColor} text-center ${bgColor} ${textColor} px-4 py-2 min-w-32 md:min-w-36 rounded-md`}>
+    <div
+      className={`border ${borderColor} text-center ${bgColor} ${textColor} px-4 py-2 min-w-32 md:min-w-36 rounded-md`}
+    >
       <p className="font-medium text-base">{value.toFixed(2)} KG</p>
       <p className="text-xs">{label}</p>
     </div>

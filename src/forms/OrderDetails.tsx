@@ -10,6 +10,7 @@ import ShipmentDetails from "./ShipmentDetails";
 import { updateOrderData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
+import { validateOrderInvoice } from "@/layout/api";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -57,9 +58,6 @@ function OrderDetails({ setActiveStep }) {
     igst: OrderForm.watch(`items.${index}.igst`),
   }));
 
-  const url =
-    "https://api.fr.stg.shipglobal.in/api/v1/orders/validate-order-invoice";
-
   const payload = {
     csbv: "0",
     currency_code: watchAllFields.invoice_currency,
@@ -80,45 +78,37 @@ function OrderDetails({ setActiveStep }) {
   const token =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbnRpdHlJZCI6MzAwNjcsImNyZWF0ZWRfYXQiOnsiZGF0ZSI6IjIwMjUtMDItMTEgMTc6MTY6MTAuNTk0ODQ3IiwidGltZXpvbmVfdHlwZSI6MywidGltZXpvbmUiOiJBc2lhL0tvbGthdGEifSwiZXhwaXJlc19hdCI6eyJkYXRlIjoiMjAyNS0wMy0xMyAxNzoxNjoxMC41OTQ4NDkiLCJ0aW1lem9uZV90eXBlIjozLCJ0aW1lem9uZSI6IkFzaWEvS29sa2F0YSJ9LCJpZCI6IjU0YTVhMDZmLTlmMTItNDNkMS05NjRmLWY0NmU0NDAzZmJlYiIsInJlbW90ZV9lbnRpdHlfaWQiOjB9.Mgqd-wgxjBYG2o9rztEvgrEzuEXxUYjoKXcmmDCg1jw";
 
-  const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-
-      if (result.data?.box?.["1"]?.exceeds_limit) {
-        setErrorMessage(result.data.box["1"].exceeds_text);
-        setIsError(true);
-        return;
-      } else {
-        setErrorMessage("");
-        setIsError(false);
+    const onSubmit = async (values: z.infer<typeof OrderSchema>) => {
+      try {
+        const result = await validateOrderInvoice(payload, token);
+  
+        if (result.data?.box?.["1"]?.exceeds_limit) {
+          setErrorMessage(result.data.box["1"].exceeds_text);
+          setIsError(true);
+          return;
+        } else {
+          setErrorMessage("");
+          setIsError(false);
+          setActiveStep(4);
+        }
+      } catch (error) {
+        console.error("Error validating order invoice:", error);
+      }
+  
+      console.log("OrderForm Data:", values);
+      const formattedValues = {
+        ...values,
+        invoice_date: values.invoice_date
+          ? new Date(values.invoice_date).toISOString()
+          : "",
+      };
+  
+      dispatch(updateOrderData(formattedValues));
+  
+      if (!isError) {
         setActiveStep(4);
       }
-    } catch (error) {
-      console.error("Error fetching rates:", error);
-    }
-
-    console.log("OrderForm Data:", values);
-    const formattedValues = {
-      ...values,
-      invoice_date: values.invoice_date
-        ? new Date(values.invoice_date).toISOString()
-        : "",
     };
-
-    dispatch(updateOrderData(formattedValues)); //.toISOString() method converts the Date object to a string format (YYYY-MM-DDTHH:mm:ss.sssZ), which is serializable
-
-    if (!isError) {
-      setActiveStep(4);
-    }
-  };
 
   return (
     <div className="px-3 md:px-7 py-4">

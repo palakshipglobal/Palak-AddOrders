@@ -10,6 +10,7 @@ import BuyerBillingDetails from "./BuyerBillingDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
+import { fetchStates } from "@/layout/api";
 
 export function BuyerDetailsForm({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -50,10 +51,11 @@ export function BuyerDetailsForm({ setActiveStep }) {
     setActiveStep(3);
   };
 
-  const countryShipping = BuyerForm.watch("shipping_country");
-  const countryBilling = BuyerForm.watch("billing_country");
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
+
+  const countryShipping = BuyerForm.watch("shipping_country");
+  const countryBilling = BuyerForm.watch("billing_country");
 
   useEffect(() => {
     if (countryShipping) {
@@ -63,36 +65,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
         BuyerForm.setValue("shipping_state", ""); // Clear state when country changes
         setShippingStates([]);
       }
-
-      const fetchStates = async () => {
-        try {
-          const response = await fetch(
-            `https://api.fr.stg.shipglobal.in/api/v1/location/states`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                state_country_code: countryShipping,
-              }),
-            }
-          );
-          const result = await response.json();
-          if (result.data && result.data.states) {
-            const formattedStates = result.data.states.map((state: any) => ({
-              value: state.state_name,
-              label: state.state_name,
-            }));
-
-            setShippingStates(formattedStates);
-          }
-        } catch (error) {
-          console.error("Error fetching states:", error);
-        }
-      };
-
-      fetchStates();
+      fetchStates(countryShipping).then(setShippingStates);
     }
   }, [countryShipping]);
 
@@ -103,37 +76,9 @@ export function BuyerDetailsForm({ setActiveStep }) {
         BuyerForm.setValue("billing_state", "");
         setBillingStates([]);
       }
-
-      const fetchStates = async () => {
-        try {
-          const response = await fetch(
-            `https://api.fr.stg.shipglobal.in/api/v1/location/states`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                state_country_code: countryBilling,
-              }),
-            }
-          );
-          const result = await response.json();
-          if (result.data && result.data.states) {
-            const formattedStates = result.data.states.map((state: any) => ({
-              value: state.state_name,
-              label: state.state_name,
-            }));
-
-            setBillingStates(formattedStates);
-          }
-        } catch (error) {
-          console.error("Error fetching states:", error);
-        }
-      };
-
-      fetchStates();
+      fetchStates(countryBilling).then(setBillingStates);
     }
+    
   }, [countryBilling]);
 
   useEffect(() => {
