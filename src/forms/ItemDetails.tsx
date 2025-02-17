@@ -31,6 +31,21 @@ const ItemDetails = ({ form }) => {
     },
     0
   );
+  const labelMap = {
+    product_name: "Product Name",
+    sku: "SKU",
+    hsn: "HSN",
+    qty: "Qty",
+    unit_price: `Unit Price (${currency})`,
+  };
+
+  const placeholderMap = {
+    product_name: "Enter Product Name...",
+    sku: "Enter SKU...",
+    hsn: "Enter HSN...",
+    qty: "Enter Qty...",
+    unit_price: "Enter Unit Price...",
+  };
 
   return (
     <div>
@@ -38,22 +53,6 @@ const ItemDetails = ({ form }) => {
         <div key={field.id} className="lg:flex items-center gap-x-1">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2 mt-2">
             {(itemFields as ItemFields[]).map((itemField) => {
-              const labelMap = {
-                product_name: "Product Name",
-                sku: "SKU",
-                hsn: "HSN",
-                qty: "Qty",
-                unit_price: `Unit Price (${currency})`,
-              };
-
-              const placeholderMap = {
-                product_name: "Enter Product Name...",
-                sku: "Enter SKU...",
-                hsn: "Enter HSN...",
-                qty: "Enter Qty...",
-                unit_price: "Enter Unit Price...",
-              };
-
               return (
                 <FormField
                   key={itemField}

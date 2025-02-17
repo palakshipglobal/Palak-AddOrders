@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/accordion";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
-import ConsignorDetails from "./forms/ConsignorDetails";
-import { updateStep } from "./features/formSlice";
-import { BillingAddress, ShippingAddress } from "./lib/utils";
+import ConsignorDetails from "@/forms/ConsignorDetails";
+import { updateStep } from "@/features/formSlice";
+import { BillingAddress, ShippingAddress } from "@/lib/utils";
+import { Button } from "./components/ui/button";
 
 function AddOrderForm() {
   const dispatch = useDispatch();
@@ -132,21 +133,21 @@ export default AddOrderForm;
 
 const QuickTipsContent = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-y-3">
       <p className="font-semibold text-base mx-auto">Quick Tips</p>
       <img src={box} className="h-44 w-44 mx-auto" />
-      <p className="font-semibold text-sm mt-3">Dead Weight:</p>
-      <div className="text-xs mt-3">
+      <p className="font-semibold text-sm ">Dead Weight:</p>
+      <div className="text-xs space-y-3">
         <p>
           Dead/Dry weight or volumetric weight whichever is higher will be taken
           while calculating the freight rates.
         </p>
-        <p className="mt-3">
+        <p>
           Fixed COD charge or COD % of the order value whichever is higher will
-          be taken while calculating the COD fee.{" "}
+          be taken while calculating the COD fee.
         </p>
-        <p className="mt-3">Above prices are exclusive of GST.</p>{" "}
-        <p className="mt-3">
+        <p>Above prices are exclusive of GST.</p>
+        <p>
           The above pricing is subject to change based on fuel surcharges and
           courier company base rates.
         </p>
@@ -154,11 +155,11 @@ const QuickTipsContent = () => {
       <p className="font-semibold text-sm mt-5">
         Volumetric Weight: (L X W X H / 5000)
       </p>
-      <p className="mt-3 text-xs">
+      <p className="text-xs">
         Volumetric Weight (or DIM weight) is calculated based on the dimensions
         of the package.
       </p>
-      <p className="mt-3 text-xs">
+      <p className="text-xs">
         The formula for calculating volumetric weight involves multiplying the
         length, width, and height of the package and then dividing by 5000.
       </p>
@@ -207,7 +208,7 @@ const Data = ({
 
               <p className="text-gray-500 mt-2.5">Shipping Address</p>
               <p className="font-medium mt-0.5">
-              {ShippingAddress(buyerData, { shippingLabel })}
+                {ShippingAddress(buyerData, { shippingLabel })}
               </p>
             </div>
           </AccordionContent>
@@ -258,12 +259,13 @@ const ItemDetails = ({ activeStep, orderData }) => {
           </p>
         )}
         {orderData.items.length > 1 && (
-          <button
+          <Button
+            variant="link"
             onClick={() => setShowAll(!showAll)}
-            className="font-medium text-sm hover:underline text-blue-800 cursor-pointer"
+            className={`text-blue-700 -mt-2 ${showAll && "-ml-3"}`}
           >
             {showAll ? "Hide" : "View"}
-          </button>
+          </Button>
         )}
       </div>
     </div>
