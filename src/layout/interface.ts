@@ -25,10 +25,10 @@ export type BuyerFormData = {
 
 export type OrderFormData = {
     id: any;
-    actual_weight: string;
-    length: string;
-    breadth: string;
-    height: string;
+    actual_weight: number;
+    length: number;
+    breadth: number;
+    height: number;
     invoice_no: string;
     invoice_date: string;
     invoice_currency: string;
@@ -38,8 +38,8 @@ export type OrderFormData = {
       product_name: string;
       sku: string;
       hsn: string;
-      qty: string;
-      unit_price: string;
+      qty: number;
+      unit_price: number;
       igst: string;
     }>;
   };

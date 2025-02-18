@@ -44,16 +44,16 @@ function OrderDetails({ setActiveStep }) {
     const payload = {
       csbv: "0",
       currency_code: watchAllFields.invoice_currency,
-      package_breadth: Number(watchAllFields.breadth),
-      package_height: Number(watchAllFields.height),
-      package_length: Number(watchAllFields.length),
-      package_weight: Number(watchAllFields.actual_weight),
+      package_breadth: watchAllFields.breadth,
+      package_height: watchAllFields.height,
+      package_length: watchAllFields.length,
+      package_weight: watchAllFields.actual_weight,
       vendor_order_item: watchVendorItems.map((item) => ({
         vendor_order_item_name: item.product_name,
         vendor_order_item_sku: item.sku,
         vendor_order_item_hsn: item.hsn,
-        vendor_order_item_quantity: Number(item.qty),
-        vendor_order_item_unit_price: Number(item.unit_price),
+        vendor_order_item_quantity: item.qty,
+        vendor_order_item_unit_price: item.unit_price,
         vendor_order_item_tax_rate: item.igst,
       })),
     };
@@ -98,7 +98,7 @@ function OrderDetails({ setActiveStep }) {
             </span>
           </p>
           <ItemDetails form={OrderForm} />
-          {errorMessage && <Error error={errorMessage}/>}
+          {errorMessage && <Error error={errorMessage} />}
           <ButtonComponent label="Continue" />
         </form>
       </Form>

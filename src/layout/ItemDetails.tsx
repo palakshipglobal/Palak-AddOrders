@@ -40,7 +40,7 @@ const ItemDetails = ({ form }) => {
     qty: "Qty",
     unit_price: `Unit Price (${currency})`,
   };
-  
+
   return (
     <div>
       {fields.map((field, index) => (
@@ -64,7 +64,7 @@ const ItemDetails = ({ form }) => {
                           className="truncate"
                           {...field}
                           type={
-                            itemField === "qty" || itemField === "unit_price"
+                            itemField === "unit_price" || itemField === "qty"
                               ? "number"
                               : "text"
                           }
@@ -87,7 +87,7 @@ const ItemDetails = ({ form }) => {
         </div>
       ))}
 
-      <div className="flex flex-col md:flex-row md:justify-between mt-7">
+      <div className="flex flex-col items-start md:flex-row md:justify-between mt-5 lg:mt-7">
         <Button
           type="button"
           variant="link"

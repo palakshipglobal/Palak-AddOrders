@@ -111,49 +111,33 @@ export const BuyerSchema = z
   });
 
 export const OrderSchema = z.object({
-  actual_weight: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "The package weight must be a numeric value.")
-    .refine((val) => parseFloat(val) <= 300, {
-      message: "Weight must not be more than 300 KG",
-    })
-    .refine((val) => Number(val) > 0, {
-      message: "Weight must be atleast 0.01 KG",
+  actual_weight: z.coerce
+    .number()
+    .gte(0.01, "Weight must be atleast 0.01 KG")
+    .refine((val) => val <= 120, {
+      message: "Weight must be not more than 120",
     }),
 
-  length: z
-    .string()
-    .min(1, "Length must be atleast 1 cm")
-    .regex(/^\d+$/, "The package length must be a numeric value.")
-    .refine((val) => parseFloat(val) <= 120, {
+  length: z.coerce
+    .number()
+    .gte(1, "Length must be atleast 1 cm")
+    .refine((val) => val <= 120, {
       message: "Length must be not more than 120",
-    })
-    .refine((val) => Number(val) > 0, {
-      message: "Length must be atleast 1 cm",
     }),
 
-  breadth: z
-    .string()
-    .min(1, "Breadth must be atleast 1 cm")
-    .regex(/^\d+$/, "The package breadth must be a numeric value.")
-    .refine((val) => parseFloat(val) <= 120, {
+  breadth: z.coerce
+    .number()
+    .gte(1, "Breadth must be atleast 1 cm")
+    .refine((val) => val <= 120, {
       message: "Breadth must be not more than 120",
-    })
-    .refine((val) => Number(val) > 0, {
-      message: "Breadth must be atleast 1 cm",
     }),
 
-  height: z
-    .string()
-    .min(1, "Height must be atleast 1 cm")
-    .regex(/^\d+$/, "The package height must be a numeric value.")
-    .refine((val) => parseFloat(val) <= 120, {
+  height: z.coerce
+    .number()
+    .gte(1, "Height must be atleast 1 cm")
+    .refine((val) => val <= 120, {
       message: "Height must be not more than 120",
-    })
-    .refine((val) => Number(val) > 0, {
-      message: "Height must be atleast 1 cm",
     }),
-
   invoice_no: z
     .string()
     .min(1, "Please enter invoice number")
@@ -176,16 +160,10 @@ export const OrderSchema = z.object({
           /^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/,
           "The product name is invalid."
         ),
-
       sku: z.string().optional(),
       hsn: z.string().regex(/^\d{8}$/, "HSN must be 8 digits long."),
-      qty: z.string().refine((value) => Number(value) > 0, {
-        message: "Quantity must be greater than zero",
-      }),
-
-      unit_price: z.string().refine((value) => Number(value) > 0, {
-        message: "Unit Price must be greater than zero",
-      }),
+      qty: z.coerce.number().gte(0, "Quantity must not be Zero"),
+      unit_price: z.coerce.number().gte(0, "Unit Price must not be Zero"),
     })
   ),
 });

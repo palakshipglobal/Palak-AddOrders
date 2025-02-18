@@ -21,14 +21,13 @@ const initialState = {
     billing_landmark: "",
     isBillingSame: true,
   },
-
   orderData: {
     id: "",
     csbNumber: "",
-    actual_weight: "",
-    length: "",
-    breadth: "",
-    height: "",
+    actual_weight: 0,
+    length: 0,
+    breadth: 0,
+    height: 0,
     invoice_no: "",
     invoice_date: "",
     invoice_currency: "INR",
@@ -39,8 +38,8 @@ const initialState = {
         product_name: "",
         sku: "",
         hsn: "",
-        qty: "",
-        unit_price: "",
+        qty: 0,
+        unit_price: 0,
         igst: "",
       },
     ],
@@ -50,6 +49,7 @@ const initialState = {
   csbNumber: "IV",
   pickupAddress: "",
 };
+
 const formSlice = createSlice({
   name: "form",
   initialState,

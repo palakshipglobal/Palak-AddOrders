@@ -290,7 +290,7 @@ const OrderItemDetail = ({ item, orderCurrency }) => {
   const fields = [
     { label: "Product", value: item.product_name },
     { label: "HSN", value: item.hsn },
-    { label: "SKU", value: item.sku },
+    { label: "SKU", value: !item?.sku && "N/A" },
     { label: "Qty", value: Number(item.qty) },
     {
       label: "Unit Price",
