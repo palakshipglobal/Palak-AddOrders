@@ -1,12 +1,11 @@
-import { Form } from "@/components/ui/form";
 import { updatePickupAddress } from "@/features/formSlice";
-import ButtonComponent from "@/layout/ButtonComponent";
 import { PickupAddressSelect } from "@/layout/ComboboxDemo";
+import FormComponent from "@/layout/FormComponent";
 import { ConsignoreFormSchema } from "@/layout/interface";
 import { ConsignorSchema } from "@/layout/schemas";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,29 +26,31 @@ function ConsignorDetails({ setActiveStep }) {
     setActiveStep(2);
   }
   return (
-    <div className="px-3 md:px-7 py-4">
-      <Form {...ConsignorForm}>
-        <form
-          onSubmit={ConsignorForm.handleSubmit(onSubmit)}
-          className="mt-2 space-y-3"
-        >
-          <div className="space-y-1">
-            <p className="font-medium">Select Pickup address</p>
-            <div className="w-5/6">
-              <PickupAddressSelect form={ConsignorForm} name="pickupAddress" />
-            </div>
-          </div>
-          {address && (
-            <div className="space-y-1 w-5/6">
-              <p className="text-gray-500 font-medium">Pickup Address</p>
-              <p>{address}</p>
-            </div>
-          )}
-          <ButtonComponent label="Continue" />
-        </form>
-      </Form>
-    </div>
+    <FormComponent
+      form={ConsignorForm}
+      onSubmit={onSubmit}
+      childElement={<FormConsignor form={ConsignorForm} address={address} />}
+    />
   );
 }
 
 export default ConsignorDetails;
+
+const FormConsignor = ({ form, address }) => {
+  return (
+    <>
+      <div className="space-y-1">
+        <p className="font-medium">Select Pickup address</p>
+        <div className="w-5/6">
+          <PickupAddressSelect form={form} name="pickupAddress" />
+        </div>
+      </div>
+      {address && (
+        <div className="space-y-1 w-5/6">
+          <p className="text-gray-500 font-medium">Pickup Address</p>
+          <p>{address}</p>
+        </div>
+      )}
+    </>
+  );
+};

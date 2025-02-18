@@ -53,11 +53,7 @@ function AccordionComponent({
           isOpen ? "max-h-full opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div
-          className={`${
-            !isOpen && "hidden"
-          } border-t-[1px] bg-white text-black`}
-        >
+        <div className={`${!isOpen && "hidden"} border-t bg-white text-black`}>
           {childElement}
         </div>
       </div>

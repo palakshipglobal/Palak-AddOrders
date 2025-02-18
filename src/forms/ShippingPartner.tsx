@@ -11,7 +11,6 @@ function ShippingPartner() {
   const selectedPartner = useSelector(
     (state: RootState) => state.form.shippingPartner
   );
-
   const [courierOptions, setCourierOptions] = useState([]);
   const [loadingPartner, setLoadingPartner] = useState<string | null>(null);
 
@@ -60,7 +59,6 @@ function ShippingPartner() {
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
   }
-
   const volumetricWeight =
     (Number(orderData.breadth) *
       Number(orderData.length) *

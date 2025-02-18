@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { BuyerSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,7 @@ import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { fetchStates } from "@/layout/api";
 import { BuyerFormData, BuyerFormSchema } from "@/layout/interface";
-import ButtonComponent from "@/layout/ButtonComponent";
+import FormComponent from "@/layout/FormComponent";
 
 export function BuyerDetailsForm({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -121,27 +120,44 @@ export function BuyerDetailsForm({ setActiveStep }) {
   };
 
   return (
-    <div className="py-4 px-3 md:px-7">
-      <Form {...BuyerForm}>
-        <form onSubmit={BuyerForm.handleSubmit(onSubmit)} className="space-y-6">
-          <BuyerShippingDetails form={BuyerForm} states={shippingStates} />
-          <label className="flex gap-2 my-5 items-center max-w-max cursor-pointer">
-            <input
-              type="checkbox"
-              className="w-4 h-4 cursor-pointer"
-              checked={BuyerForm.watch("isBillingSame")}
-              onChange={handleBillingChange}
-            />
-            <p className="text-sm select-none">
-              Billing Address is same as shipping address.
-            </p>
-          </label>
-          {!BuyerForm.watch("isBillingSame") && (
-            <BuyerBillingDetails form={BuyerForm} states={billingStates} />
-          )}
-          <ButtonComponent label="Continue" />
-        </form>
-      </Form>
-    </div>
+    <FormComponent
+      form={BuyerForm}
+      onSubmit={onSubmit}
+      childElement={
+        <FormBuyer
+          form={BuyerForm}
+          shippingStates={shippingStates}
+          billingStates={billingStates}
+          handleBillingChange={handleBillingChange}
+        />
+      }
+    />
   );
 }
+
+const FormBuyer = ({
+  form,
+  shippingStates,
+  billingStates,
+  handleBillingChange,
+}) => {
+  return (
+    <>
+      <BuyerShippingDetails form={form} states={shippingStates} />
+      <label className="flex gap-2 my-5 items-center max-w-max cursor-pointer">
+        <input
+          type="checkbox"
+          className="w-4 h-4 cursor-pointer"
+          checked={form.watch("isBillingSame")}
+          onChange={handleBillingChange}
+        />
+        <p className="text-sm select-none">
+          Billing Address is same as shipping address.
+        </p>
+      </label>
+      {!form.watch("isBillingSame") && (
+        <BuyerBillingDetails form={form} states={billingStates} />
+      )}
+    </>
+  );
+};

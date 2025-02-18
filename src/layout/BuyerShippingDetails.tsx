@@ -2,37 +2,40 @@ import { CountrySelect, StateSelect } from "@/layout/ComboboxDemo";
 import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
+const withBuyerShippingForm = (WrappedComponent: any) => {
+  return (props: any, form: any) => {
+    return <WrappedComponent {...props} form={form} />;
+  };
+};
+const FormField = withBuyerShippingForm(SimpleFormField);
+
 const BuyerShippingDetails = ({ form, states }) => {
   return (
     <div className="space-y-2">
       <p className="text-sm font-semibold">Personal Details</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
-        <SimpleFormField
-          form={form}
+        <FormField
           label="First Name"
           name="shipping_firstname"
           placeholder="Enter First Name..."
           type="text"
           required
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Last Name"
           name="shipping_lastname"
           placeholder="Enter Last Name..."
           type="text"
           required
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Mobile Number"
           name="shipping_mobile"
           placeholder="Enter Mobile Number..."
           type="text"
           required
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Email"
           name="shipping_email"
           placeholder="Enter Email ID..."
@@ -42,30 +45,26 @@ const BuyerShippingDetails = ({ form, states }) => {
       </div>
       <p className="text-sm font-semibold pt-5">Shipping Address</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Address 1"
           name="shipping_address1"
           placeholder="Enter Address 1..."
           type="text"
           required
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Address 2"
           name="shipping_address2"
           placeholder="Enter Address 2..."
           required
           type="text"
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Landmark"
           name="shipping_landmark"
           placeholder="Enter Landmark..."
           type="text"
         />
-
         <CountrySelect form={form} name="shipping_country" required />
         <StateSelect
           form={form}
@@ -73,16 +72,14 @@ const BuyerShippingDetails = ({ form, states }) => {
           required
           states={states}
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="City"
           name="shipping_city"
           placeholder="Enter City..."
           type="text"
           required
         />
-        <SimpleFormField
-          form={form}
+        <FormField
           label="Pincode"
           name="shipping_pincode"
           placeholder="Enter Pincode..."
@@ -94,4 +91,4 @@ const BuyerShippingDetails = ({ form, states }) => {
   );
 };
 
-export default BuyerShippingDetails;
+export default withBuyerShippingForm(BuyerShippingDetails);

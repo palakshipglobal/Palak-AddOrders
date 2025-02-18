@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { OrderSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,8 +10,8 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { validateOrderInvoice } from "@/layout/api";
 import { OrderFormData, OrderFormSchema } from "@/layout/interface";
-import ButtonComponent from "@/layout/ButtonComponent";
 import Error from "@/layout/Error";
+import FormComponent from "@/layout/FormComponent";
 
 function OrderDetails({ setActiveStep }) {
   const dispatch = useDispatch();
@@ -85,25 +84,30 @@ function OrderDetails({ setActiveStep }) {
   };
 
   return (
-    <div className="px-3 md:px-7 py-4">
-      <Form {...OrderForm}>
-        <form onSubmit={OrderForm.handleSubmit(onSubmit)}>
-          <OrderItemDetails form={OrderForm} />
-          <p className="text-sm font-semibold pt-5">Box Measurements</p>
-          <ShipmentDetails form={OrderForm} />
-          <p className="text-sm font-semibold pt-5">
-            Item(s) Details
-            <span className="ml-2 font-normal bg-red-50 text-red-500 text-xs rounded-md px-1 py-0.5">
-              Items that can export
-            </span>
-          </p>
-          <ItemDetails form={OrderForm} />
-          {errorMessage && <Error error={errorMessage} />}
-          <ButtonComponent label="Continue" />
-        </form>
-      </Form>
-    </div>
+    <FormComponent
+      form={OrderForm}
+      onSubmit={onSubmit}
+      childElement={<FormOrder form={OrderForm} errorMessage={errorMessage} />}
+    />
   );
 }
 
 export default OrderDetails;
+
+const FormOrder = ({ form, errorMessage }) => {
+  return (
+    <>
+      <OrderItemDetails form={form} />
+      <p className="text-sm font-semibold pt-5">Box Measurements</p>
+      <ShipmentDetails form={form} />
+      <p className="text-sm font-semibold pt-5">
+        Item(s) Details
+        <span className="ml-2 font-normal bg-red-50 text-red-500 text-xs rounded-md px-1 py-0.5">
+          Items that can export
+        </span>
+      </p>
+      <ItemDetails form={form} />
+      {errorMessage && <Error error={errorMessage} />}
+    </>
+  );
+};

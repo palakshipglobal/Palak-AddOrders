@@ -316,26 +316,26 @@ const OrderItemDetail = ({ item, orderCurrency }) => {
   );
 };
 
-const Summary = ({ shippingPartner }: any) => (
-  <div className="rounded-lg p-3 px-0 pb-3 mt-3 border border-yellow-750 bg-orange-50">
-    <div className="px-5 py-1.5 text-base font-semibold border-b border-orange-100 text-orange-500">
-      Summary
-    </div>
-    <div>
-      <div className="flex justify-between px-5 mt-4 space-x-10 text-sm font-normal text-black">
-        <div className="grid gap-y-4">
+const Summary = ({ shippingPartner }: any) => {
+  return (
+    <div className="py-3 mt-3 border bg-red-50 rounded-lg">
+      <p className="px-5 py-2 font-bold border-b border-orange-100 text-orange-500">
+        Summary
+      </p>
+      <div className="flex justify-between text-sm px-5 mt-3">
+        <div className="flex flex-col gap-y-3">
           <p>Logistic Fee</p>
           <p>GST</p>
         </div>
-        <div className="grid text-right text-black gap-y-4">
+        <div className="flex flex-col text-right gap-y-3">
           <p>Rs. {shippingPartner?.rate}.00</p>
           <p>Rs. {Number(shippingPartner?.rate * 0.18).toFixed(2)}</p>
         </div>
       </div>
-      <div className="flex justify-between px-5 py-3 mt-5 text-sm font-semibold bg-orange-100">
+      <div className="flex justify-between px-5 py-3 mt-4 text-sm font-semibold bg-red-100">
         <p>Total</p>
         <p>Rs. {Number(shippingPartner?.rate) + 1223.16}</p>
       </div>
     </div>
-  </div>
-);
+  );
+};
