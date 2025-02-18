@@ -12,11 +12,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./store";
+import { RootState } from "@/store";
 import ConsignorDetails from "@/forms/ConsignorDetails";
 import { updateStep } from "@/features/formSlice";
 import { BillingAddress, ShippingAddress } from "@/lib/utils";
-import { Button } from "./components/ui/button";
+import { Button } from "@/components/ui/button";
 
 function AddOrderForm() {
   const dispatch = useDispatch();
@@ -329,7 +329,7 @@ const Summary = ({ shippingPartner }: any) => (
         </div>
         <div className="grid text-right text-black gap-y-4">
           <p>Rs. {shippingPartner?.rate}.00</p>
-          <p>Rs. {Number(shippingPartner?.rate*0.18).toFixed(2)}</p>
+          <p>Rs. {Number(shippingPartner?.rate * 0.18).toFixed(2)}</p>
         </div>
       </div>
       <div className="flex justify-between px-5 py-3 mt-5 text-sm font-semibold bg-orange-100">

@@ -22,9 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Required from "./Required";
-import { DatePickerWithPresets } from "./DatePicker";
-import { addresses, currency, igst, pickupAddress } from "./arrays";
+import Required from "@/layout/Required";
+import { DatePickerWithPresets } from "@/layout/DatePicker";
+import { addresses, currency, igst, pickupAddress } from "@/layout/arrays";
 
 interface ComboboxProps {
   options: any;
