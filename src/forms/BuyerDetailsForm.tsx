@@ -67,7 +67,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     }
   }, [countryBilling]);
 
-  const ModifyData = (fieldName, value: string) => {
+  const modifyData = (fieldName:any, value: string) => {
     BuyerForm.setValue(fieldName, value);
   };
 
@@ -83,34 +83,30 @@ export function BuyerDetailsForm({ setActiveStep }) {
 
   useEffect(() => {
     if (isBillingSame) {
-      ModifyData("billing_address1", shippingValues[0]);
-      ModifyData("billing_landmark", shippingValues[6]);
-      ModifyData("billing_address2", shippingValues[1]);
-      ModifyData("billing_city", shippingValues[2]);
-      ModifyData("billing_pincode", shippingValues[5]);
-      ModifyData("billing_country", shippingValues[3]);
-      ModifyData("billing_state", shippingValues[4]);
+      modifyData("billing_address1", shippingValues[0]);
+      modifyData("billing_landmark", shippingValues[6]);
+      modifyData("billing_address2", shippingValues[1]);
+      modifyData("billing_city", shippingValues[2]);
+      modifyData("billing_pincode", shippingValues[5]);
+      modifyData("billing_country", shippingValues[3]);
+      modifyData("billing_state", shippingValues[4]);
     }
   }, [isBillingSame, ...shippingValues]);
-
-  const setBillingFields = (
-    BuyerForm: any,
-    shippingField: string,
-    billingField: string
-  ) => {
-    const shippingValue = BuyerForm.getValues(shippingField);
-    if (shippingValue) {
-      BuyerForm.setValue(billingField, shippingValue);
-    }
-  };
 
   const handleBillingChange = () => {
     const newValue = !isBillingSame;
     setIsBillingSame(newValue);
     BuyerForm.setValue("isBillingSame", newValue);
     if (newValue) {
-      setBillingFields(BuyerForm, "shipping_country", "billing_country");
-      setBillingFields(BuyerForm, "shipping_state", "billing_state");
+      const shippingCountryValue = BuyerForm.getValues("shipping_country");
+      if (shippingCountryValue) {
+        modifyData("billing_country", shippingCountryValue);
+       
+      }
+      const shippingStateValue = BuyerForm.getValues("shipping_state");
+      if (shippingStateValue) {
+        modifyData("billing_state", shippingStateValue);       
+      }
     }
   };
 

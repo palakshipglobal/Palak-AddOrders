@@ -45,7 +45,7 @@ export type OrderFormData = {
   };
 
 export type BuyerFormSchema =  z.infer<typeof BuyerSchema>
-export type ConsignoreFormSchema = z.infer<typeof ConsignorSchema>
+export type ConsignorFormSchema = z.infer<typeof ConsignorSchema>
 export type OrderFormSchema = z.infer<typeof OrderSchema>
 
 export const initialProductDetails = {

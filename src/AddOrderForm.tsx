@@ -317,6 +317,9 @@ const OrderItemDetail = ({ item, orderCurrency }) => {
 };
 
 const Summary = ({ shippingPartner }: any) => {
+  const gst = Number(shippingPartner?.rate * 0.18).toFixed(2);
+  const shippingRate = Number(shippingPartner?.rate)
+
   return (
     <div className="py-3 mt-3 border bg-red-50 rounded-lg">
       <p className="px-5 py-2 font-bold border-b border-orange-100 text-orange-500">
@@ -328,13 +331,13 @@ const Summary = ({ shippingPartner }: any) => {
           <p>GST</p>
         </div>
         <div className="flex flex-col text-right gap-y-3">
-          <p>Rs. {shippingPartner?.rate}.00</p>
-          <p>Rs. {Number(shippingPartner?.rate * 0.18).toFixed(2)}</p>
+          <p>Rs. {shippingRate}.00</p>
+          <p>Rs. {gst}</p>
         </div>
       </div>
       <div className="flex justify-between px-5 py-3 mt-4 text-sm font-semibold bg-red-100">
         <p>Total</p>
-        <p>Rs. {Number(shippingPartner?.rate) + 1223.16}</p>
+        <p>Rs. {Number((shippingPartner?.rate * 0.18)+shippingPartner?.rate).toFixed(2)}</p>
       </div>
     </div>
   );

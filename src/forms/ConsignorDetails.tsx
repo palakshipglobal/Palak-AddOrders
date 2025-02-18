@@ -1,7 +1,7 @@
 import { updatePickupAddress } from "@/features/formSlice";
 import { PickupAddressSelect } from "@/layout/ComboboxDemo";
 import FormComponent from "@/layout/FormComponent";
-import { ConsignoreFormSchema } from "@/layout/interface";
+import { ConsignorFormSchema } from "@/layout/interface";
 import { ConsignorSchema } from "@/layout/schemas";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,14 +14,14 @@ function ConsignorDetails({ setActiveStep }) {
   const storedPickupAddress = useSelector(
     (state: RootState) => state.form.pickupAddress
   );
-  const ConsignorForm = useForm<ConsignoreFormSchema>({
+  const ConsignorForm = useForm<ConsignorFormSchema>({
     resolver: zodResolver(ConsignorSchema),
     defaultValues: {
       pickupAddress: storedPickupAddress,
     },
   });
   const address = ConsignorForm.watch("pickupAddress");
-  function onSubmit(formData: ConsignoreFormSchema) {
+  function onSubmit(formData: ConsignorFormSchema) {
     dispatch(updatePickupAddress(formData.pickupAddress));
     setActiveStep(2);
   }
