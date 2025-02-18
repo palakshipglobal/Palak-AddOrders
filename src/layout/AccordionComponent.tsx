@@ -9,7 +9,6 @@ function AccordionComponent({
   setActiveStep,
   childElement,
 }) {
-
   const isActive = activeStep === stepNumber;
   const isCompleted = activeStep > stepNumber;
 
@@ -22,7 +21,7 @@ function AccordionComponent({
       <div className="flex flex-row cursor-pointer py-2.5 items-center justify-between transition duration-300">
         <div
           className={`cursor-pointer items-center gap-x-2 flex flex-row  ${
-           isActive ? "text-black" : "text-gray-500"
+            isActive ? "text-black" : "text-gray-500"
           } px-2 lg:px-4 text-sm font-medium`}
         >
           <div
@@ -40,7 +39,6 @@ function AccordionComponent({
           </div>
           {title}
         </div>
-
         {isCompleted && (
           <button
             className="text-blue-800 underline text-sm mr-8"

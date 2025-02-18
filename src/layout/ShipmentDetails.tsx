@@ -1,11 +1,11 @@
-import { measurements } from "@/layout/arrays";
-import SimpleFormFields from "@/layout/SimpleFormFields";
+import { measurements } from "@/layout/constants";
+import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
-      {measurements.map((measurement,index) => (
+    <div className="grid md:grid-cols-4 gap-2 mt-2">
+      {measurements.map((measurement, index) => (
         <MeasurementInput key={index} form={form} {...measurement} />
       ))}
     </div>
@@ -17,7 +17,7 @@ export default ShipmentDetails;
 const MeasurementInput = ({ form, label, name, placeholder, unit }) => {
   return (
     <div className="flex">
-      <SimpleFormFields
+      <SimpleFormField
         form={form}
         label={label}
         name={name}

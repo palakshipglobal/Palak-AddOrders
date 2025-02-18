@@ -4,7 +4,7 @@ import { updateShippingPartner } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { CircleCheck } from "lucide-react";
 import { fetchShipperRates } from "@/layout/api";
-import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/layout/ButtonComponent";
 
 function ShippingPartner() {
   const dispatch = useDispatch();
@@ -30,17 +30,17 @@ function ShippingPartner() {
   }
 
   useEffect(() => {
-    if (step === 4) {
-      const payload = {
-        customer_shipping_country_code: buyerData.shipping_country,
-        customer_shipping_postcode: buyerData.shipping_pincode,
-        package_breadth: orderData.breadth,
-        package_height: orderData.height,
-        package_length: orderData.length,
-        package_weight: orderData.actual_weight,
-      };
-
-      fetchShipperRates(payload).then((rates) => {
+    const fetchRates = async () => {
+      try {
+        const payload = {
+          customer_shipping_country_code: buyerData.shipping_country,
+          customer_shipping_postcode: buyerData.shipping_pincode,
+          package_breadth: orderData.breadth,
+          package_height: orderData.height,
+          package_length: orderData.length,
+          package_weight: orderData.actual_weight,
+        };
+        const rates = await fetchShipperRates(payload);
         setCourierOptions(
           rates.map((rate: any) => ({
             name: rate.display_name,
@@ -48,18 +48,25 @@ function ShippingPartner() {
             rate: rate.rate,
           }))
         );
-      });
+      } catch (error) {
+        console.error("Error fetching shipper rates:", error);
+      }
+    };
+    if (step === 4) {
+      fetchRates();
     }
   }, [step, buyerData, orderData]);
 
   function onSubmit() {
     dispatch(updateShippingPartner(selectedPartner));
   }
+
   const volumetricWeight =
     (Number(orderData.breadth) *
       Number(orderData.length) *
       Number(orderData.height)) /
     50000;
+
   return (
     <div className="px-3 md:px-7 py-4">
       <p>
@@ -92,7 +99,6 @@ function ShippingPartner() {
           {courierOptions.length > 1 ? "results" : "result"}{" "}
         </p>
       )}
-
       {courierOptions.length === 0 ? (
         <p className="text-center font-semibold text-lg mt-9">
           No shipper available
@@ -149,21 +155,16 @@ function ShippingPartner() {
           ))}
         </table>
       )}
-
-      <div className="flex justify-end py-5">
-        <Button
-          type="submit"
-          onClick={onSubmit}
-          disabled={!selectedPartner.name}
-          className={`bg-blue-800 hover:bg-blue-800/90 ${
-            !selectedPartner.name
-              ? "opacity-35 cursor-not-allowed"
-              : "opacity-100"
-          }`}
-        >
-          Pay and Order
-        </Button>
-      </div>
+      <ButtonComponent
+        label="Pay and Order"
+        onClick={onSubmit}
+        disabled={!selectedPartner.name}
+        className={`${
+          !selectedPartner.name
+            ? "opacity-35 cursor-not-allowed"
+            : "opacity-100"
+        }`}
+      />
     </div>
   );
 }

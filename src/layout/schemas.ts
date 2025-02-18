@@ -32,7 +32,7 @@ export const BuyerSchema = z
       .string()
       .min(1, "Pincode is required.")
       .max(20, "Pincode should not be longer than 20 characters")
-      .regex(/^[A-Za-z0-9]{1,20}$/, "Invalid pincode."),
+      .regex(/^[A-Za-z0-9\s]{1,20}$/, "Invalid pincode."),
 
     shipping_city: z
       .string()
@@ -80,7 +80,7 @@ export const BuyerSchema = z
           message: "Pincode is required.",
           code: "custom",
         });
-      } else if (!/^[A-Za-z0-9]{1,20}$/.test(data.billing_pincode)) {
+      } else if (!/^[A-Za-z0-9\s]{1,20}$/.test(data.billing_pincode)) {
         ctx.addIssue({
           path: ["billing_pincode"],
           message: "Pincode should not be longer than 20 characters",

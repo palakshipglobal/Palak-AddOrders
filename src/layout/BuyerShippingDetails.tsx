@@ -1,13 +1,13 @@
 import { CountrySelect, StateSelect } from "@/layout/ComboboxDemo";
-import SimpleFormFields from "@/layout/SimpleFormFields";
+import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
 const BuyerShippingDetails = ({ form, states }) => {
   return (
     <div className="space-y-2">
       <p className="text-sm font-semibold">Personal Details</p>
-      <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-y-2 gap-x-4">
-        <SimpleFormFields
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
+        <SimpleFormField
           form={form}
           label="First Name"
           name="shipping_firstname"
@@ -15,7 +15,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Last Name"
           name="shipping_lastname"
@@ -23,7 +23,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Mobile Number"
           name="shipping_mobile"
@@ -31,7 +31,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Email"
           name="shipping_email"
@@ -42,7 +42,7 @@ const BuyerShippingDetails = ({ form, states }) => {
       </div>
       <p className="text-sm font-semibold pt-5">Shipping Address</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Address 1"
           name="shipping_address1"
@@ -50,7 +50,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Address 2"
           name="shipping_address2"
@@ -58,7 +58,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           required
           type="text"
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Landmark"
           name="shipping_landmark"
@@ -72,9 +72,8 @@ const BuyerShippingDetails = ({ form, states }) => {
           name="shipping_state"
           required
           states={states}
-          
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="City"
           name="shipping_city"
@@ -82,7 +81,7 @@ const BuyerShippingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Pincode"
           name="shipping_pincode"

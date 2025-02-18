@@ -92,3 +92,11 @@ export const measurements = [
   { label: "Breadth", name: "breadth", placeholder: "Eg: 10", unit: "cm" },
   { label: "Height", name: "height", placeholder: "Eg: 10", unit: "cm" },
 ];
+
+export const placeholderMap = {
+  product_name: "Enter Product Name...",
+  sku: "Enter SKU...",
+  hsn: "Enter HSN...",
+  qty: "Enter Qty...",
+  unit_price: "Enter Unit Price...",
+};

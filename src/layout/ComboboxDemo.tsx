@@ -24,8 +24,7 @@ import {
 } from "@/components/ui/form";
 import Required from "@/layout/Required";
 import { DatePickerWithPresets } from "@/layout/DatePicker";
-import { addresses, currency, igst, pickupAddress } from "@/layout/arrays";
-
+import { addresses, currency, igst, pickupAddress } from "@/layout/constants";
 interface ComboboxProps {
   options: any;
   placeholder: string;
@@ -36,11 +35,9 @@ interface ComboboxProps {
 function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
   const filteredOptions = options.filter((option: any) =>
     option.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   const selectedOption = options.find(
     (option: any) => option.value === field.value
   );
@@ -50,7 +47,7 @@ function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full h-9 text-gray-600 justify-between overflow-hidden truncate"           
+          className="w-full h-9 text-gray-600 justify-between overflow-hidden truncate"
           disabled={disabled}
         >
           <span className="truncate">
@@ -103,7 +100,6 @@ function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
 
 export function CountrySelect({ form, name, required }) {
   const [countries, setCountries] = useState([]);
-
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -111,7 +107,6 @@ export function CountrySelect({ form, name, required }) {
           "https://api.fr.stg.shipglobal.in/api/v1/location/countries"
         );
         const result = await response.json();
-
         if (result.data && result.data.countries) {
           const formattedCountries = result.data.countries.map(
             (country: any) => ({
@@ -126,7 +121,6 @@ export function CountrySelect({ form, name, required }) {
         console.error("Error fetching countries:", error);
       }
     };
-
     fetchCountries();
   }, []);
 

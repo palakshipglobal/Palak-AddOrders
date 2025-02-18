@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -20,7 +19,7 @@ interface SimpleFormFieldProps {
   className?: string;
   inputStyle?: string;
 }
-function SimpleFormFields({
+function SimpleFormField({
   form,
   type,
   name,
@@ -54,5 +53,5 @@ function SimpleFormFields({
   );
 }
 
-export default SimpleFormFields;
+export default SimpleFormField;
 const Required = () => <span className="ml-px text-red-500">*</span>;

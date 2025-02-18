@@ -1,13 +1,13 @@
 import { CountrySelect, StateSelect } from "@/layout/ComboboxDemo";
-import SimpleFormFields from "@/layout/SimpleFormFields";
+import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
 const BuyerBillingDetails = ({ form, states }) => {
   return (
-    <div className="space-y-2">
-      <p className="text-base font-semibold">Billing Address</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
-        <SimpleFormFields
+    <>
+      <p className="text-base font-semibold mt-2">Billing Address</p>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
+        <SimpleFormField
           form={form}
           label="Address 1"
           name="billing_address1"
@@ -15,7 +15,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Address 2"
           name="billing_address2"
@@ -23,14 +23,13 @@ const BuyerBillingDetails = ({ form, states }) => {
           type="text"
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Landmark"
           name="billing_landmark"
           placeholder="Enter Landmark..."
           type="text"
         />
-
         <CountrySelect form={form} name="billing_country" required />
         <StateSelect
           form={form}
@@ -38,8 +37,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           required
           states={states}
         />
-
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="Pincode"
           name="billing_pincode"
@@ -47,7 +45,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           placeholder="Enter Pincode..."
           required
         />
-        <SimpleFormFields
+        <SimpleFormField
           form={form}
           label="City"
           name="billing_city"
@@ -56,7 +54,7 @@ const BuyerBillingDetails = ({ form, states }) => {
           required
         />
       </div>
-    </div>
+    </>
   );
 };
 

@@ -11,10 +11,12 @@ import { useFieldArray } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 import { IGSTSelect } from "@/layout/ComboboxDemo";
 import { Button } from "@/components/ui/button";
+import Required from "@/layout/Required";
+import { placeholderMap } from "@/layout/constants";
+import { initialProductDetails } from "@/layout/interface";
 
 const ItemDetails = ({ form }) => {
   const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];
-  type ItemFields = "product_name" | "sku" | "hsn" | "qty" | "unit_price";
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "items",
@@ -38,21 +40,13 @@ const ItemDetails = ({ form }) => {
     qty: "Qty",
     unit_price: `Unit Price (${currency})`,
   };
-
-  const placeholderMap = {
-    product_name: "Enter Product Name...",
-    sku: "Enter SKU...",
-    hsn: "Enter HSN...",
-    qty: "Enter Qty...",
-    unit_price: "Enter Unit Price...",
-  };
-
+  
   return (
     <div>
       {fields.map((field, index) => (
         <div key={field.id} className="lg:flex items-center gap-x-1">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2 mt-2">
-            {(itemFields as ItemFields[]).map((itemField) => {
+          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-2 mt-2">
+            {itemFields.map((itemField) => {
               return (
                 <FormField
                   key={itemField}
@@ -62,9 +56,7 @@ const ItemDetails = ({ form }) => {
                     <FormItem>
                       <FormLabel className="text-sm font-normal">
                         {labelMap[itemField]}
-                        {itemField !== "sku" && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
+                        {itemField !== "sku" && <Required />}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -99,16 +91,7 @@ const ItemDetails = ({ form }) => {
         <Button
           type="button"
           variant="link"
-          onClick={() =>
-            append({
-              product_name: "",
-              sku: "",
-              hsn: "",
-              qty: "",
-              unit_price: "",
-              igst: "0",
-            })
-          }
+          onClick={() => append(initialProductDetails)}
           className="p-0"
         >
           <Plus className="w-4 h-4 text-blue-800" />

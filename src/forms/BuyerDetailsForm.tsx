@@ -2,121 +2,97 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { BuyerSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import BuyerShippingDetails from "@/forms/BuyerShippingDetails";
-import BuyerBillingDetails from "@/forms/BuyerBillingDetails";
+import BuyerShippingDetails from "@/layout/BuyerShippingDetails";
+import BuyerBillingDetails from "@/layout/BuyerBillingDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBuyerData } from "@/features/formSlice";
 import { RootState } from "@/store";
 import { fetchStates } from "@/layout/api";
-import { Button } from "@/components/ui/button";
+import { BuyerFormData, BuyerFormSchema } from "@/layout/interface";
+import ButtonComponent from "@/layout/ButtonComponent";
 
 export function BuyerDetailsForm({ setActiveStep }) {
   const dispatch = useDispatch();
-  const buyerData = useSelector((state: RootState) => state.form.buyerData);
-
-  type BuyerFormData = {
-    shipping_firstname: string;
-    shipping_lastname: string;
-    shipping_mobile: string;
-    shipping_email: string;
-    shipping_country: string;
-    shipping_address1: string;
-    shipping_address2: string;
-    shipping_landmark: string;
-    shipping_pincode: string;
-    shipping_city: string;
-    shipping_state: string;
-    isBillingSame: boolean;
-    billing_country: string;
-    billing_address1: string;
-    billing_address2: string;
-    billing_pincode: string;
-    billing_city: string;
-    billing_state: string;
-    billing_landmark: string;
-  };
-
+  const initialBuyerData = useSelector(
+    (state: RootState) => state.form.buyerData
+  );
   const BuyerForm = useForm<BuyerFormData>({
     resolver: zodResolver(BuyerSchema),
-    defaultValues: buyerData,
+    defaultValues: initialBuyerData,
   });
-
-  const [isBillingSame, setIsBillingSame] = useState(buyerData.isBillingSame);
-
-  const onSubmit = (values: z.infer<typeof BuyerSchema>) => {
-    dispatch(updateBuyerData(values));
-    setActiveStep(3);
-  };
-
+  const [isBillingSame, setIsBillingSame] = useState(
+    initialBuyerData.isBillingSame
+  );
   const [shippingStates, setShippingStates] = useState([]);
   const [billingStates, setBillingStates] = useState([]);
-
   const countryShipping = BuyerForm.watch("shipping_country");
   const countryBilling = BuyerForm.watch("billing_country");
 
   useEffect(() => {
+    const fetchShippingStates = async () => {
+      try {
+        const states = await fetchStates(countryShipping);
+        setShippingStates(states);
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
     if (countryShipping) {
-      const prevCountry = buyerData?.shipping_country;
+      const prevCountry = initialBuyerData?.shipping_country;
       if (prevCountry !== countryShipping) {
         BuyerForm.setValue("shipping_state", "");
         setShippingStates([]);
       }
-      fetchStates(countryShipping).then(setShippingStates);
+      fetchShippingStates();
     }
   }, [countryShipping]);
 
   useEffect(() => {
+    const fetchShippingStates = async () => {
+      try {
+        const states = await fetchStates(countryBilling);
+        setBillingStates(states);
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
     if (countryBilling) {
-      const prevBillingCountry = buyerData?.billing_country;
+      const prevBillingCountry = initialBuyerData?.billing_country;
       if (prevBillingCountry !== countryBilling) {
         BuyerForm.setValue("billing_state", "");
         setBillingStates([]);
       }
-      fetchStates(countryBilling).then(setBillingStates);
+      fetchShippingStates();
     }
   }, [countryBilling]);
 
+  const ModifyData = (fieldName, value: string) => {
+    BuyerForm.setValue(fieldName, value);
+  };
+
+  const shippingValues = BuyerForm.watch([
+    "shipping_address1",
+    "shipping_address2",
+    "shipping_city",
+    "shipping_country",
+    "shipping_state",
+    "shipping_pincode",
+    "shipping_landmark",
+  ]);
+
   useEffect(() => {
     if (isBillingSame) {
-      BuyerForm.setValue(
-        "billing_address1",
-        BuyerForm.getValues("shipping_address1")
-      );
-      BuyerForm.setValue(
-        "billing_landmark",
-        BuyerForm.getValues("shipping_landmark")
-      );
-      BuyerForm.setValue(
-        "billing_address2",
-        BuyerForm.getValues("shipping_address2")
-      );
-      BuyerForm.setValue(
-        "billing_pincode",
-        BuyerForm.getValues("shipping_pincode")
-      );
-      BuyerForm.setValue("billing_city", BuyerForm.getValues("shipping_city"));
-      BuyerForm.setValue(
-        "billing_country",
-        BuyerForm.getValues("shipping_country")
-      );
-      BuyerForm.setValue(
-        "billing_state",
-        BuyerForm.getValues("shipping_state")
-      );
+      ModifyData("billing_address1", shippingValues[0]);
+      ModifyData("billing_landmark", shippingValues[6]);
+      ModifyData("billing_address2", shippingValues[1]);
+      ModifyData("billing_city", shippingValues[2]);
+      ModifyData("billing_pincode", shippingValues[5]);
+      ModifyData("billing_country", shippingValues[3]);
+      ModifyData("billing_state", shippingValues[4]);
     }
-  }, [
-    isBillingSame,
-    BuyerForm.watch("shipping_address1"),
-    BuyerForm.watch("shipping_address2"),
-    BuyerForm.watch("shipping_city"),
-    BuyerForm.watch("shipping_country"),
-    BuyerForm.watch("shipping_state"),
-    BuyerForm.watch("shipping_pincode"),
-    BuyerForm.watch("shipping_landmark"),
-  ]);
+  }, [isBillingSame, ...shippingValues]);
 
   const setBillingFields = (
     BuyerForm: any,
@@ -129,6 +105,21 @@ export function BuyerDetailsForm({ setActiveStep }) {
     }
   };
 
+  const handleBillingChange = () => {
+    const newValue = !isBillingSame;
+    setIsBillingSame(newValue);
+    BuyerForm.setValue("isBillingSame", newValue);
+    if (newValue) {
+      setBillingFields(BuyerForm, "shipping_country", "billing_country");
+      setBillingFields(BuyerForm, "shipping_state", "billing_state");
+    }
+  };
+
+  const onSubmit = (values: BuyerFormSchema) => {
+    dispatch(updateBuyerData(values));
+    setActiveStep(3);
+  };
+
   return (
     <div className="py-4 px-3 md:px-7">
       <Form {...BuyerForm}>
@@ -139,38 +130,16 @@ export function BuyerDetailsForm({ setActiveStep }) {
               type="checkbox"
               className="w-4 h-4 cursor-pointer"
               checked={BuyerForm.watch("isBillingSame")}
-              onChange={() => {
-                const newValue = !BuyerForm.getValues("isBillingSame");
-                setIsBillingSame(newValue);
-                BuyerForm.setValue("isBillingSame", newValue);
-                if (newValue) {
-                  setBillingFields(
-                    BuyerForm,
-                    "shipping_country",
-                    "billing_country"
-                  );
-                  setBillingFields(
-                    BuyerForm,
-                    "shipping_state",
-                    "billing_state"
-                  );
-                }
-              }}
+              onChange={handleBillingChange}
             />
             <p className="text-sm select-none">
               Billing Address is same as shipping address.
             </p>
           </label>
-
-          {BuyerForm.watch("isBillingSame") === false && (
+          {!BuyerForm.watch("isBillingSame") && (
             <BuyerBillingDetails form={BuyerForm} states={billingStates} />
           )}
-
-          <div className="flex justify-end">
-            <Button type="submit" className="bg-blue-800 hover:bg-blue-800/90">
-              Continue
-            </Button>
-          </div>
+          <ButtonComponent label="Continue" />
         </form>
       </Form>
     </div>
