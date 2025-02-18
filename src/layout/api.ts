@@ -48,7 +48,7 @@ export async function fetchStates(countryCode: string) {
     }
   };
   
-  const API_URL =
+  const SHIPPER_API_URL =
     "https://api.fr.stg.shipglobal.in/api/v1/orders/get-shipper-rates";
 
   export const shipperToken =
@@ -56,7 +56,7 @@ export async function fetchStates(countryCode: string) {
 
   export const fetchShipperRates = async (payload:any) => {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(SHIPPER_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

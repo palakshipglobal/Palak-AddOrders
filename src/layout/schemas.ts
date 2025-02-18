@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ConsignorSchema = z.object({
-    pickupAddress: z.string().min(1, "Please select an address"),
-  });
+  pickupAddress: z.string().min(1, "Please select an address"),
+});
 
 export const BuyerSchema = z
   .object({
@@ -186,8 +186,6 @@ export const OrderSchema = z.object({
       unit_price: z.string().refine((value) => Number(value) > 0, {
         message: "Unit Price must be greater than zero",
       }),
-
-      igst: z.string().min(1, "IGST is required"),
     })
   ),
 });

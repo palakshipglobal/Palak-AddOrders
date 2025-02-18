@@ -101,14 +101,16 @@ function ShippingPartner() {
         <table className="mt-5 w-full relative text-xs lg:text-sm border-separate border-spacing-y-2.5">
           <thead>
             <tr className="text-left text-slate-500 bg-slate-50">
-              <th className="p-4 border border-r-0 rounded-l-md">
-                Courier Partner
-              </th>
-              <th className="border-t border-b">Delivery Time</th>
-              <th className="border-t border-b">Shipment Rate</th>
-              <th className="border border-l-0 rounded-r-md pr-2">
-                Select
-              </th>
+              <TableHeader
+                heading="Courier Partner"
+                className="p-4 border-r-0 border-l rounded-l-md"
+              />
+              <TableHeader heading="Delivery Time" />
+              <TableHeader heading="Shipment Rate" />
+              <TableHeader
+                heading="Select"
+                className="border-r rounded-r-md pr-2"
+              />
             </tr>
           </thead>
           {courierOptions.map((courier, index) => (
@@ -122,11 +124,13 @@ function ShippingPartner() {
                 className="cursor-pointer"
                 onClick={() => handleSelectPartner(courier)}
               >
-                <td className="font-medium pt-8 pb-4 pl-5 border border-r-0 rounded-l-md">
-                  {courier.name}
-                </td>
-                <td className="border-t border-b pt-4">{courier.time}</td>
-                <td className="border-t border-b pt-4">{courier.rate}</td>
+                <TableDescription
+                  description={courier.name}
+                  className="font-medium pt-8 pb-4 pl-5 border border-r-0 rounded-l-md"
+                />
+                <TableDescription description={courier.time} />
+                <TableDescription description={courier.rate} />
+
                 <td className="border-t border-b pt-4 border-r rounded-r-md">
                   {loadingPartner === courier.name ? (
                     <div className="w-5 h-5 border-2 border-gray-300 border-t-2 border-t-green-500 rounded-full animate-spin"></div>
@@ -188,5 +192,26 @@ const WeightCard = ({
       <p className="font-medium text-base">{value.toFixed(2)} KG</p>
       <p className="text-xs">{label}</p>
     </div>
+  );
+};
+
+interface TableHeaderProps {
+  heading: string;
+  className?: string;
+}
+const TableHeader = ({ heading, className }: TableHeaderProps) => {
+  return <th className={`border-t border-b ${className}`}>{heading}</th>;
+};
+
+interface TableDescriptionProps {
+  description: string;
+  className?: string;
+}
+const TableDescription = ({
+  description,
+  className,
+}: TableDescriptionProps) => {
+  return (
+    <td className={`border-t border-b pt-4 ${className}`}>{description}</td>
   );
 };

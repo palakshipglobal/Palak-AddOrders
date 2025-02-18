@@ -117,6 +117,18 @@ export function BuyerDetailsForm({ setActiveStep }) {
     BuyerForm.watch("shipping_pincode"),
     BuyerForm.watch("shipping_landmark"),
   ]);
+
+  const setBillingFields = (
+    BuyerForm: any,
+    shippingField: string,
+    billingField: string
+  ) => {
+    const shippingValue = BuyerForm.getValues(shippingField);
+    if (shippingValue) {
+      BuyerForm.setValue(billingField, shippingValue);
+    }
+  };
+
   return (
     <div className="py-4 px-3 md:px-7">
       <Form {...BuyerForm}>
@@ -132,13 +144,15 @@ export function BuyerDetailsForm({ setActiveStep }) {
                 setIsBillingSame(newValue);
                 BuyerForm.setValue("isBillingSame", newValue);
                 if (newValue) {
-                  BuyerForm.setValue(
-                    "billing_country",
-                    BuyerForm.getValues("shipping_country")
+                  setBillingFields(
+                    BuyerForm,
+                    "shipping_country",
+                    "billing_country"
                   );
-                  BuyerForm.setValue(
-                    "billing_state",
-                    BuyerForm.getValues("shipping_state")
+                  setBillingFields(
+                    BuyerForm,
+                    "shipping_state",
+                    "billing_state"
                   );
                 }
               }}

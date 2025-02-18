@@ -1,19 +1,8 @@
+import { measurements } from "@/layout/arrays";
 import SimpleFormFields from "@/layout/SimpleFormFields";
 import React from "react";
 
 const ShipmentDetails = ({ form }) => {
-  const measurements = [
-    {
-      label: "Weight",
-      name: "actual_weight",
-      placeholder: "Eg: 1.25",
-      unit: "kg",
-    },
-    { label: "Length", name: "length", placeholder: "Eg: 10", unit: "cm" },
-    { label: "Breadth", name: "breadth", placeholder: "Eg: 10", unit: "cm" },
-    { label: "Height", name: "height", placeholder: "Eg: 10", unit: "cm" },
-  ];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
       {measurements.map((measurement,index) => (

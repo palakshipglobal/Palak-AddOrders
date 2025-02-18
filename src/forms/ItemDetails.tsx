@@ -88,7 +88,7 @@ const ItemDetails = ({ form }) => {
           </div>
           {index > 0 && (
             <Trash2
-              className="w-7 h-7 cursor-pointer text-red-500 mt-8"
+              className="w-7 h-7 cursor-pointer text-red-500 lg:mt-8 md:mt-5"
               onClick={() => remove(index)}
             />
           )}
@@ -109,6 +109,7 @@ const ItemDetails = ({ form }) => {
               igst: "0",
             })
           }
+          className="p-0"
         >
           <Plus className="w-4 h-4 text-blue-800" />
           <span className="text-blue-800 underline font-medium">

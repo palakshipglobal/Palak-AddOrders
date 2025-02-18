@@ -81,7 +81,11 @@ function AddOrderForm() {
         />
       ),
     },
-    { title: "Select Shipping Partner", component: <ShippingPartner /> },
+    {
+      title: "Select Shipping Partner",
+      component: <ShippingPartner />,
+      activeStepNumber: true,
+    },
   ];
 
   return (
@@ -91,14 +95,17 @@ function AddOrderForm() {
       </p>
       <BreadCrumb />
       <div className="flex gap-3 mt-3">
-        <div className="w-full -mt-3 rounded-md lg:w-2/3 flex flex-col">
+        <div className="w-full -mt-2 rounded-md lg:w-2/3 flex flex-col">
           {formSteps.map((step, index) => (
             <AccordionComponent
               key={index}
               title={step.title}
               activeStep={activeStep}
               isOpen={activeStep === index + 1}
-              setActiveStep={(step: number) => dispatch(updateStep(step))}
+              setActiveStep={
+                !step.activeStepNumber &&
+                ((step: number) => dispatch(updateStep(step)))
+              }
               stepNumber={index + 1}
               childElement={step.component}
             />
@@ -108,7 +115,7 @@ function AddOrderForm() {
         <div className="flex-col w-1/3 hidden lg:block">
           <div className="bg-white max-h-max rounded-md px-8 py-3">
             {activeStep === 1 && <QuickTipsContent />}
-            <Data
+            <ConsigneeDetailsData
               activeStep={activeStep}
               buyerData={buyerData}
               pickupAddress={pickupAddress}
@@ -167,7 +174,7 @@ const QuickTipsContent = () => {
   );
 };
 
-const Data = ({
+const ConsigneeDetailsData = ({
   activeStep,
   buyerData,
   pickupAddress,
@@ -218,6 +225,23 @@ const Data = ({
   );
 };
 
+const ItemDimensions = ({ orderData }) => {
+  return (
+    <div className="flex justify-between text-sm mt-3">
+      <div className="flex flex-col">
+        <p className="text-gray-500">Billed Weight</p>
+        <p className="font-medium mt-0.5">{orderData.actual_weight} KG</p>
+      </div>
+      <div className="flex flex-col">
+        <p className="text-gray-500">Dimensions</p>
+        <p className="font-medium mt-0.5">
+          {orderData.length}cm X {orderData.breadth}cm X {orderData.height}cm
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const ItemDetails = ({ activeStep, orderData }) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -226,18 +250,8 @@ const ItemDetails = ({ activeStep, orderData }) => {
   return (
     <div className="border-t pt-4">
       <h3 className="text-lg font-semibold">Item Details</h3>
-      <div className="flex justify-between text-sm mt-3">
-        <div className="flex flex-col">
-          <p className="text-gray-500">Billed Weight</p>
-          <p className="font-medium mt-0.5">{orderData.actual_weight} KG</p>
-        </div>
-        <div className="flex flex-col">
-          <p className="text-gray-500">Dimensions</p>
-          <p className="font-medium mt-0.5">
-            {orderData.length}cm X {orderData.breadth}cm X {orderData.height}cm
-          </p>
-        </div>
-      </div>
+
+      <ItemDimensions orderData={orderData} />
       <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
         {orderData.items.map((item: any, index: any) => {
           if (!showAll && index > 0) return null;
@@ -315,7 +329,7 @@ const Summary = ({ shippingPartner }: any) => (
         </div>
         <div className="grid text-right text-black gap-y-4">
           <p>Rs. {shippingPartner?.rate}.00</p>
-          <p>Rs. 1223.16</p>
+          <p>Rs. {Number(shippingPartner?.rate*0.18).toFixed(2)}</p>
         </div>
       </div>
       <div className="flex justify-between px-5 py-3 mt-5 text-sm font-semibold bg-orange-100">

@@ -80,3 +80,15 @@ export const pickupAddress = [
       "Head OFFICE, mahipalpur, Indira Park, South West Delhi, Delhi-110045",
   },
 ];
+
+export const measurements = [
+  {
+    label: "Weight",
+    name: "actual_weight",
+    placeholder: "Eg: 1.25",
+    unit: "kg",
+  },
+  { label: "Length", name: "length", placeholder: "Eg: 10", unit: "cm" },
+  { label: "Breadth", name: "breadth", placeholder: "Eg: 10", unit: "cm" },
+  { label: "Height", name: "height", placeholder: "Eg: 10", unit: "cm" },
+];

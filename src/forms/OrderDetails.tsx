@@ -100,7 +100,6 @@ function OrderDetails({ setActiveStep }) {
     };
 
     dispatch(updateOrderData(formattedValues));
-
     if (!isError) {
       setActiveStep(4);
     }
