@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { CountrySelect } from "./layout/ComboboxDemo";
 import SimpleFormField from "./layout/SimpleFormField";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import { RateSchema } from "./layout/schemas";
 import { Form } from "./components/ui/form";
 import ShipmentDetails, { MeasurementInput } from "./layout/ShipmentDetails";
 import { Button } from "./components/ui/button";
-import { fetchRates, WeightCard } from "./forms/ShippingPartner";
+import { WeightCard } from "./forms/ShippingPartner";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store";
 import {
@@ -16,34 +16,32 @@ import {
 } from "./features/formSlice";
 import { CircleCheck } from "lucide-react";
 import { QuickTipsContent } from "./AddOrderForm";
+import { fetchShipperRates } from "./layout/api";
 
 const RateCalculator = () => {
   const dispatch = useDispatch();
-  const { rateCalculatorData, buyerData, orderData, shippingPartner } =
-    useSelector((state: RootState) => state.form);
+  const { rateCalculatorData, shippingPartner } = useSelector(
+    (state: RootState) => state.form
+  );
 
   const [showCalculatedWeight, setShowCalculatedWeight] = useState(false);
+  const [courierOptions, setCourierOptions] = useState([]);
+  const [loadingPartner, setLoadingPartner] = useState<string | null>(null);
 
   const RateForm = useForm({
     resolver: zodResolver(RateSchema),
     defaultValues: rateCalculatorData,
   });
 
-  const volumetricWeight = useMemo(
-    () =>
-      (Number(rateCalculatorData?.breadth || 0) *
-        Number(rateCalculatorData?.length || 0) *
-        Number(rateCalculatorData?.height || 0)) /
-      5000,
-    [rateCalculatorData]
-  );
-
-  const [courierOptions, setCourierOptions] = useState([]);
-  const [loadingPartner, setLoadingPartner] = useState<string | null>(null);
+  const volumetricWeight = () =>
+    (Number(rateCalculatorData?.breadth || 0) *
+      Number(rateCalculatorData?.length || 0) *
+      Number(rateCalculatorData?.height || 0)) /
+    5000;
 
   useEffect(() => {
-    fetchRates(buyerData, orderData, setCourierOptions);
-  }, [buyerData, orderData]);
+    fetchRates(rateCalculatorData, setCourierOptions);
+  }, []);
 
   const handleSelectPartner = (courier: any) => {
     setLoadingPartner(courier.id);
@@ -114,7 +112,7 @@ const RateCalculator = () => {
             selectedPartner={shippingPartner}
           />
         </div>
-        <div className="bg-white w-1/3 hidden lg:block max-h-max rounded-md px-8 py-3">
+        <div className="bg-white w-1/3 hidden lg:block max-h-max rounded-md px-4 py-3">
           <QuickTipsContent />
         </div>
       </div>
@@ -132,6 +130,32 @@ const Buttons = () => (
     </Button>
   </div>
 );
+
+const fetchRates = async (rateCalculatorData: any, setCourierOptions: any) => {
+  try {
+    const payload = {
+      customer_shipping_country_code: rateCalculatorData.country,
+      customer_shipping_postcode: rateCalculatorData.pincode,
+      package_breadth: rateCalculatorData.breadth,
+      package_height: rateCalculatorData.height,
+      package_length: rateCalculatorData.length,
+      package_weight: rateCalculatorData.weight,
+    };
+    const rates = await fetchShipperRates(payload);
+    setCourierOptions(
+      rates.map((rate: any) => ({
+        id: `${rate.display_name}-${rate.rate}`,
+        name: rate.display_name,
+        time: rate.transit_time,
+        rate: rate.rate,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching shipper rates:", error);
+  }
+};
+
+export default RateCalculator;
 
 const WeightSummary = ({ rateCalculatorData, volumetricWeight }) => (
   <div className="flex flex-col md:flex-row items-center gap-3 justify-center mt-10">
@@ -173,8 +197,14 @@ const CourierTable = ({
           />
         </tr>
       </thead>
-      <tbody>
-        {courierOptions.map((courier, index) => (
+
+      {courierOptions.map((courier: any, index: any) => (
+        <tbody>
+          <tr>
+            <td className="absolute mt-2.5 w-full border-t bg-blue-50 border-x text-xs rounded-t-sm text-red-500 px-3 py-1">
+              Duties will be charged, if applicable
+            </td>
+          </tr>
           <tr
             key={index}
             className="cursor-pointer"
@@ -200,8 +230,8 @@ const CourierTable = ({
               )}
             </td>
           </tr>
-        ))}
-      </tbody>
+        </tbody>
+      ))}
     </table>
   );
 
@@ -225,5 +255,3 @@ const TableDescription = ({
     <td className={`border-t border-b pt-4 ${className}`}>{description}</td>
   );
 };
-
-export default RateCalculator;

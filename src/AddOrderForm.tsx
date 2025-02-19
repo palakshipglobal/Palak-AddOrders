@@ -125,10 +125,10 @@ export default AddOrderForm;
 
 export const QuickTipsContent = () => {
   return (
-    <div className="flex flex-col gap-y-3">
+    <div className="flex flex-col">
       <p className="font-semibold text-base mx-auto">Quick Tips</p>
       <img src={box} className="h-44 w-44 mx-auto" />
-      <p className="font-bold text-sm">Dead Weight:</p>
+      <p className="font-semibold text-xs mb-1">Dead Weight:</p>
       <div className="text-xs space-y-3">
         <p>
           Dead/Dry weight or volumetric weight whichever is higher will be taken
@@ -144,19 +144,13 @@ export const QuickTipsContent = () => {
           courier company base rates.
         </p>
       </div>
-      <p className="font-bold text-sm mt-4">
+      <p className="font-semibold text-xs mt-6">
         Volumetric Weight: (L X W X H / 5000)
       </p>
-      <div className="text-xs space-y-3">
-        <p>
-          Volumetric Weight (or DIM weight) is calculated based on the
-          dimensions of the package.
-        </p>
-        <p>
-          The formula for calculating volumetric weight involves multiplying the
-          length, width, and height of the package and then dividing by 5000.
-        </p>
-      </div>
+      <p className="text-xs mt-1">
+        Volumetric weight is calculated LxBxH/5000 for all courier companies
+        except for Fedex Surface, Aramex, Fedex Surface Light and Gati Surface.
+      </p>
       <ImportantTip />
     </div>
   );
@@ -164,8 +158,11 @@ export const QuickTipsContent = () => {
 
 const ImportantTip = () => {
   return (
-    <div className="bg-pink-100 py-5 px-4 rounded-sm text-xs mt-10">
-      <div className="flex">
+    <div className="bg-pink-100 py-5 px-3 rounded-sm text-xs mt-10">
+      <div className="flex gap-x-2 items-start">
+        <div className="bg-yellow-500 w-4 h-4 px-1.5 rounded-full text-white">
+          i
+        </div>
         <p>
           <b>Important:</b> The standard Courier RTO charge will also apply to
           their additional weight courier type.
