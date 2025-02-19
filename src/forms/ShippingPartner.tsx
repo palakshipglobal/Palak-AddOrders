@@ -13,7 +13,6 @@ function ShippingPartner() {
   );
   const [courierOptions, setCourierOptions] = useState([]);
   const [loadingPartner, setLoadingPartner] = useState<string | null>(null);
-
   const { buyerData, orderData, step } = useSelector(
     (state: RootState) => state.form
   );
@@ -29,41 +28,20 @@ function ShippingPartner() {
   }
 
   useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const payload = {
-          customer_shipping_country_code: buyerData.shipping_country,
-          customer_shipping_postcode: buyerData.shipping_pincode,
-          package_breadth: orderData.breadth,
-          package_height: orderData.height,
-          package_length: orderData.length,
-          package_weight: orderData.actual_weight,
-        };
-        const rates = await fetchShipperRates(payload);
-        setCourierOptions(
-          rates.map((rate: any) => ({
-            name: rate.display_name,
-            time: rate.transit_time,
-            rate: rate.rate,
-          }))
-        );
-      } catch (error) {
-        console.error("Error fetching shipper rates:", error);
-      }
-    };
     if (step === 4) {
-      fetchRates();
+      fetchRates(buyerData, orderData, setCourierOptions);
     }
   }, [step, buyerData, orderData]);
 
-  function onSubmit() {
-    dispatch(updateShippingPartner(selectedPartner));
-  }
   const volumetricWeight =
     (Number(orderData.breadth) *
       Number(orderData.length) *
       Number(orderData.height)) /
     50000;
+
+  function onSubmit() {
+    dispatch(updateShippingPartner(selectedPartner));
+  }
 
   return (
     <div className="px-3 md:px-7 py-4">
@@ -156,12 +134,8 @@ function ShippingPartner() {
       <ButtonComponent
         label="Pay and Order"
         onClick={onSubmit}
-        disabled={!selectedPartner.name}
-        className={`${
-          !selectedPartner.name
-            ? "opacity-35 cursor-not-allowed"
-            : "opacity-100"
-        }`}
+        disabled={!selectedPartner?.name}
+        className="transition-opacity duration-200"
       />
     </div>
   );
@@ -213,4 +187,31 @@ const TableDescription = ({
   return (
     <td className={`border-t border-b pt-4 ${className}`}>{description}</td>
   );
+};
+
+const fetchRates = async (
+  buyerData: any,
+  orderData: any,
+  setCourierOptions: any
+) => {
+  try {
+    const payload = {
+      customer_shipping_country_code: buyerData.shipping_country,
+      customer_shipping_postcode: buyerData.shipping_pincode,
+      package_breadth: orderData.breadth,
+      package_height: orderData.height,
+      package_length: orderData.length,
+      package_weight: orderData.actual_weight,
+    };
+    const rates = await fetchShipperRates(payload);
+    setCourierOptions(
+      rates.map((rate: any) => ({
+        name: rate.display_name,
+        time: rate.transit_time,
+        rate: rate.rate,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching shipper rates:", error);
+  }
 };

@@ -12,6 +12,14 @@ function AccordionComponent({
   const isActive = activeStep === stepNumber;
   const isCompleted = activeStep > stepNumber;
 
+  const stepClass = isCompleted
+    ? "bg-green-500 text-black"
+    : isActive
+    ? "bg-black text-white"
+    : "bg-gray-200 text-black";
+
+  const handleStepChange = () => setActiveStep(stepNumber);
+
   return (
     <div
       className={`border rounded-sm mt-2 w-full ${
@@ -20,19 +28,13 @@ function AccordionComponent({
     >
       <div className="flex flex-row cursor-pointer py-2.5 items-center justify-between transition duration-300">
         <div
-          className={`cursor-pointer items-center gap-x-2 flex flex-row  ${
+          className={`cursor-pointer items-center gap-x-2 flex flex-row ${
             isActive ? "text-black" : "text-gray-500"
           } px-2 lg:px-4 text-sm font-medium`}
         >
-          <div
-            className={`text-center w-6 h-6 py-0.5 rounded-sm 
-              ${activeStep < stepNumber && "bg-gray-200 text-black"}
-                ${isCompleted && "bg-green-500 text-black"}
-               ${isActive && "bg-black text-white"}
-              `}
-          >
+          <div className={`text-center w-6 h-6 py-0.5 rounded-sm ${stepClass}`}>
             {isCompleted ? (
-              <Check className="text-white size-5 pt-0.5 pl-1" />
+              <Check className="w-4 h-4 text-white ml-1 mt-0.5" />
             ) : (
               stepNumber
             )}
@@ -42,7 +44,7 @@ function AccordionComponent({
         {isCompleted && (
           <button
             className="text-blue-800 underline text-sm mr-8"
-            onClick={() => setActiveStep(stepNumber)}
+            onClick={handleStepChange}
           >
             Change
           </button>

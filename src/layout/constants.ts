@@ -100,3 +100,5 @@ export const placeholderMap = {
   qty: "Enter Qty...",
   unit_price: "Enter Unit Price...",
 };
+
+export const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];

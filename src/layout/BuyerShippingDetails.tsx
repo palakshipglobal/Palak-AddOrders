@@ -46,4 +46,4 @@ const BuyerShippingDetails = ({ form, states }) => {
   );
 };
 
-export default withBuyerShippingForm(BuyerShippingDetails);
+export default BuyerShippingDetails;

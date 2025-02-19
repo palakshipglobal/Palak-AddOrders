@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { OrderSchema } from "@/layout/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemDetails from "@/layout/ItemDetails";
@@ -19,8 +19,6 @@ function OrderDetails({ setActiveStep }) {
     (state: RootState) => state.form.orderData
   );
   const [errorMessage, setErrorMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-
   const OrderForm = useForm<OrderFormData>({
     resolver: zodResolver(OrderSchema),
     defaultValues: {
@@ -30,43 +28,37 @@ function OrderDetails({ setActiveStep }) {
   });
 
   const watchAllFields = OrderForm.watch();
-  const watchVendorItems = initialOrderData.items.map((item, index) => ({
-    product_name: OrderForm.watch(`items.${index}.product_name`),
-    sku: OrderForm.watch(`items.${index}.sku`),
-    hsn: OrderForm.watch(`items.${index}.hsn`),
-    qty: OrderForm.watch(`items.${index}.qty`),
-    unit_price: OrderForm.watch(`items.${index}.unit_price`),
-    igst: OrderForm.watch(`items.${index}.igst`),
-  }));
+  const watchVendorItems = useWatch({
+    control: OrderForm.control,
+    name: "items",
+  });
+
+  const generatePayload = (fields: any, items: any) => ({
+    csbv: "0",
+    currency_code: fields.invoice_currency,
+    package_breadth: fields.breadth,
+    package_height: fields.height,
+    package_length: fields.length,
+    package_weight: fields.actual_weight,
+    vendor_order_item: items.map((item: any) => ({
+      vendor_order_item_name: item.product_name,
+      vendor_order_item_sku: item.sku,
+      vendor_order_item_hsn: item.hsn,
+      vendor_order_item_quantity: item.qty,
+      vendor_order_item_unit_price: item.unit_price,
+      vendor_order_item_tax_rate: item.igst,
+    })),
+  });
 
   const onSubmit = async (values: OrderFormSchema) => {
-    const payload = {
-      csbv: "0",
-      currency_code: watchAllFields.invoice_currency,
-      package_breadth: watchAllFields.breadth,
-      package_height: watchAllFields.height,
-      package_length: watchAllFields.length,
-      package_weight: watchAllFields.actual_weight,
-      vendor_order_item: watchVendorItems.map((item) => ({
-        vendor_order_item_name: item.product_name,
-        vendor_order_item_sku: item.sku,
-        vendor_order_item_hsn: item.hsn,
-        vendor_order_item_quantity: item.qty,
-        vendor_order_item_unit_price: item.unit_price,
-        vendor_order_item_tax_rate: item.igst,
-      })),
-    };
+    const payload = generatePayload(watchAllFields, watchVendorItems);
     try {
       const result = await validateOrderInvoice(payload);
-      if (result.data?.box?.["1"]?.exceeds_limit) {
-        setErrorMessage(result.data.box["1"].exceeds_text);
-        setIsError(true);
-        return;
-      } else {
-        setErrorMessage("");
-        setIsError(false);
-        setActiveStep(4);
-      }
+      const errorText = result.data?.box?.["1"]?.exceeds_limit
+        ? result.data.box["1"].exceeds_text
+        : "";
+      setErrorMessage(errorText);
+      if (!errorText) setActiveStep(4);
     } catch (error) {
       console.error("Error validating order invoice:", error);
     }
@@ -76,11 +68,7 @@ function OrderDetails({ setActiveStep }) {
         ? new Date(values.invoice_date).toISOString()
         : "",
     };
-
     dispatch(updateOrderData(formattedValues));
-    if (!isError) {
-      setActiveStep(4);
-    }
   };
 
   return (

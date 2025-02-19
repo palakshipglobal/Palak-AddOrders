@@ -38,4 +38,4 @@ const BuyerBillingDetails = ({ form, states }) => {
   );
 };
 
-export default withBuyerBillingForm(BuyerBillingDetails);
+export default BuyerBillingDetails;

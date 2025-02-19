@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BuyerSchema } from "@/layout/schemas";
@@ -67,7 +66,7 @@ export function BuyerDetailsForm({ setActiveStep }) {
     }
   }, [countryBilling]);
 
-  const modifyData = (fieldName:any, value: string) => {
+  const modifyData = (fieldName: any, value: string) => {
     BuyerForm.setValue(fieldName, value);
   };
 
@@ -101,11 +100,10 @@ export function BuyerDetailsForm({ setActiveStep }) {
       const shippingCountryValue = BuyerForm.getValues("shipping_country");
       if (shippingCountryValue) {
         modifyData("billing_country", shippingCountryValue);
-       
       }
       const shippingStateValue = BuyerForm.getValues("shipping_state");
       if (shippingStateValue) {
-        modifyData("billing_state", shippingStateValue);       
+        modifyData("billing_state", shippingStateValue);
       }
     }
   };
