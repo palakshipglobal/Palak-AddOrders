@@ -128,7 +128,7 @@ const QuickTipsContent = () => {
     <div className="flex flex-col gap-y-3">
       <p className="font-semibold text-base mx-auto">Quick Tips</p>
       <img src={box} className="h-44 w-44 mx-auto" />
-      <p className="font-semibold text-sm ">Dead Weight:</p>
+      <p className="font-bold text-sm">Dead Weight:</p>
       <div className="text-xs space-y-3">
         <p>
           Dead/Dry weight or volumetric weight whichever is higher will be taken
@@ -144,17 +144,19 @@ const QuickTipsContent = () => {
           courier company base rates.
         </p>
       </div>
-      <p className="font-semibold text-sm mt-5">
+      <p className="font-bold text-sm mt-4">
         Volumetric Weight: (L X W X H / 5000)
       </p>
-      <p className="text-xs">
-        Volumetric Weight (or DIM weight) is calculated based on the dimensions
-        of the package.
-      </p>
-      <p className="text-xs">
-        The formula for calculating volumetric weight involves multiplying the
-        length, width, and height of the package and then dividing by 5000.
-      </p>
+      <div className="text-xs space-y-3">
+        <p>
+          Volumetric Weight (or DIM weight) is calculated based on the
+          dimensions of the package.
+        </p>
+        <p>
+          The formula for calculating volumetric weight involves multiplying the
+          length, width, and height of the package and then dividing by 5000.
+        </p>
+      </div>
     </div>
   );
 };
@@ -166,10 +168,7 @@ const ConsigneeDetailsData = ({ billingLabel, shippingLabel }) => {
     pickupAddress,
   } = useSelector((state: RootState) => state.form);
   return (
-    <Accordion
-      type="multiple"
-      defaultValue={["consignor", "consignee", "item"]}
-    >
+    <Accordion type="multiple" defaultValue={["consignor", "consignee"]}>
       {activeStep > 1 && (
         <AccordionItem value="consignor">
           <AccordionTrigger>Consignor Details</AccordionTrigger>
@@ -191,16 +190,14 @@ const ConsigneeDetailsData = ({ billingLabel, shippingLabel }) => {
                 {buyerData.shipping_firstname || ""}{" "}
                 {buyerData.shipping_lastname || ""}
               </p>
-
-              <p className="text-gray-500 mt-2.5">Billing Address</p>
-              <p className="font-medium mt-0.5">
-                {BillingAddress(buyerData, { billingLabel })}
-              </p>
-
-              <p className="text-gray-500 mt-2.5">Shipping Address</p>
-              <p className="font-medium mt-0.5">
-                {ShippingAddress(buyerData, { shippingLabel })}
-              </p>
+              <AddressDetails
+                heading="Billing Address"
+                details={BillingAddress(buyerData, { billingLabel })}
+              />
+              <AddressDetails
+                heading="Shipping Address"
+                details={ShippingAddress(buyerData, { shippingLabel })}
+              />
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -209,12 +206,12 @@ const ConsigneeDetailsData = ({ billingLabel, shippingLabel }) => {
   );
 };
 
-const ItemDimensions = ({ label, value }) => {
+const AddressDetails = ({ heading, details }) => {
   return (
-    <div className="flex flex-col">
-      <p className="text-gray-500">{label}</p>
-      <p className="font-medium mt-0.5">{value}</p>
-    </div>
+    <>
+      <p className="text-gray-500 mt-2.5">{heading}</p>
+      <p className="font-medium mt-0.5">{details}</p>
+    </>
   );
 };
 
@@ -237,7 +234,6 @@ const ItemDetails = () => {
       <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
         {orderData.items.map((item: any, index: any) => {
           if (!showAll && index > 0) return null;
-
           return (
             <React.Fragment key={index}>
               <OrderItemDetail
@@ -264,6 +260,15 @@ const ItemDetails = () => {
           </Button>
         )}
       </div>
+    </div>
+  );
+};
+
+const ItemDimensions = ({ label, value }) => {
+  return (
+    <div className="flex flex-col">
+      <p className="text-gray-500">{label}</p>
+      <p className="font-medium mt-0.5">{value}</p>
     </div>
   );
 };
