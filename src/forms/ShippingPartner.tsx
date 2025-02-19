@@ -18,10 +18,14 @@ function ShippingPartner() {
   );
 
   function handleSelectPartner(courier: any) {
-    setLoadingPartner(courier.name);
+    setLoadingPartner(courier.id);
     setTimeout(() => {
       dispatch(
-        updateShippingPartner({ name: courier.name, rate: courier.rate })
+        updateShippingPartner({
+          id: courier.id,
+          name: courier.name,
+          rate: courier.rate,
+        })
       );
       setLoadingPartner(null);
     }, 1000);
@@ -114,12 +118,12 @@ function ShippingPartner() {
                 <TableDescription description={courier.rate} />
 
                 <td className="border-t border-b pt-4 border-r rounded-r-md">
-                  {loadingPartner === courier.name ? (
+                  {loadingPartner === courier.id ? (
                     <div className="w-5 h-5 border-2 border-gray-300 border-t-2 border-t-green-500 rounded-full animate-spin"></div>
                   ) : (
                     <CircleCheck
                       className={`h-6 w-6 cursor-pointer transition-colors ${
-                        selectedPartner?.name === courier.name
+                        selectedPartner?.id === courier.id
                           ? "fill-green-500 text-white"
                           : "text-white fill-gray-300"
                       }`}
@@ -134,7 +138,7 @@ function ShippingPartner() {
       <ButtonComponent
         label="Pay and Order"
         onClick={onSubmit}
-        disabled={!selectedPartner?.name}
+        disabled={!selectedPartner?.id}
         className="transition-opacity duration-200"
       />
     </div>
@@ -206,6 +210,7 @@ const fetchRates = async (
     const rates = await fetchShipperRates(payload);
     setCourierOptions(
       rates.map((rate: any) => ({
+        id: `${rate.display_name}-${rate.rate}`,
         name: rate.display_name,
         time: rate.transit_time,
         rate: rate.rate,

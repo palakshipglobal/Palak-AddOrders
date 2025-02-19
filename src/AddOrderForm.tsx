@@ -35,14 +35,12 @@ function AddOrderForm() {
     const storedCountries = localStorage.getItem("countries");
     if (storedCountries) {
       const parsedCountries = JSON.parse(storedCountries);
-
       if (buyerData.billing_country) {
         const billing = parsedCountries.find(
           (country: any) => country.value === buyerData.billing_country
         );
         setBillingLabel(billing ? billing.label : null);
       }
-
       if (buyerData.shipping_country) {
         const shipping = parsedCountries.find(
           (country: any) => country.value === buyerData.shipping_country
@@ -55,6 +53,10 @@ function AddOrderForm() {
   useEffect(() => {
     loadCountries();
   }, [buyerData.billing_country, buyerData.shipping_country]);
+
+  useEffect(() => {
+    loadCountries();
+  }, [loadCountries]);
 
   const formSteps = [
     {
@@ -111,7 +113,6 @@ function AddOrderForm() {
             />
           ))}
         </div>
-
         <div className="flex-col w-1/3 hidden lg:block">
           <div className="bg-white max-h-max rounded-md px-8 py-3">
             {activeStep === 1 && <QuickTipsContent />}
@@ -126,7 +127,6 @@ function AddOrderForm() {
               <ItemDetails orderData={orderData} activeStep={activeStep} />
             )}
           </div>
-
           {activeStep === 4 && shippingPartner.name && (
             <Summary shippingPartner={shippingPartner} />
           )}
@@ -244,9 +244,7 @@ const ItemDimensions = ({ orderData }) => {
 
 const ItemDetails = ({ activeStep, orderData }) => {
   const [showAll, setShowAll] = useState(false);
-
   if (activeStep <= 3) return null;
-
   return (
     <div className="border-t pt-4">
       <h3 className="text-lg font-semibold">Item Details</h3>
@@ -318,7 +316,7 @@ const OrderItemDetail = ({ item, orderCurrency }) => {
 
 const Summary = ({ shippingPartner }: any) => {
   const gst = Number(shippingPartner?.rate * 0.18).toFixed(2);
-  const shippingRate = Number(shippingPartner?.rate)
+  const shippingRate = Number(shippingPartner?.rate);
 
   return (
     <div className="py-3 mt-3 border bg-red-50 rounded-lg">
@@ -337,7 +335,12 @@ const Summary = ({ shippingPartner }: any) => {
       </div>
       <div className="flex justify-between px-5 py-3 mt-4 text-sm font-semibold bg-red-100">
         <p>Total</p>
-        <p>Rs. {Number((shippingPartner?.rate * 0.18)+shippingPartner?.rate).toFixed(2)}</p>
+        <p>
+          Rs.{" "}
+          {Number(shippingPartner?.rate * 0.18 + shippingPartner?.rate).toFixed(
+            2
+          )}
+        </p>
       </div>
     </div>
   );
