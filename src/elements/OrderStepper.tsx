@@ -1,17 +1,18 @@
+import { RootState } from "@/store";
 import { Check } from "lucide-react";
 import React from "react";
+import { useSelector } from "react-redux";
 
-function AccordionComponent({
+function OrderStepper({
   title,
-  isOpen,
-  activeStep,
   stepNumber,
   setActiveStep,
   childElement,
 }) {
+  const { step: activeStep } = useSelector((state: RootState) => state.form);
   const isActive = activeStep === stepNumber;
   const isCompleted = activeStep > stepNumber;
-
+  const isOpen = activeStep === stepNumber;
   const stepClass = isCompleted
     ? "bg-green-500 text-black"
     : isActive
@@ -63,4 +64,4 @@ function AccordionComponent({
   );
 }
 
-export default AccordionComponent;
+export default OrderStepper;

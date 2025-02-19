@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "@/layout/BreadCrumb";
-import AccordionComponent from "@/layout/AccordionComponent";
+import OrderStepper from "@/elements/OrderStepper";
 import box from "@/assets/box.jpg";
 import { BuyerDetailsForm } from "@/forms/BuyerDetailsForm";
 import OrderDetails from "@/forms/OrderDetails";
@@ -23,9 +23,7 @@ function AddOrderForm() {
   const {
     step: activeStep,
     buyerData,
-    orderData,
     shippingPartner,
-    pickupAddress,
   } = useSelector((state: RootState) => state.form);
 
   const [billingLabel, setBillingLabel] = useState(null);
@@ -52,11 +50,7 @@ function AddOrderForm() {
 
   useEffect(() => {
     loadCountries();
-  }, [buyerData.billing_country, buyerData.shipping_country]);
-
-  useEffect(() => {
-    loadCountries();
-  }, [loadCountries]);
+  }, [buyerData.billing_country, buyerData.shipping_country, loadCountries]);
 
   const formSteps = [
     {
@@ -99,11 +93,9 @@ function AddOrderForm() {
       <div className="flex gap-3 mt-3">
         <div className="w-full -mt-2 rounded-md lg:w-2/3 flex flex-col">
           {formSteps.map((step, index) => (
-            <AccordionComponent
+            <OrderStepper
               key={index}
               title={step.title}
-              activeStep={activeStep}
-              isOpen={activeStep === index + 1}
               setActiveStep={
                 !step.activeStepNumber &&
                 ((step: number) => dispatch(updateStep(step)))
@@ -117,19 +109,12 @@ function AddOrderForm() {
           <div className="bg-white max-h-max rounded-md px-8 py-3">
             {activeStep === 1 && <QuickTipsContent />}
             <ConsigneeDetailsData
-              activeStep={activeStep}
-              buyerData={buyerData}
-              pickupAddress={pickupAddress}
               billingLabel={billingLabel}
               shippingLabel={shippingLabel}
             />
-            {activeStep > 3 && (
-              <ItemDetails orderData={orderData} activeStep={activeStep} />
-            )}
+            {activeStep > 3 && <ItemDetails />}
           </div>
-          {activeStep === 4 && shippingPartner.name && (
-            <Summary shippingPartner={shippingPartner} />
-          )}
+          {activeStep === 4 && shippingPartner.name && <Summary />}
         </div>
       </div>
     </div>
@@ -174,13 +159,12 @@ const QuickTipsContent = () => {
   );
 };
 
-const ConsigneeDetailsData = ({
-  activeStep,
-  buyerData,
-  pickupAddress,
-  billingLabel,
-  shippingLabel,
-}) => {
+const ConsigneeDetailsData = ({ billingLabel, shippingLabel }) => {
+  const {
+    step: activeStep,
+    buyerData,
+    pickupAddress,
+  } = useSelector((state: RootState) => state.form);
   return (
     <Accordion
       type="multiple"
@@ -225,7 +209,8 @@ const ConsigneeDetailsData = ({
   );
 };
 
-const ItemDimensions = ({ orderData }) => {
+const ItemDimensions = () => {
+  const { orderData } = useSelector((state: RootState) => state.form);
   return (
     <div className="flex justify-between text-sm mt-3">
       <div className="flex flex-col">
@@ -242,14 +227,13 @@ const ItemDimensions = ({ orderData }) => {
   );
 };
 
-const ItemDetails = ({ activeStep, orderData }) => {
+const ItemDetails = () => {
   const [showAll, setShowAll] = useState(false);
-  if (activeStep <= 3) return null;
+  const { orderData } = useSelector((state: RootState) => state.form);
   return (
     <div className="border-t pt-4">
       <h3 className="text-lg font-semibold">Item Details</h3>
-
-      <ItemDimensions orderData={orderData} />
+      <ItemDimensions />
       <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
         {orderData.items.map((item: any, index: any) => {
           if (!showAll && index > 0) return null;
@@ -314,8 +298,9 @@ const OrderItemDetail = ({ item, orderCurrency }) => {
   );
 };
 
-const Summary = ({ shippingPartner }: any) => {
-  const gst = Number(shippingPartner?.rate * 0.18).toFixed(2);
+const Summary = () => {
+  const { shippingPartner } = useSelector((state: RootState) => state.form);
+  const gst = (Number(shippingPartner?.rate) * 0.18).toFixed(2);
   const shippingRate = Number(shippingPartner?.rate);
 
   return (
@@ -337,9 +322,9 @@ const Summary = ({ shippingPartner }: any) => {
         <p>Total</p>
         <p>
           Rs.{" "}
-          {Number(shippingPartner?.rate * 0.18 + shippingPartner?.rate).toFixed(
-            2
-          )}
+          {Number(
+            Number(shippingPartner?.rate) * 0.18 + shippingPartner?.rate
+          ).toFixed(2)}
         </p>
       </div>
     </div>
