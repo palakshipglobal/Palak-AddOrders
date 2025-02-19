@@ -93,6 +93,12 @@ export const measurements = [
   { label: "Height", name: "height", placeholder: "Eg: 10", unit: "cm" },
 ];
 
+export const dimensions = [
+  { name: "length", placeholder: "Length", unit: "cm" },
+  { name: "breadth", placeholder: "Width", unit: "cm" },
+  { name: "height", placeholder: "Height", unit: "cm" },
+];
+
 export const placeholderMap = {
   product_name: "Enter Product Name...",
   sku: "Enter SKU...",
@@ -102,3 +108,8 @@ export const placeholderMap = {
 };
 
 export const itemFields = ["product_name", "sku", "hsn", "qty", "unit_price"];
+
+export const weightUnits = [
+  { value: "kg", label: "Kg" },
+  { value: "g", label: "G" },
+];

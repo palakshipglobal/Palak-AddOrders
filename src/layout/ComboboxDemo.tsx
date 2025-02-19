@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import Required from "@/layout/Required";
 import { DatePickerWithPresets } from "@/layout/DatePicker";
-import { addresses, currency, igst, pickupAddress } from "@/layout/constants";
+import { addresses, currency, igst, pickupAddress, weightUnits } from "@/layout/constants";
 interface ComboboxProps {
   options: any;
   placeholder: string;
@@ -98,7 +98,13 @@ function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
   );
 }
 
-export function CountrySelect({ form, name, required }) {
+interface CountryProps{
+  form?:any;
+  name:string;
+  required?:boolean;
+  label:string
+}
+export function CountrySelect({ form, name, required,label }:CountryProps) {
   const [countries, setCountries] = useState([]);
   useEffect(() => {
     const fetchCountries = async () => {
@@ -131,7 +137,7 @@ export function CountrySelect({ form, name, required }) {
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-sm font-normal">
-            Country {required && <Required />}
+            {label} {required && <Required />}
           </FormLabel>
           <FormControl>
             <Combobox
@@ -272,6 +278,27 @@ export function PickupAddressSelect({ form, name }) {
             <Combobox
               options={pickupAddress}
               placeholder="Select Pickup Address"
+              field={field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function WeightSelect({ form, name }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Combobox
+              options={weightUnits}
+              placeholder="Type Here"
               field={field}
             />
           </FormControl>

@@ -167,3 +167,21 @@ export const OrderSchema = z.object({
     })
   ),
 });
+
+export const RateSchema = z.object({
+  country: z.string().min(1, "Please select a country."),
+  pincode: z
+    .string()
+    .min(1, "Pincode is required.")
+    .max(20, "Pincode should not be longer than 20 characters")
+    .regex(/^[A-Za-z0-9\s]{1,20}$/, "Invalid pincode."),
+  weight: z.coerce
+    .number()
+    .gte(0.01, "Weight must be atleast 0.01 KG")
+    .refine((val) => val <= 120, {
+      message: "Weight must be not more than 120",
+    }),
+  length: z.coerce.number().optional(),
+  breadth: z.coerce.number().optional(),
+  height: z.coerce.number().optional(),
+});

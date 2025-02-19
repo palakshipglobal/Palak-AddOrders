@@ -1,8 +1,9 @@
 import React from "react";
 import AddOrderForm from "@/AddOrderForm";
+import RateCalculator from "./RateCalculator";
 
 function App() {
-  return <AddOrderForm />;
+  return <RateCalculator />;
 }
 
 export default App;

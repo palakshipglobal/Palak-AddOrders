@@ -24,7 +24,7 @@ const BuyerBillingDetails = ({ form, states }) => {
         <FormField label="Address 1" name="billing_address1" />
         <FormField label="Address 2" name="billing_address2" />
         <FormField label="Landmark" name="billing_landmark" required={false} />
-        <CountrySelect name="billing_country" required form={form} />
+        <CountrySelect name="billing_country" required form={form} label="Country"/>
         <StateSelect
           name="billing_state"
           required

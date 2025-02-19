@@ -1,11 +1,17 @@
-import { measurements } from "@/layout/constants";
+import { dimensions, measurements } from "@/layout/constants";
 import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    <div className="grid md:grid-cols-4 gap-2 mt-2">
-      {measurements.map((measurement, index) => (
+    // <div className="grid md:grid-cols-4 gap-2">
+    //   {measurements.map((measurement, index) => (
+    //     <MeasurementInput key={index} form={form} {...measurement} />
+    //   ))}
+
+    // </div>
+    <div className="grid md:grid-cols-3 gap-x-5 gap-y-4">
+      {dimensions.map((measurement, index) => (
         <MeasurementInput key={index} form={form} {...measurement} />
       ))}
     </div>
@@ -14,20 +20,39 @@ const ShipmentDetails = ({ form }) => {
 
 export default ShipmentDetails;
 
-const MeasurementInput = ({ form, label, name, placeholder, unit }) => {
+interface MeasurementInputProps {
+  form: any;
+  label?: string;
+  name: string;
+  placeholder: string;
+  className?: string;
+  unit: string;
+  required?: boolean;
+}
+export const MeasurementInput = ({
+  form,
+  label,
+  name,
+  placeholder,
+  className,
+  unit,
+  required,
+}: MeasurementInputProps) => {
   return (
     <div className="flex">
       <SimpleFormField
         form={form}
         label={label}
         name={name}
+        required={required}
         type="number"
         placeholder={placeholder}
         className="w-full"
         inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
-        required
       />
-      <div className="bg-gray-100 p-1.5 h-9 mt-8 text-sm rounded-r-md border border-l-0 border-gray-200">
+      <div
+        className={`bg-gray-100 p-1.5 h-9 mt-2 text-sm rounded-r-md border border-l-0 border-gray-200 ${className}`}
+      >
         {unit}
       </div>
     </div>

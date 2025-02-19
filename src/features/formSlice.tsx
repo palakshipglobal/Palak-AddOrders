@@ -21,6 +21,14 @@ const initialState = {
     billing_landmark: "",
     isBillingSame: true,
   },
+  rateCalculatorData: {
+    country: "",
+    pincode: "",
+    weight: null,
+    length: null,
+    breadth: null,
+    height: null,
+  },
   orderData: {
     id: "",
     csbNumber: "",
@@ -45,7 +53,7 @@ const initialState = {
     ],
   },
   step: 1,
-  shippingPartner: {id:"", name: "", rate: "" },
+  shippingPartner: { id: "", name: "", rate: "" },
   csbNumber: "IV",
   pickupAddress: "",
 };
@@ -77,6 +85,10 @@ const formSlice = createSlice({
     updatePickupAddress: (state, action) => {
       state.pickupAddress = action.payload;
     },
+
+    updateRateCalculatorData: (state, action) => {
+      state.rateCalculatorData = action.payload;
+    },
   },
 });
 
@@ -87,5 +99,6 @@ export const {
   updateShippingPartner,
   updateCsbNumber,
   updatePickupAddress,
+  updateRateCalculatorData,
 } = formSlice.actions;
 export default formSlice.reducer;

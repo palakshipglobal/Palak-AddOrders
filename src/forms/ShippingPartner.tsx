@@ -155,7 +155,7 @@ interface WeightCardProps {
   textColor?: string;
 }
 
-const WeightCard = ({
+export const WeightCard = ({
   value,
   label,
   borderColor = "border-gray-300",
@@ -193,7 +193,7 @@ const TableDescription = ({
   );
 };
 
-const fetchRates = async (
+export const fetchRates = async (
   buyerData: any,
   orderData: any,
   setCourierOptions: any

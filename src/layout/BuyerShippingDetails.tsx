@@ -32,7 +32,7 @@ const BuyerShippingDetails = ({ form, states }) => {
         <FormField label="Address 1" name="shipping_address1" />
         <FormField label="Address 2" name="shipping_address2" />
         <FormField label="Landmark" name="shipping_landmark" required={false} />
-        <CountrySelect form={form} name="shipping_country" required />
+        <CountrySelect form={form} name="shipping_country" required label="Country"/>
         <StateSelect
           form={form}
           name="shipping_state"

@@ -123,7 +123,7 @@ function AddOrderForm() {
 
 export default AddOrderForm;
 
-const QuickTipsContent = () => {
+export const QuickTipsContent = () => {
   return (
     <div className="flex flex-col gap-y-3">
       <p className="font-semibold text-base mx-auto">Quick Tips</p>
@@ -155,6 +155,20 @@ const QuickTipsContent = () => {
         <p>
           The formula for calculating volumetric weight involves multiplying the
           length, width, and height of the package and then dividing by 5000.
+        </p>
+      </div>
+      <ImportantTip />
+    </div>
+  );
+};
+
+const ImportantTip = () => {
+  return (
+    <div className="bg-pink-100 py-5 px-4 rounded-sm text-xs mt-10">
+      <div className="flex">
+        <p>
+          <b>Important:</b> The standard Courier RTO charge will also apply to
+          their additional weight courier type.
         </p>
       </div>
     </div>
