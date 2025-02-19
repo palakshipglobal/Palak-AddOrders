@@ -3,12 +3,7 @@ import { Check } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 
-function OrderStepper({
-  title,
-  stepNumber,
-  setActiveStep,
-  childElement,
-}) {
+function OrderStepper({ title, stepNumber, setActiveStep, childElement }) {
   const { step: activeStep } = useSelector((state: RootState) => state.form);
   const isActive = activeStep === stepNumber;
   const isCompleted = activeStep > stepNumber;

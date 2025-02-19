@@ -209,20 +209,11 @@ const ConsigneeDetailsData = ({ billingLabel, shippingLabel }) => {
   );
 };
 
-const ItemDimensions = () => {
-  const { orderData } = useSelector((state: RootState) => state.form);
+const ItemDimensions = ({ label, value }) => {
   return (
-    <div className="flex justify-between text-sm mt-3">
-      <div className="flex flex-col">
-        <p className="text-gray-500">Billed Weight</p>
-        <p className="font-medium mt-0.5">{orderData.actual_weight} KG</p>
-      </div>
-      <div className="flex flex-col">
-        <p className="text-gray-500">Dimensions</p>
-        <p className="font-medium mt-0.5">
-          {orderData.length}cm X {orderData.breadth}cm X {orderData.height}cm
-        </p>
-      </div>
+    <div className="flex flex-col">
+      <p className="text-gray-500">{label}</p>
+      <p className="font-medium mt-0.5">{value}</p>
     </div>
   );
 };
@@ -233,7 +224,16 @@ const ItemDetails = () => {
   return (
     <div className="border-t pt-4">
       <h3 className="text-lg font-semibold">Item Details</h3>
-      <ItemDimensions />
+      <div className="flex justify-between text-sm mt-3">
+        <ItemDimensions
+          label="Billed Weight"
+          value={`${orderData.actual_weight} KG`}
+        />
+        <ItemDimensions
+          label="Dimensions"
+          value={`${orderData.length}cm X ${orderData.breadth}cm X ${orderData.height} cm`}
+        />
+      </div>
       <div className="grid text-sm grid-cols-3 gap-y-3 mt-5">
         {orderData.items.map((item: any, index: any) => {
           if (!showAll && index > 0) return null;
