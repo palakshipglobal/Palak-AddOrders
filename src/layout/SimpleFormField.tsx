@@ -44,6 +44,20 @@ function SimpleFormField({
               placeholder={placeholder}
               {...field}
               className={inputStyle}
+              onChange={(e) => {
+                let value = e.target.value;
+                if (type === "number") {
+                  value = value.replace(/[^0-9.]/g, "");
+                  if (value.includes(".")) {
+                    const [integer, decimal] = value.split(".");
+                    value =
+                      decimal.length > 2
+                        ? `${integer}.${decimal.slice(0, 2)}`
+                        : value;
+                  }
+                }
+                field.onChange(value);
+              }}
             />
           </FormControl>
           <FormMessage />

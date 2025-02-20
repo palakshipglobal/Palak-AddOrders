@@ -176,46 +176,53 @@ export const RateSchema = z.object({
     .max(12, "String must contain at most 12 character(s)")
     .regex(/^[A-Z0-9]+(?: [A-Z0-9]+)?$/, "Invalid pincode"),
 
-  weight: z.coerce
+  actual_weight: z.coerce
     .number()
     .gte(0.01, "Weight must be at least 0.01 KG")
-    .refine((val) => val <= 300, {
-      message: "Weight must not be more than 300 KG",
+    .lte(300, "Weight must not be more than 300 KG"),
+
+  // actual_weight:
+  //   z .number()
+  //     .min(0.01, { message: "Weight must be above 0.01 KG" })
+  //     .max(300, { message: "Weight must not be more than 300 KG" }),
+  // ),
+
+  breadth: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d+$/.test(val), {
+      message: "Breadth must be a number",
     })
-    .refine((val) => Number(val.toFixed(2)) === val, {
-      message: "Weight must have at most 2 decimal places",
+    .refine((val) => !val || Number(val) >= 1, {
+      message: "Breadth must be at least 1 cm",
+    })
+    .refine((val) => !val || Number(val) <= 120, {
+      message: "Breadth must not be more than 120 cm",
     }),
 
-  length: z.union([
-    z.undefined(),
-    z.coerce
-      .number()
-      .gte(1, "Length must be at least 1 cm")
-      .lte(120, "Length must not be more than 120 cm")
-      .refine((val) => Number.isInteger(val), {
-        message: "Length must be an integer",
-      }),
-  ]),
+  length: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d+$/.test(val), {
+      message: "Length must be a number",
+    })
+    .refine((val) => !val || Number(val) >= 1, {
+      message: "Length must be at least 1 cm",
+    })
+    .refine((val) => !val || Number(val) <= 120, {
+      message: "Length must not be more than 120 cm",
+    }),
 
-  breadth: z.union([
-    z.undefined(),
-    z.coerce
-      .number()
-      .gte(0, "Breadth must be at least 1 cm")
-      .lte(120, "Breadth must not be more than 120 cm")
-      .refine((val) => Number.isInteger(val), {
-        message: "Breadth must be an integer",
-      }),
-  ]),
-
-  height: z.union([
-    z.undefined(),
-    z.coerce
-      .number()
-      .gte(0, "Height must be at least 1 cm")
-      .lte(120, "Height must not be more than 120 cm")
-      .refine((val) => Number.isInteger(val), {
-        message: "Height must be an integer",
-      }),
-  ]),
+  height: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d+$/.test(val), {
+      message: "Height must be a number",
+    })
+    .refine((val) => !val || Number(val) >= 1, {
+      message: "Height must be at least 1 cm",
+    })
+    .refine((val) => !val || Number(val) <= 120, {
+      message: "Height must not be more than 120 cm",
+    }),
 });

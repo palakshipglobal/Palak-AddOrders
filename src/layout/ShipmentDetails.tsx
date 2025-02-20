@@ -1,17 +1,11 @@
-import { dimensions, measurements } from "@/layout/constants";
+import { measurements } from "@/layout/constants";
 import SimpleFormField from "@/layout/SimpleFormField";
 import React from "react";
 
 const ShipmentDetails = ({ form }) => {
   return (
-    // <div className="grid md:grid-cols-4 gap-2">
-    //   {measurements.map((measurement, index) => (
-    //     <MeasurementInput key={index} form={form} {...measurement} />
-    //   ))}
-
-    // </div>
-    <div className="grid md:grid-cols-3 gap-x-5 gap-y-4">
-      {dimensions.map((measurement, index) => (
+    <div className="grid md:grid-cols-4 gap-x-8">
+      {measurements.map((measurement, index) => (
         <MeasurementInput key={index} form={form} {...measurement} />
       ))}
     </div>
@@ -49,9 +43,10 @@ export const MeasurementInput = ({
         placeholder={placeholder}
         className="w-full"
         inputStyle="rounded-r-none focus-visible:outline-none focus-visible:ring-0"
+        
       />
       <div
-        className={`bg-gray-100 p-1.5 h-9 mt-2 text-sm rounded-r-md border border-l-0 border-gray-200 ${className}`}
+        className={`bg-gray-100 mt-8 p-1.5 h-9 text-sm rounded-r-md border border-l-0 border-gray-200 ${className}`}
       >
         {unit}
       </div>

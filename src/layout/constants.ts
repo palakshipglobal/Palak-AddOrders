@@ -83,20 +83,15 @@ export const pickupAddress = [
 
 export const measurements = [
   {
-    label: "Weight",
+    label: "Dead Weight",
     name: "actual_weight",
     placeholder: "Eg: 1.25",
     unit: "kg",
+    required:true
   },
   { label: "Length", name: "length", placeholder: "Eg: 10", unit: "cm" },
   { label: "Breadth", name: "breadth", placeholder: "Eg: 10", unit: "cm" },
   { label: "Height", name: "height", placeholder: "Eg: 10", unit: "cm" },
-];
-
-export const dimensions = [
-  { name: "length", placeholder: "Eg: 10", unit: "cm" },
-  { name: "breadth", placeholder: "Eg: 10", unit: "cm" },
-  { name: "height", placeholder: "Eg: 10", unit: "cm" },
 ];
 
 export const placeholderMap = {
