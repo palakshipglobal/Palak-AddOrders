@@ -164,7 +164,7 @@ export const WeightCard = ({
 }: WeightCardProps) => {
   return (
     <div
-      className={`border ${borderColor} text-center ${bgColor} ${textColor} px-9 py-2 min-w-32 md:min-w-36 rounded-md`}
+      className={`border ${borderColor} text-center ${bgColor} ${textColor} px-9 py-2 min-w-44 md:min-w-36 rounded-md`}
     >
       <p className="font-medium text-sm">{value.toFixed(2)} KG</p>
       <p className="text-xs">{label}</p>

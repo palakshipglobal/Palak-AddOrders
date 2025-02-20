@@ -24,7 +24,13 @@ import {
 } from "@/components/ui/form";
 import Required from "@/layout/Required";
 import { DatePickerWithPresets } from "@/layout/DatePicker";
-import { addresses, currency, igst, pickupAddress, weightUnits } from "@/layout/constants";
+import {
+  addresses,
+  currency,
+  igst,
+  pickupAddress,
+  weightUnits,
+} from "@/layout/constants";
 interface ComboboxProps {
   options: any;
   placeholder: string;
@@ -98,13 +104,13 @@ function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
   );
 }
 
-interface CountryProps{
-  form?:any;
-  name:string;
-  required?:boolean;
-  label:string
+interface CountryProps {
+  form?: any;
+  name: string;
+  required?: boolean;
+  label: string;
 }
-export function CountrySelect({ form, name, required,label }:CountryProps) {
+export function CountrySelect({ form, name, required, label }: CountryProps) {
   const [countries, setCountries] = useState([]);
   useEffect(() => {
     const fetchCountries = async () => {
@@ -142,7 +148,7 @@ export function CountrySelect({ form, name, required,label }:CountryProps) {
           <FormControl>
             <Combobox
               options={countries}
-              placeholder="Select a Country"
+              placeholder="Select Country"
               field={field}
             />
           </FormControl>

@@ -94,9 +94,9 @@ export const measurements = [
 ];
 
 export const dimensions = [
-  { name: "length", placeholder: "Length", unit: "cm" },
-  { name: "breadth", placeholder: "Width", unit: "cm" },
-  { name: "height", placeholder: "Height", unit: "cm" },
+  { name: "length", placeholder: "Eg: 10", unit: "cm" },
+  { name: "breadth", placeholder: "Eg: 10", unit: "cm" },
+  { name: "height", placeholder: "Eg: 10", unit: "cm" },
 ];
 
 export const placeholderMap = {
