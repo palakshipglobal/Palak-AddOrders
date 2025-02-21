@@ -11,19 +11,20 @@ import { CircleCheck } from "lucide-react";
 import { QuickTipsContent } from "@/AddOrderForm";
 import { fetchShipperRates } from "@/layout/api";
 import SearchInput from "@/layout/SelectInput";
+import { cn } from "./lib/utils";
 
 const RateCalculator = () => {
   const [showCalculatedWeight, setShowCalculatedWeight] = useState(false);
-  const [courierOptions, setCourierOptions] = useState([]);
+  const [shipperOptions, setShipperOptions] = useState([]);
   const [selectedCourier, setSelectedCourier] = useState(null);
 
   const initialValues = {
     country: "",
     pincode: "",
     actual_weight: "",
-    breadth:"",
-    length:"",
-    height:"",
+    breadth: "",
+    length: "",
+    height: "",
   };
 
   const RateForm = useForm({
@@ -49,37 +50,31 @@ const RateCalculator = () => {
     RateForm.reset();
     setSelectedCourier(null);
     setShowCalculatedWeight(false);
-    setCourierOptions([]);
+    setShipperOptions([]);
   };
 
-  const fetchRates = async (values: any) => {
+  const fetchRates = async () => {
     try {
       const payload = {
-        customer_shipping_country_code: values.country,
-        customer_shipping_postcode: values.pincode,
-        package_breadth: values.breadth,
-        package_height: values.height,
-        package_length: values.length,
-        package_weight: values.actual_weight,
+        customer_shipping_country_code: RateForm.watch("country"),
+        customer_shipping_postcode: RateForm.watch("pincode"),
+        package_breadth: RateForm.watch("breadth"),
+        package_height: RateForm.watch("height"),
+        package_length: RateForm.watch("length"),
+        package_weight: RateForm.watch("actual_weight"),
       };
       const rates = await fetchShipperRates(payload);
-      setCourierOptions(
-        rates.map((rate: any) => ({
-          id: `${rate.display_name}-${rate.rate}`,
-          name: rate.display_name,
-          time: rate.transit_time,
-          rate: rate.rate,
-        }))
-      );
+      setShipperOptions(rates);
+      // return await fetchShipperRates(payload);
     } catch (error) {
       console.error("Error fetching shipper rates:", error);
     }
   };
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async () => {
+    await fetchRates();
     setShowCalculatedWeight(true);
-    await fetchRates(values);
-    console.log(values);
+    console.log(RateForm.watch());
   };
 
   return (
@@ -99,6 +94,7 @@ const RateCalculator = () => {
                   label="Select Country"
                   placeholder="Search for a country..."
                   fetchData={fetchCountries}
+                  required
                 />
                 <SimpleFormField
                   label="Destination Pincode"
@@ -110,7 +106,7 @@ const RateCalculator = () => {
                 />
               </div>
               <ShipmentDetails form={RateForm} />
-              <Buttons reset={handleResetData} />
+              <CalcResetButtons reset={handleResetData} />
             </form>
           </Form>
           {showCalculatedWeight && (
@@ -119,9 +115,9 @@ const RateCalculator = () => {
               volumetricWeight={volumetricWeight()}
             />
           )}
-          {courierOptions.length > 0 && (
+          {shipperOptions.length > 0 && (
             <CourierTable
-              courierOptions={courierOptions}
+              shipperOptions={shipperOptions}
               handleSelectPartner={handleSelectPartner}
               selectedCourier={selectedCourier}
             />
@@ -135,7 +131,7 @@ const RateCalculator = () => {
   );
 };
 
-const Buttons = ({ reset }) => (
+const CalcResetButtons = ({ reset }) => (
   <div className="flex justify-center md:justify-end gap-x-2 md:gap-x-5">
     <Button
       type="button"
@@ -166,7 +162,7 @@ const WeightSummary = ({ formValues, volumetricWeight }) => (
 );
 
 const CourierTable = ({
-  courierOptions,
+  shipperOptions,
   handleSelectPartner,
   selectedCourier,
 }) => (
@@ -182,23 +178,23 @@ const CourierTable = ({
         <TableHeader heading="Select" className="border-r rounded-r-md pr-2" />
       </tr>
     </thead>
-    {courierOptions.map((courier, index) => (
+    {shipperOptions.map((courier: any, index: any) => (
       <tbody key={index}>
-        <tr>
+        <tr className="cursor-pointer">
           <td className="absolute mt-2.5 w-full border-t bg-blue-50 border-x text-xs rounded-t-sm text-red-500 px-3 py-1">
             Duties will be charged, if applicable
           </td>
         </tr>
         <tr
-          className="cursor-pointer"
           onClick={() => handleSelectPartner(courier)}
+          className="cursor-pointer"
         >
           <TableDescription
-            description={courier.name}
+            description={courier.display_name}
             className="font-medium pt-8 pb-4 pl-1.5 md:pl-5 border border-r-0 rounded-l-md"
           />
-          <TableDescription description={courier.time} />
-          <TableDescription description={courier.rate} />
+          <TableDescription description={courier.transit_time} />
+          <TableDescription description={`Rs. ${courier.rate}`} />
           <td className="border-t border-b pt-4 border-r rounded-r-md">
             <CircleCheck
               onClick={() => handleSelectPartner(courier)}
@@ -215,27 +211,28 @@ const CourierTable = ({
   </table>
 );
 
+export default RateCalculator;
+
 interface TableHeaderProps {
   heading: string;
   className?: string;
 }
 const TableHeader = ({ heading, className }: TableHeaderProps) => {
-  return <th className={`border-t border-b ${className}`}>{heading}</th>;
+  return <th className={cn("border-t border-b", className)}>{heading}</th>;
 };
 
 interface TableDescriptionProps {
   description: string;
   className?: string;
 }
-
 const TableDescription = ({
   description,
   className,
 }: TableDescriptionProps) => (
-  <td className={`border-t border-b pt-4 pr-2 ${className}`}>{description}</td>
+  <td className={cn("border-t border-b pt-4 pr-2", className)}>
+    {description}
+  </td>
 );
-
-export default RateCalculator;
 
 const fetchCountries = async () => {
   try {

@@ -32,7 +32,7 @@ const SearchInput = ({
   className,
 }: SearchInputProps) => {
   const { setValue, clearErrors, watch } = useFormContext();
-  const fieldValue = watch(name); // Watch field value in real-time
+  const fieldValue = watch(name);
   const [searchQuery, setSearchQuery] = useState("");
   const [options, setOptions] = useState<
     { value: string; label: string; code: string }[]
@@ -107,6 +107,7 @@ const SearchInput = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={() => setIsDropdownOpen(true)}
                   placeholder={placeholder}
+                  onBlur={()=> setIsDropdownOpen(false)}
                   className="rounded-l-none border-l-0 focus-visible:outline-none focus-visible:ring-0"
                 />
               </div>
@@ -118,6 +119,7 @@ const SearchInput = ({
                         key={option.value}
                         className="px-4 py-2 hover:bg-gray-100 rounded-md pl-10 cursor-pointer"
                         onClick={() => handleSelectOption(option)}
+                        onMouseDown={(e) => e.preventDefault()}
                       >
                         {option.label}
                       </div>
