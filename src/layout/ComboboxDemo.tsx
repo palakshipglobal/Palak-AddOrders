@@ -22,106 +22,117 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Required from "./Required";
-import { DatePickerWithPresets } from "./DatePicker";
+import Required from "@/layout/Required";
+import { DatePickerWithPresets } from "@/layout/DatePicker";
+import {
+  addresses,
+  currency,
+  igst,
+  pickupAddress,
+  weightUnits,
+} from "@/layout/constants";
+interface ComboboxProps {
+  options: any;
+  placeholder: string;
+  field: any;
+  disabled?: boolean;
+}
 
-const addresses = [
-  { value: "Main St", label: "Main St" },
-  {
-    value: "Oak Street",
-    label: "Oak Street",
-  },
-  { value: "Pine St", label: "Pine St" },
-];
-
-const currency = [
-  { value: "AED", label: "AED" },
-  { value: "AUD", label: "AUD" },
-  { value: "CAD", label: "CAD" },
-  { value: "EUR", label: "EUR" },
-  { value: "IND", label: "IND" },
-];
-
-const igst = [
-  { value: "0", label: "0%" },
-  { value: "3", label: "3%" },
-  { value: "5", label: "5%" },
-  { value: "12", label: "12%" },
-  { value: "18", label: "18%" },
-];
-
-function Combobox({ options, placeholder, field }) {
+function Combobox({ options, placeholder, field, disabled }: ComboboxProps) {
   const [open, setOpen] = useState(false);
-  const selectedOption = options.find((option) => option.value === field.value);
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredOptions = options.filter((option: any) =>
+    option.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const selectedOption = options.find(
+    (option: any) => option.value === field.value
+  );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open && !disabled} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full bg-gray-100 h-9 text-gray-600 justify-between overflow-hidden text-ellipsis"
+          className="w-full h-9 text-gray-600 justify-between overflow-hidden truncate"
+          disabled={disabled}
         >
-          {selectedOption ? selectedOption.label : placeholder}
+          <span className="truncate">
+            {selectedOption ? selectedOption.label : placeholder}
+          </span>
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
-        <Command>
-          <CommandInput placeholder={placeholder} />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={() => {
-                    field.onChange(option.value);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={`mr-2 h-4 w-4 ${
-                      field.value === option.value ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
+      {!disabled && (
+        <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
+          <Command>
+            <CommandInput
+              placeholder={placeholder}
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
+            <CommandList>
+              {filteredOptions.length === 0 ? (
+                <CommandEmpty>No results found.</CommandEmpty>
+              ) : (
+                <CommandGroup>
+                  {filteredOptions.map((option: any) => (
+                    <CommandItem
+                      key={option.value}
+                      value={option.label}
+                      onSelect={() => {
+                        field.onChange(option.value);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={`mr-2 truncate h-4 w-4 ${
+                          field.value === option.value
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      />
+                      {option.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      )}
     </Popover>
   );
 }
 
-export function CountrySelect({ form, name, required }) {
+interface CountryProps {
+  form?: any;
+  name: string;
+  required?: boolean;
+  label: string;
+}
+export function CountrySelect({ form, name, required, label }: CountryProps) {
   const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    async function fetchCountries() {
+    const fetchCountries = async () => {
       try {
         const response = await fetch(
           "https://api.fr.stg.shipglobal.in/api/v1/location/countries"
         );
         const result = await response.json();
-
         if (result.data && result.data.countries) {
-          const formattedCountries = result.data.countries.map((country) => ({
-            value: country.country_iso2,
-            label: country.country_display,
-          }));
+          const formattedCountries = result.data.countries.map(
+            (country: any) => ({
+              value: country.country_iso2,
+              label: country.country_display,
+            })
+          );
           setCountries(formattedCountries);
+          localStorage.setItem("countries", JSON.stringify(formattedCountries));
         }
       } catch (error) {
         console.error("Error fetching countries:", error);
-      } finally {
-        setLoading(false);
       }
-    }
-
+    };
     fetchCountries();
   }, []);
 
@@ -131,17 +142,15 @@ export function CountrySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Country {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            {label} {required && <Required />}
+          </FormLabel>
           <FormControl>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <Combobox
-                options={countries}
-                placeholder="Select a Country"
-                field={field}
-              />
-            )}
+            <Combobox
+              options={countries}
+              placeholder="Select Country"
+              field={field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -157,7 +166,9 @@ export function StateSelect({ form, name, required, states }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>State {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            State {required && <Required />}
+          </FormLabel>
           <FormControl>
             <Combobox
               options={states}
@@ -200,7 +211,9 @@ export function CurrencySelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Invoice Currency {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            Invoice Currency {required && <Required />}
+          </FormLabel>
           <FormControl>
             <Combobox
               options={currency}
@@ -222,7 +235,9 @@ export function DateSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Invoice Date {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            Invoice Date {required && <Required />}
+          </FormLabel>
           <FormControl>
             <DatePickerWithPresets name="invoice_date" />
           </FormControl>
@@ -240,9 +255,58 @@ export function IGSTSelect({ form, name, required }) {
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>IGST {required && <Required />}</FormLabel>
+          <FormLabel className="text-sm font-normal">
+            IGST {required && <Required />}
+          </FormLabel>
           <FormControl>
-            <Combobox options={igst} placeholder="0%" field={field} />
+            <Combobox
+              options={igst}
+              placeholder="0%"
+              field={field}
+              disabled={true}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function PickupAddressSelect({ form, name }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Combobox
+              options={pickupAddress}
+              placeholder="Select Pickup Address"
+              field={field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function WeightSelect({ form, name }) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Combobox
+              options={weightUnits}
+              placeholder="Type Here"
+              field={field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

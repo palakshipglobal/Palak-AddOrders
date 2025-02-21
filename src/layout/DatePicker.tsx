@@ -4,7 +4,6 @@ import * as React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { addDays, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -23,16 +22,18 @@ import {
 
 export function DatePickerWithPresets({ name }: { name: string }) {
   const { control } = useFormContext();
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Controller
       control={control}
       name={name}
       render={({ field }) => (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
+              onClick={() => setOpen(true)}
               className={cn(
                 "w-full justify-start text-left font-normal",
                 !field.value && "text-muted-foreground"
@@ -50,9 +51,10 @@ export function DatePickerWithPresets({ name }: { name: string }) {
           >
             {/* Preset Date Selection */}
             <Select
-              onValueChange={(value) =>
-                field.onChange(addDays(new Date(), parseInt(value)))
-              }
+              onValueChange={(value) => {
+                field.onChange(addDays(new Date(), parseInt(value)));
+                setOpen(false);
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a date" />
@@ -69,7 +71,10 @@ export function DatePickerWithPresets({ name }: { name: string }) {
               <Calendar
                 mode="single"
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={(date) => {
+                  field.onChange(date);
+                  setOpen(false);
+                }}
               />
             </div>
           </PopoverContent>

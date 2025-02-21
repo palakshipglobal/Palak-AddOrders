@@ -1,8 +1,10 @@
 import React from "react";
-import Form from "./Form";
+import AddOrderForm from "@/AddOrderForm";
+import RateCalculator from "./RateCalculator";
+import HeavyWeightQuote from "./HeavyWeightQuote";
 
 function App() {
-  return <Form />;
+  return <HeavyWeightQuote />;
 }
 
 export default App;

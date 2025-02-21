@@ -1,37 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  form1Data: {
+  buyerData: {
     shipping_firstname: "",
     shipping_lastname: "",
     shipping_mobile: "",
+    shipping_email: "",
+    shipping_landmark: "",
     shipping_country: "",
     shipping_address1: "",
     shipping_address2: "",
     shipping_pincode: "",
     shipping_city: "",
     shipping_state: "",
-    billing_firstname: "",
-    billing_lastname: "",
-    billing_mobile: "",
     billing_country: "",
     billing_address1: "",
     billing_address2: "",
     billing_pincode: "",
     billing_city: "",
     billing_state: "",
+    billing_landmark: "",
     isBillingSame: true,
   },
-
-  form2Data: {
+  rateCalculatorData: {
+    country: "",
+    pincode: "",
+    weight: null,
+    length: null,
+    breadth: null,
+    height: null,
+  },
+  orderData: {
     id: "",
     csbNumber: "",
-    actual_weight: "",
-    length: "",
-    breadth: "",
-    height: "",
+    actual_weight: null,
+    length: null,
+    breadth: null,
+    height: null,
     invoice_no: "",
     invoice_date: "",
-    invoice_currency: "",
+    invoice_currency: "INR",
     order_id: "",
     ioss_number: "",
     items: [
@@ -39,26 +46,28 @@ const initialState = {
         product_name: "",
         sku: "",
         hsn: "",
-        qty: "",
-        unit_price: "",
+        qty: null,
+        unit_price: null,
         igst: "",
       },
     ],
   },
   step: 1,
-  shippingPartner: "Shipglobal WorldWide",
+  shippingPartner: { id: "", name: "", rate: "" },
   csbNumber: "IV",
+  pickupAddress: "",
 };
+
 const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    updateForm1Data: (state, action) => {
-      state.form1Data = action.payload;
+    updateBuyerData: (state, action) => {
+      state.buyerData = action.payload;
     },
 
-    updateForm2Data: (state, action) => {
-      state.form2Data = action.payload;
+    updateOrderData: (state, action) => {
+      state.orderData = action.payload;
     },
 
     updateStep: (state, action) => {
@@ -72,14 +81,24 @@ const formSlice = createSlice({
     updateCsbNumber: (state, action) => {
       state.csbNumber = action.payload;
     },
+
+    updatePickupAddress: (state, action) => {
+      state.pickupAddress = action.payload;
+    },
+
+    updateRateCalculatorData: (state, action) => {
+      state.rateCalculatorData = action.payload;
+    },
   },
 });
 
 export const {
-  updateForm1Data,
-  updateForm2Data,
+  updateBuyerData,
+  updateOrderData,
   updateStep,
   updateShippingPartner,
   updateCsbNumber,
+  updatePickupAddress,
+  updateRateCalculatorData,
 } = formSlice.actions;
 export default formSlice.reducer;

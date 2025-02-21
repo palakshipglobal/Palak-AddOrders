@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -20,7 +19,7 @@ interface SimpleFormFieldProps {
   className?: string;
   inputStyle?: string;
 }
-function SimpleFormFields({
+function SimpleFormField({
   form,
   type,
   name,
@@ -36,7 +35,7 @@ function SimpleFormFields({
       control={form.control}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel>
+          <FormLabel className="text-sm font-normal">
             {label} {required && <Required />}
           </FormLabel>
           <FormControl>
@@ -45,6 +44,20 @@ function SimpleFormFields({
               placeholder={placeholder}
               {...field}
               className={inputStyle}
+              onChange={(e) => {
+                let value = e.target.value;
+                if (type === "number") {
+                  value = value.replace(/[^0-9.]/g, "");
+                  if (value.includes(".")) {
+                    const [integer, decimal] = value.split(".");
+                    value =
+                      decimal.length > 2
+                        ? `${integer}.${decimal.slice(0, 2)}`
+                        : value;
+                  }
+                }
+                field.onChange(value);
+              }}
             />
           </FormControl>
           <FormMessage />
@@ -54,5 +67,5 @@ function SimpleFormFields({
   );
 }
 
-export default SimpleFormFields;
+export default SimpleFormField;
 const Required = () => <span className="ml-px text-red-500">*</span>;
