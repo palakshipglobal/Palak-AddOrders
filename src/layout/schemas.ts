@@ -181,12 +181,6 @@ export const RateSchema = z.object({
     .gte(0.01, "Weight must be at least 0.01 KG")
     .lte(300, "Weight must not be more than 300 KG"),
 
-  // actual_weight:
-  //   z .number()
-  //     .min(0.01, { message: "Weight must be above 0.01 KG" })
-  //     .max(300, { message: "Weight must not be more than 300 KG" }),
-  // ),
-
   breadth: z
     .string()
     .optional()
@@ -224,5 +218,24 @@ export const RateSchema = z.object({
     })
     .refine((val) => !val || Number(val) <= 120, {
       message: "Height must not be more than 120 cm",
+    }),
+});
+
+export const ShipmentDetailsSchema = z.object({
+  country: z.string().min(1, "Please select a country."),
+  pincode: z
+    .string()
+    .min(1, "Pincode is required.")
+    .max(12, "String must contain at most 12 character(s)")
+    .regex(/^[A-Z0-9]+(?: [A-Z0-9]+)?$/, "Invalid pincode"),
+  weight: z.coerce
+    .number()
+    .gte(0.01, "Weight must be at least 0.01 KG")
+    .lte(300, "Weight must not be more than 300 KG"),
+  boxes: z
+    .string()
+    .min(1, "Number of boxes must be at least 1")
+    .refine((val) => !val || /^\d+$/.test(val), {
+      message: "Number of boxes must be a number",
     }),
 });

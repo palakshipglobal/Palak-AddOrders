@@ -65,7 +65,6 @@ const RateCalculator = () => {
       };
       const rates = await fetchShipperRates(payload);
       setShipperOptions(rates);
-      // return await fetchShipperRates(payload);
     } catch (error) {
       console.error("Error fetching shipper rates:", error);
     }
@@ -234,7 +233,7 @@ const TableDescription = ({
   </td>
 );
 
-const fetchCountries = async () => {
+export const fetchCountries = async () => {
   try {
     const response = await fetch(
       "https://api.fr.stg.shipglobal.in/api/v1/location/countries"

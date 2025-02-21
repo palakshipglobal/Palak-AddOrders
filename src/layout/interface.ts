@@ -63,11 +63,3 @@ export const initialProductDetails = {
   igst: "0",
 };
 
-export type RateFormData = {
-  country: string;
-  pincode: string;
-  weight: number;
-  length: number;
-  breadth: number;
-  height: number;
-};
